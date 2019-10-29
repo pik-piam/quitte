@@ -28,8 +28,9 @@
 #' @return A data frame or a quitte object, the same as \code{data}.
 #' @author Michaja Pehl
 #'
-#' @import dplyr
-#' @import tidyr
+#' @importFrom rlang :=
+#' @importFrom stats na.omit spline
+#' @importFrom zoo na.approx
 #'
 #' @examples
 #' require(dplyr)
@@ -56,21 +57,22 @@
 #'
 #' # works on data frames with different column names
 #' (data <- data %>%
-#'      rename(year = period, coeff = value))
+#'         rename(year = period, coeff = value))
 #'
 #' interpolate_missing_periods(data, year, value = 'coeff')
 #'
 #' # works on quitte objects too
 #' (quitte <- data %>%
-#'      rename(model = group, scenario = item, period = year, value = coeff) %>%
-#'      as.quitte())
+#'         rename(model = group, scenario = item, period = year, value = coeff) %>%
+#'         mutate(variable = 'Var 1', unit = 'u1') %>%
+#'         as.quitte())
 #'
 #' interpolate_missing_periods(quitte, expand.values = TRUE)
 #'
 #' # and works with POSIXct periods
 #' ISOyear <- make.ISOyear(seq(2010, 2035, 5))
 #' (quitte <- quitte %>%
-#'     mutate(period = ISOyear(period)))
+#'         mutate(period = ISOyear(period)))
 #'
 #' interpolate_missing_periods(quitte, period = ISOyear(seq(2010, 2035, 5)))
 #'
@@ -84,10 +86,9 @@ interpolate_missing_periods <- function(data, ..., value = 'value',
                                         method = 'linear',
                                         combinations = 'nesting') {
 
-    # only use the first name-value pair
+    # ---- normalise periods to a named list of numerics/POSIXct ----
     periods <- lazyeval::lazy_dots(...)[1]
 
-    # normalise the periods argument to a named list of numerics/POSIXct
     if (is.null(periods[[1]])) {
         periods <- stats::setNames(
             list(unique(lazyeval::lazy_eval('period', data))),
@@ -114,15 +115,11 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
                                          method = 'linear',
                                          combinations = 'nesting') {
 
-    # guardians
+    period <- names(periods[1])
+
+    # ---- guardians ----
     if (!is.data.frame(data))
         stop("Works only on data frames")
-
-    if (!is.list(periods))
-        stop(paste0('periods must be a list giving the name of the period',
-                    ' column and the periods to expand to'))
-
-    period <- names(periods[1])
 
     if (!period %in% colnames(data))
         stop(paste0('period column \'', period, '\' not found'))
@@ -139,43 +136,34 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         stop('method must be one of linear, spline, spline_fmm, or',
              ' spline_natural')
 
-    if (!combinations %in% c('nesting', 'crossing'))
-        stop('combinations must be one of nesting or crossing')
-
-    # convert POSIXct periods to doubles
+    # ---- convert POSIXct periods to integer ----
     if (return_POSIXct <- 'POSIXct' %in% class(getElement(data, period))) {
-        data <- mutate_(data,
-                        .dots = stats::setNames(
-                            list(lazyeval::interp(~as.double(x),
-                                                  x = as.name(period))),
-                            period))
-        periods[[1]] <- as.double(periods[[1]])
+        data <- data %>%
+            mutate(!!sym(period) := as.integer(!!sym(period)))
+        periods[[1]] <- as.integer(periods[[1]])
     }
 
+    # ---- expand periods to include missing entries ----
     # columns for which combinations are to be preserved/expanded
     combination_columns <- setdiff(colnames(data), c(period, value))
 
-    cols <- c(
-        list(
-            lazyeval::as.lazy(
-                paste0('tidyr::', combinations, '(',
-                       paste(combination_columns, collapse = ', '),
-                       ')'))),
-        stats::setNames(
-            list(
-                lazyeval::as.lazy(
-                    paste0('c(',
-                           paste(periods[[1]], collapse = ', '),
-                           ')'))),
-            names(periods))
-    )
+    if ('nesting' == combinations) {
+        data <- data %>%
+            complete(nesting(!!!syms(combination_columns)),
+                     !!sym(period) := periods[[1]])
+    } else if ('crossing' == combinations) {
+        data <- data %>%
+            complete(crossing(!!!syms(combination_columns)),
+                     !!sym(period) := periods[[1]])
+    } else {
+        stop('combinations must be one of nesting or crossing')
+    }
 
-    # expand periods
-    data <- dplyr::group_by_(
-        tidyr::complete_(data, cols),
-        .dots = combination_columns)
+    data <- data %>%
+        group_by_at(combination_columns)
 
-    # choose correct method
+    # ---- fill in missing periods ----
+    # choose method
     if ('linear' != method) {
         if ('spline' == method) {
             method <- 'fmm'
@@ -184,7 +172,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         }
     }
 
-    # calculate missing values
+    # ---- calculate missing values ----
     .set_na <- function(a, b) {   # !diagnostics suppress=.set_na
         # set a to NA for all NA on the fringes of b
         if (!all(is.na(b))) {
@@ -199,16 +187,13 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
 
     if ('linear' == method) {
         data <- data %>%
-            mutate_(.dots = stats::setNames(
-                list(lazyeval::interp(
-                    ~zoo::na.approx(object = value, x = period,
-                                    yleft = head(value[!is.na(value)], 1),
-                                    yright = tail(value[!is.na(value)], 1),
-                                    na.rm = FALSE) %>%
-                        .set_na(value),
-                    value = as.name(value),
-                    period = as.name(period))),
-                value))
+            mutate(!!sym(value) := na.approx(
+                object = !!sym(value),
+                x = !!sym(period),
+                yleft = first(na.omit(!!sym(value))),
+                yright = last(na.omit(!!sym(value))),
+                na.rm = FALSE) %>%
+                    .set_na(!!sym(value)))
 
         # if there is only one non-NA value, zoo::na.approx() does nothing, so
         # replace NAs with the one non-NA value
@@ -216,60 +201,39 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
             # all groups that don't consist of just one non-NA value (including
             # all NAs)
             data %>%
-                filter_(lazyeval::interp(~1 != sum(!is.na(value)),
-                                         value = as.name(value))),
+                filter(1 != sum(!is.na(!!sym(value)))),
 
             # all groups consisting of just one non-NA value
             data %>%
-                filter_(lazyeval::interp(~1 == sum(!is.na(value)),
-                                         value = as.name(value))) %>%
-                mutate_(.dots = stats::setNames(
-                    list(lazyeval::interp(~stats::na.omit(value),
-                                          value = as.name(value))),
-                    value))
+                filter(1 == sum(!is.na(!!sym(value)))) %>%
+                mutate(!!sym(value) := na.omit(!!sym(value)))
         )
     } else {
         data <- bind_rows(
             # if all values are NA, no interpolation is possible
             data %>%
-                dplyr::filter_(.dots = list(
-                    lazyeval::interp(~all(is.na(value)),
-                                     value = as.name(value)))),
+                filter(all(is.na(!!sym(value)))),
 
             # if not all values are NA, then interpolate
             data %>%
-                dplyr::filter_(.dots = list(
-                    lazyeval::interp(~!all(is.na(value)),
-                                     value = as.name(value)))) %>%
-                dplyr::mutate_(
-                    .dots = stats::setNames(
-                        list(lazyeval::interp(
-                            ~unlist(
-                                getElement(
-                                    stats::spline(x      = period,
-                                                  y      = value,
-                                                  method = method,
-                                                  xout   = period),
-                                    'y'),
-                                use.names = FALSE) %>%
-                                .set_na(value),
-                                period = as.name(period),
-                                value  = as.name(value))),
-                        value)
-                )
+                filter(!all(is.na(!!sym(value)))) %>%
+                mutate(!!sym(value) := spline(x = !!sym(period),
+                                              y = !!sym(value),
+                                              method = method,
+                                              xout = !!sym(period)) %>%
+                           getElement('y') %>%
+                           unlist(use.names = FALSE) %>%
+                           .set_na(!!sym(value)))
         )
     }
 
+    # ---- return data ----
     data <- ungroup(data)
 
     if (return_POSIXct)
-        data <- dplyr::mutate_(
-            .data = data,
-            .dots = stats::setNames(
-                list(lazyeval::interp(
-                    ~as.POSIXct(x, origin = '1970-01-01 00:00.00'),
-                    x = as.name(period))),
-                period))
+        data <- data %>%
+        mutate(!!sym(period) := as.POSIXct(!!sym(period),
+                                           origin = '1970-01-01 00:00.00'))
 
     if (return_quitte)
         data <- as.quitte(data)

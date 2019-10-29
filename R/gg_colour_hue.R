@@ -9,7 +9,7 @@
 #' specifications by R graphics functions.
 #'
 #' @examples
-#' gg_color_hue(5)
+#' gg_colour_hue(5)
 #'
 #' @importFrom grDevices hcl
 #'
