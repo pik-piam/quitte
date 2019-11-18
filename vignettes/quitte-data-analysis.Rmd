@@ -42,7 +42,7 @@ the `ggplot2` package and a couple of others.
 As `quitte` builds on the capabilities and practices of the _tidy data_ 
 packages, it is highly recommended to read [this excellent tutorial introducing 
 `dplyr` and `tidyr`
-](https://www.dropbox.com/sh/i8qnluwmuieicxc/AAAgt9tIKoIm7WZKIyK25lh6a). You 
+](https://datacarpentry.org/R-ecology-lesson/03-dplyr.html). You 
 should be comfortable with the concept of piping (`%>%`), as well as the 
 `filter()`, `select()`, `group_by()`, `mutate()`, and `summarise()` functions. 
 Understanding the join functions (especially `inner_join()` and `full_join()` 
