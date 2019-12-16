@@ -23,12 +23,15 @@
 #' \dontrun{
 #' require(dplyr)
 #' require(ggplot2)
-#' expand.grid(x = as.factor(c("left", "center", "right")),
-#'                   stack = as.factor(c("bottom", "middle", "top")),
-#'                   category = letters[1:4]) %>%
-#'     mutate(value = abs(rnorm(n()))) %>%
-#'     ggplot_bar_stacked_dodged(aes(x = x, y = value, fill = stack,
-#'                                   dodge = category)) +
+#'
+#' set.seed(0)
+#' (data <- crossing(x = c('left', 'center', 'right'),
+#'          stack = c('bottom', 'middle', 'top'),
+#'          category = LETTERS[26:23]) %>%
+#'     mutate(value = abs(rnorm(n()))))
+#'
+#' ggplot_bar_stacked_dodged(data, aes(x = x, y = value, fill = stack,
+#'                                     dodge = category)) +
 #'     guides(fill = guide_legend(reverse = TRUE))
 #' }
 #'
@@ -39,15 +42,11 @@
 #' @export
 ggplot_bar_stacked_dodged <- function(data, mapping) {
 
-    # disable until bugs are fixed
-    stop(c('Function does not work as of version 0.3070.01. ',
-           'See bug #2657.'))
-
     # get names from aesthetics mapping
-    category <- deparse(mapping$x)
-    y        <- deparse(mapping$y)
-    fill     <- deparse(mapping$fill)
-    dodge    <- deparse(mapping$dodge)
+    category <- as.character(rlang::get_expr(mapping$x))
+    y        <- as.character(rlang::get_expr(mapping$y))
+    fill     <- as.character(rlang::get_expr(mapping$fill))
+    dodge    <- as.character(rlang::get_expr(mapping$dodge))
 
     # guardians
     if (is.null(category))
@@ -61,30 +60,47 @@ ggplot_bar_stacked_dodged <- function(data, mapping) {
     if (!is.data.frame(data))
         stop("requires data frame")
 
-    # generate temporary data frame in which 'category' and 'dodge' columns are
-    # combined to one column which can be used on the x axis
-    tmp <- data.frame(
-        data %>%
-            select_(.dots = setdiff(colnames(data), c(y, dodge))) %>%
-            # there is no gap after the last category on the x axis
-            filter_(lazyeval::interp(~ val != var, val = as.name(category),
-                           var = as.character(tail(unique(data[[category]]),
-                                                   1)))) %>%
-            distinct(),
-        "gap",
-        0)
+    .levelsorunique <- function(x) {
+        if (is.factor(x)) {
+            return(levels(x))
+        } else if (is.character(x)) {
+            return(unique(x))
+        } else {
+            stop('only character vectors or factors')
+        }
+    }
 
-    # fix column names
-    colnames(tmp)[dim(tmp)[2] - c(1, 0)] <- c(dodge, y)
+    data[category] <- factor(data[[category]],
+                               levels = .levelsorunique(data[[category]]))
+    data[fill] <- factor(data[[fill]], levels = .levelsorunique(data[[fill]]))
+    data[dodge] <- factor(data[[dodge]],
+                          levels = .levelsorunique(data[[dodge]]))
+
+    # generate temporary data frame in which 'x' and 'dodge' columns are
+    # combined into one column which can be used on the x axis
+    tmp <- data %>%
+        select(setdiff(colnames(data), c(y, dodge))) %>%
+        distinct() %>%
+        # drop last entry, as there is no gap after the last bar
+        filter(!!sym(category) != ifelse(is.factor(data[[category]]),
+                                         last(levels(data[[category]])),
+                                         last(data[[category]]))) %>%
+        mutate(!!dodge := 'gap',
+               !!y     := 0)
+
+    # harmonise factor levels, so gaps are in the right place
+    tmp[dodge]  <- factor(tmp[[dodge]],
+                          levels = c(levels(data[[dodge]]), 'gap'))
+    data[dodge] <- factor(data[[dodge]],
+                          levels = c(.levelsorunique(data[[dodge]]), 'gap'))
 
     unite.name <- paste(category, dodge, sep = ".")
 
-    tmp <- rbind(data, tmp) %>%
-        unite_(col    = unite.name,
-               from   = c(category, dodge),
-               sep    = ".",
-               remove = FALSE) %>%
-        arrange_(.dots = c(category, dodge, fill))
+    # add temporary to plot data and arrange correctly
+    tmp <- bind_rows(data, tmp) %>%
+        unite(col = 'x.category', !!category, !!dodge, sep = '.',
+              remove = FALSE) %>%
+        arrange(!!!syms(c(category, dodge, fill)))
 
     unite.col <- which(colnames(tmp) == unite.name)
 
@@ -97,17 +113,12 @@ ggplot_bar_stacked_dodged <- function(data, mapping) {
         from       = (length(unique(getElement(data, dodge))) + 1) / 2,
         by         = length(unique(getElement(data, dodge))) + 1,
         length.out = length(unique(getElement(data, category))))
-    labels.category <- as.character(unique(getElement(data, category)))
 
+    labels.category <- as.character(unique(getElement(data, category)))
 
     ggplot(data = tmp, # pass data along for future use
            mapping = aes_string(x = unite.name, y = y, fill = fill)) +
         # plot positive and negative values individually
-        geom_bar(data = tmp %>% filter_(lazyeval::interp(~ val >= 0,
-                                                         val = as.name(y))),
-                 stat = "identity") +
-        geom_bar(data = tmp %>% filter_(lazyeval::interp(~ val < 0,
-                                                         val = as.name(y))),
-                 stat = "identity") +
+        geom_col() +
         scale_x_continuous(breaks = x.breaks, labels = labels.category)
 }
