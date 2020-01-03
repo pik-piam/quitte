@@ -9,6 +9,14 @@
 #'
 #' @usage remind_timesteps
 #'
+#' @examples
+#' require(tidyverse)
+#'
+#' remind_timesteps %>%
+#'     filter(period %in% c(2055, 2060, 2070)) %>%
+#'     spread(period, weight, fill = 0) %>%
+#'     print(n = Inf)
+#'
 #' @author Michaja Pehl
 
 NULL
