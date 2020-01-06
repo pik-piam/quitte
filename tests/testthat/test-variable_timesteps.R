@@ -358,7 +358,7 @@ test_that(
                     filter(first(scenario) == scenario,
                            last(region) == region,
                            'Consumption' == variable),
-                period = 'period',
+                periods = 'period',
                 gaps = 0) %>%
                 select('period', 'xpos', 'width'),
             expected = data.frame(
@@ -390,6 +390,22 @@ test_that(
                          2112.5, 2130, 2153.5),
                 width = c(4.5, 4.5, 4.5, 4.5, 4.5, 4.5,  4.5,  4.5,  4.5, 4.5,
                           4.5, 7.0, 9.5, 9.5, 9.5, 9.5, 14.5, 19.5, 26.5)))
+
+    # real-world bug, periods not named 'period'
+    expect_equal(
+        object = add_remind_timesteps_columns(
+            data = data.frame(facet = 'specific energy use',
+                              t     = as.integer(2005),
+                              pf    = factor('feso_otherInd'),
+                              value = 0.0293),
+            periods = 't'),
+        expected = add_remind_timesteps_columns(
+            data = data.frame(facet = 'specific energy use',
+                              period     = as.integer(2005),
+                              pf    = factor('feso_otherInd'),
+                              value = 0.0293),
+            periods = 'period') %>%
+            rename(t = period))
     }
 )
 

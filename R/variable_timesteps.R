@@ -137,7 +137,7 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
             ungroup() %>%
             select('period', 'xpos', 'width'),
 
-        setNames(periods, 'period')
+        setNames('period', periods)
     )
 }
 
