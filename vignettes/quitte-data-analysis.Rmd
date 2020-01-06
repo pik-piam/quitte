@@ -50,7 +50,7 @@ will help immensely).
 
 ## Piping
 
-The pipe operator `%>%` is a short cut to string any number of operations 
+The pipe operator `%>%` is a shortcut to string any number of operations 
 together. So instead of writing a long code worm like
 ```{r code worm, eval = FALSE}
 ungroup(mutate(group_by(select(filter(data, 'Reference' == scenario), region, period, value), region), value = cumsum(value)))
@@ -472,7 +472,7 @@ ggplot() +
         mapping = aes(x = period, y = value, fill = variable)) +
     scale_fill_manual(values = colours_PE,
                       name = NULL) +
-    scale_x_continuous(breaks = unique(remind_timesteps$period),
+    scale_x_continuous(breaks = unique(data_plot$period),
                        name = NULL) +
     labs(y = 'EJ/yr')
 ```
@@ -493,7 +493,18 @@ ggplot() +
         mapping = aes(x = xpos, width = width, y = value, fill = variable)) +
     scale_fill_manual(values = colours_PE,
                       name = NULL) +
-    scale_x_continuous(breaks = unique(remind_timesteps$period),
+    scale_x_continuous(breaks = unique(data_plot$period),
                        name = NULL) +
+    labs(y = 'EJ/yr')
+```
+
+This is also available through the utility function `ggplot_bar_remind_vts`:
+```{r using ggplot_bar_remind_vts, warning = FALSE}
+periods <- unique(data_plot$period)
+periods <- periods[which(!periods %% 10)]
+
+ggplot_bar_remind_vts(data_plot) +
+    scale_fill_manual(values = colours_PE, name = NULL) +
+    scale_x_continuous(breaks = periods, name = NULL) +
     labs(y = 'EJ/yr')
 ```
