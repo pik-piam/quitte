@@ -140,6 +140,26 @@ test_that(
     }
 )
 
+# ---- dodge/stack numericals ----
+test_that(
+    desc = 'add_stack_dodge_xpos() numerical columns',
+    code = {
+        expect_equal(
+            object = add_stacked_dodged_xpos(
+                data = crossing(a = c('a', 'b'),
+                                b = c('A', 'B'),
+                                t = c(1, 2)),
+                list(xpos = c('t', 'b'))),
+            expected = add_stacked_dodged_xpos(
+                data = crossing(a = c('a', 'b'),
+                                b = c('A', 'B'),
+                                t = c('1', '2')),
+                list(xpos = c('t', 'b'))) %>%
+                mutate(t = as.numeric(t)))
+    }
+)
+
+
 context('calc_stacked_dodged_xlabels()')
 
 # ---- label positions ----

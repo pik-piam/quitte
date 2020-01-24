@@ -148,14 +148,20 @@ add_stacked_dodged_xpos <- function(data, ..., gap = 1) {
                 ifelse(bar.gap != !!sym(bar), 1, gap) %>%
                 # sum everything up (first bar and shift to position 1 cancel)
                 cumsum()) %>%
-    # remove gap, they were only needed to count out positions
-    filter(!!sym(bar) != bar.gap) %>%
+        # remove gap, they were only needed to count out positions
+        filter(!!sym(bar) != bar.gap) %>%
         droplevels()
 
-    if (!is.factor(data[[group]]))
+    if (!is.factor(data[[group]])) {
         tmp[[group]] <- as.character(tmp[[group]])
-    if (!is.factor(data[[bar]]))
+        if (is.numeric(data[[group]]))
+            tmp[[group]] <- as.numeric(tmp[[group]])
+    }
+    if (!is.factor(data[[bar]])) {
         tmp[[bar]] <- as.character(tmp[[bar]])
+        if (is.numeric(data[[bar]]))
+            tmp[[bar]] <- as.numeric(tmp[[bar]])
+    }
 
     left_join(data, tmp, c(group, bar)) %>%
         return()
