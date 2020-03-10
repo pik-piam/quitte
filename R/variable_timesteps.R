@@ -23,6 +23,8 @@
 #'     \code{x}, \code{y}, and optionally \code{fill}.
 #' @param gaps Gaps between bars as a fraction of the smallest bar width.
 #'     Defaults to 0.1 (e.g. 0.1 * 5 years = 0.5 years).
+#' @param position_fill If \code{TRUE}, stacks bars and standardises each stack
+#'     to have constant height.
 #'
 #' @return \code{add_timesteps_columns()} and
 #'     \code{add_remind_timesteps_columns()} return a data frame.
@@ -174,7 +176,7 @@ add_remind_timesteps_columns <- function(data, periods = 'period', gaps = 0) {
 ggplot_bar_vts <- function(data, timesteps,
                            mapping = aes_string(x = 'period', y = 'value',
                                                 fill = 'variable'),
-                           gaps = 0.1) {
+                           gaps = 0.1, position_fill = FALSE) {
 
     # ---- parse mapping ----
     x    <- as.character(get_expr(mapping$x))
@@ -213,7 +215,8 @@ ggplot_bar_vts <- function(data, timesteps,
         geom_col(data = data %>%
                      add_timesteps_columns(timesteps, x, gaps),
                  mapping = aes_string(x = 'xpos', y = y, width = 'width',
-                                      fill = fill))
+                                      fill = fill),
+                 position = ifelse(position_fill, 'fill', 'stack'))
 }
 
 #' @rdname variable_timesteps
@@ -222,7 +225,7 @@ ggplot_bar_remind_vts <- function(data,
                                   mapping = aes_string(x = 'period',
                                                        y = 'value',
                                                        fill = 'variable'),
-                                  gaps = 0.1) {
+                                  gaps = 0.1, position_fill = FALSE) {
     # ---- call ggplot_bar_vts() ----
-    ggplot_bar_vts(data, quitte::remind_timesteps, mapping, gaps)
+    ggplot_bar_vts(data, quitte::remind_timesteps, mapping, gaps, position_fill)
 }
