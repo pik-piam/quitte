@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' library(dplyr)
-#' data <- data_frame(
+#' data <- tibble(
 #'     country = c('Belgium', 'Narnia', 'Russia', 'Botswana'),
 #'     data    = 1:4)
 #'

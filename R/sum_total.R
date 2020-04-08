@@ -30,7 +30,7 @@
 #'
 #' sum_total(d, lower, name = 'sum over lower', na.rm = FALSE)
 #'
-#' (e <- data_frame(
+#' (e <- tibble(
 #'     item = c('large', 'medium', 'small'),
 #'     specific.value = c(1, 10, 100),
 #'     size = c(1000, 100, 1)))

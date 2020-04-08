@@ -12,7 +12,7 @@
 #' @author Michaja Pehl
 #' @examples
 #' require(dplyr)
-#' str(df <- data_frame(UPPER = LETTERS[3:1], lower = factor(letters[24:26]),
+#' str(df <- tibble(UPPER = LETTERS[3:1], lower = factor(letters[24:26]),
 #'                      value = 1:3))
 #' str(order.levels(df, UPPER = LETTERS[1:3], lower = letters[26:20]))
 #' str(order.levels_(df, list(UPPER = LETTERS[1:3], lower = letters[26:23]),

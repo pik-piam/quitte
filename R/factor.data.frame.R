@@ -11,7 +11,7 @@
 #' @author Michaja Pehl
 #' @examples
 #' require(dplyr)
-#' (df <- data_frame(
+#' (df <- tibble(
 #'     char = letters[1:3],
 #'     fact = factor(LETTERS[24:26], levels = LETTERS[c(1:3, 24:26)]),
 #'     num  = (1:3) ^ 2))

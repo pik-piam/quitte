@@ -19,7 +19,7 @@
 #' @examples
 #' require(dplyr)
 #' require(tidyr)
-#' data <- data_frame(group = rep(c("A", "B"), 10),
+#' data <- tibble(group = rep(c("A", "B"), 10),
 #'                    value = 1:20) %>%
 #'                    arrange(group) %>%
 #'                    group_by(group)
@@ -27,6 +27,8 @@
 #' data %>%
 #'  calc_quantiles() %>%
 #'  spread(quantile, value)
+#'
+#' @importFrom tibble tibble_
 #'
 #' @export
 calc_quantiles <- function(.data,
@@ -69,7 +71,7 @@ calc_quantiles_ <- function(.data,
     names(rename.list) <- value
 
     .data %>%
-        do(data_frame_(
+        do(tibble_(
             list("quantile" = lazyeval::interp(~factor(names(probs),
                                              levels = names(probs))),
                  "value"    = lazyeval::interp(~quantile(getElement(., value),

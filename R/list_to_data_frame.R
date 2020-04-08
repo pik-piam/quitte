@@ -14,6 +14,8 @@
 #' l <- list(Africa = c('Egypt', 'Tanzania'),
 #'           Europe = c('Portugal', 'Ukraine', 'Denmark'))
 #' list_to_data_frame(l, region, country)
+#'
+#' @importFrom tibble tibble_
 
 #' @export
 list_to_data_frame <- function(l, ...) {
@@ -37,10 +39,10 @@ list_to_data_frame <- function(l, ...) {
 #' @export
 #' @rdname list_to_data_frame
 list_to_data_frame_ <- function(l, category = 'category', item = 'item') {
-    d <- data_frame()
+    d <- tibble()
     for (name in names(l))
         d <- bind_rows(d,
-                       data_frame_(
+                       tibble_(
                            stats::setNames(
                                list(~name, ~getElement(l, name)),
                                c(category, item))

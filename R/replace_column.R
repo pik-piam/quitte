@@ -55,7 +55,7 @@
 #'
 #' # also works on quitte objects
 #' require(dplyr)
-#' (quitte <- data_frame(
+#' (quitte <- tibble(
 #'     model    = c('Model1', '2ndModel'),
 #'     scenario = 'Scenario',
 #'     region   = 'Region',

@@ -38,7 +38,7 @@ read.quitte <- function(file,
         stop('\'file\' is empty.')
 
     # read quitte for all supplied files
-    quitte <- data_frame()
+    quitte <- tibble()
     for (f in file) {
         quitte <- bind_rows(
             quitte,

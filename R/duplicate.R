@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' require(dplyr)
-#' (data <- data_frame(region   = rep(c('AFR', 'CHN'), 2),
+#' (data <- tibble(region   = rep(c('AFR', 'CHN'), 2),
 #'                     variable = paste('Var', c(1, 1, 2, 2)),
 #'                     value    = 1:4))
 #'
