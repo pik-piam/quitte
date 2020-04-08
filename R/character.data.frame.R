@@ -20,6 +20,8 @@
 #'
 #' @seealso \code{\link{factor.data.frame}}
 #'
+#' @importFrom tibble as_tibble
+#'
 #' @export
 character.data.frame <- function(df, ...) {
     .dots <- sapply(lazyeval::lazy_dots(...),
@@ -41,7 +43,7 @@ character.data.frame_ <- function(df, .dots) {
         cols <- sapply(df, is.factor)
     }
 
-    df[,cols] <- sapply(df[,cols], as.character)
+    df[,cols] <- as_tibble(lapply(df[,cols], as.character))
 
     return(df)
 }
