@@ -49,8 +49,10 @@ read.quitte <- function(file,
     quitte <- factor.data.frame(quitte)
 
     # check for duplicate entries, ignoring values
-    if (check.duplicates && quitte %>% select_('-value') %>% anyDuplicated())
+    if (check.duplicates && quitte %>% select(-!!sym('value')) %>%
+        anyDuplicated()) {
         warning('Duplicates in resulting quitte')
+    }
 
     # apply quitte "class" attribute
     class(quitte) <- c(class(quitte), 'quitte')
