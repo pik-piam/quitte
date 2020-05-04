@@ -25,7 +25,7 @@ removeColNa <- function(df){
   .fct_default = levels(forcats::fct_explicit_na(factor(NA)))
   
   df = df[colSums(!is.na(df)) > 0]
-  df = df[colSums(df != .fct_default) > 0]
+  df = df[colSums(df != .fct_default, na.rm= TRUE) > 0]
 
 return(df)
 }
