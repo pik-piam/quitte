@@ -37,6 +37,7 @@ character.data.frame <- function(df, ...) {
 #' @export
 #' @rdname character.data.frame
 character.data.frame_ <- function(df, .dots) {
+    df = as_tibble(df)
     if (length(.dots)) {
         cols <- match(.dots, colnames(df))
     } else {
