@@ -26,6 +26,9 @@
 #' @param forceAggregation binary. If \code{TRUE}, (dis)aggregation will be applied
 #'        even though the items contained contained in the data and in the data do not fully match.
 #'        The data is reduced to the items covered both by the mapping and the data.
+#' @param autodetect this parameter takes the values auto, aggregate or disaggregate. If auto (the default)
+#'                   the function tries to auto-detect whether this is an aggregation or a disaggregation.
+#'                   If aggregate, it will aggregate, if disaggregate, it will disaggregate.
 #' @param scaleWeights binary. If \code{TRUE}, weights are scaled so that the sum of the
 #' components equals the value of the larger category.
 #' @param variable Column name of variables. Defaults to \code{"variable"}.
@@ -101,6 +104,7 @@ aggregate_map <- function(data,
                           na.rm = TRUE,
                           weights = NULL,
                           forceAggregation = F,
+                          autodetect = "auto",
                           scaleWeights = T,
                           variable = "variable",
                           value = "value",
@@ -166,6 +170,10 @@ aggregate_map <- function(data,
     if(!(weight_item_col %in% colnames(weights)))    stop("No column '", weight_item_col, "' found in the weights'")
     weight_item_col
   }
+  
+  if (.mapnamesright %in% .bynamesleft) stop("The mapping column name '",.mapnamesright,"' equals the data colum name '",.bynamesleft,"'. Please remove that ambiguity")
+  
+  if (! autodetect %in% c("auto","disaggregate","aggregate")) stop("autodetect must take 'auto', 'disaggregate', 'aggregate")
   #-------- Determine whether there is a "unit" column------------------
 
   if (unit %in% .colnames){
@@ -175,8 +183,14 @@ aggregate_map <- function(data,
   }
 
   #-------- Determine whether this is an aggregation or a disaggregation -------
-
-  aggregation = length(getColValues(mapping,by))  >  length(getColValues(mapping,.mapnamesright))
+  if(autodetect == "auto"){
+    aggregation = length(getColValues(mapping,by))  >  length(getColValues(mapping,.mapnamesright))
+  } else if (autodetect == "aggregate"){
+    aggregation = T
+  } else if (autodetect == "disaggregate"){
+    aggregation = F
+  }
+  
   .nameDetailedColumn = ifelse(aggregation,.bynamesleft,.mapnamesright)
 
 
