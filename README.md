@@ -1,6 +1,8 @@
 # Bits and pieces of code to use with quitte-style data frames
-#### R package **quitte**, version **0.3079.0**
- 
+
+R package **quitte**, version **0.3079.1**
+
+  
 
 ## Purpose and Functionality
 
@@ -29,6 +31,14 @@ Package updates can be installed using `update.packages` (make sure that the add
 update.packages()
 ```
 
+## Tutorial
+
+The package comes with a vignette describing the basic functionality of the package and how to use it. You can load it with the following command (the package needs to be installed):
+
+```r
+vignette(quitte-data-analysis) # REMIND/IAM Data Analysis Using quitte
+```
+
 ## Questions / Problems
 
 In case of questions / problems please contact Michaja Pehl <michaja.pehl@pik-potsdam.de>.
@@ -39,7 +49,7 @@ To cite package **quitte** in publications use:
 
 Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich
 J (2020). _quitte: Bits and pieces of code to use with quitte-style
-data frames_. R package version 0.3079.0, <URL:
+data frames_. R package version 0.3079.1, <URL:
 https://CRAN.R-project.org/package=quitte>.
 
 A BibTeX entry for LaTeX users is
@@ -49,7 +59,7 @@ A BibTeX entry for LaTeX users is
   title = {quitte: Bits and pieces of code to use with quitte-style data frames},
   author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich},
   year = {2020},
-  note = {R package version 0.3079.0},
+  note = {R package version 0.3079.1},
   url = {https://CRAN.R-project.org/package=quitte},
 }
 ```

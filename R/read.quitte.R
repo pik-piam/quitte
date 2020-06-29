@@ -55,7 +55,7 @@ read.quitte <- function(file,
     }
 
     # apply quitte "class" attribute
-    class(quitte) <- c(class(quitte), 'quitte')
+    class(quitte) <- c('quitte', class(quitte))
 
     return(quitte)
 }
@@ -106,7 +106,7 @@ read.quitte <- function(file,
     data <- read.table(file, header = TRUE, sep = sep, quote = quote,
                        na.strings = na.strings, colClasses = colClasses,
                        check.names = FALSE, strip.white = TRUE) %>%
-        tbl_df()
+        as_tibble()
 
     colnames(data) <- tolower(colnames(data))
 
@@ -122,6 +122,6 @@ read.quitte <- function(file,
         data$period <- as.integer(as.character(data$period))
     }
 
-    return(tbl_df(data))
+    return(as_tibble(data))
 }
 

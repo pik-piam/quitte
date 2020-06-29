@@ -303,7 +303,7 @@ test_that(
 test_that(
     desc = 'add_timesteps_columns() calculations',
     code = {
-        # no gaps, centered on period
+        # no gaps, centred on period
         expect_equal(
             object = add_timesteps_columns(
                 data = quitte_example_data %>%
@@ -313,7 +313,8 @@ test_that(
                 timesteps = remind_timesteps,
                 periods = 'period',
                 gaps = 0) %>%
-                select('period', 'xpos', 'width'),
+                select('period', 'xpos', 'width') %>%
+                as.data.frame(),
             expected = data.frame(
                 period = c(2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040,
                            2045, 2050, 2055, 2060, 2070, 2080, 2090, 2100,
@@ -334,7 +335,8 @@ test_that(
                 timesteps = remind_timesteps,
                 periods = 'period',
                 gaps = 0.1) %>%
-                select('period', 'xpos', 'width'),
+                select('period', 'xpos', 'width') %>%
+                as.data.frame(),
             expected = data.frame(
                 period = c(2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040,
                            2045, 2050, 2055, 2060, 2070, 2080, 2090, 2100,
@@ -360,7 +362,8 @@ test_that(
                            'Consumption' == variable),
                 periods = 'period',
                 gaps = 0) %>%
-                select('period', 'xpos', 'width'),
+                select('period', 'xpos', 'width') %>%
+                as.data.frame(),
             expected = data.frame(
                 period = c(2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040,
                            2045, 2050, 2055, 2060, 2070, 2080, 2090, 2100,
@@ -380,7 +383,8 @@ test_that(
                            'Consumption' == variable),
                 periods = 'period',
                 gaps = 0.1) %>%
-                select('period', 'xpos', 'width'),
+                select('period', 'xpos', 'width') %>%
+                as.data.frame(),
             expected = data.frame(
                 period = c(2005, 2010, 2015, 2020, 2025, 2030, 2035, 2040,
                            2045, 2050, 2055, 2060, 2070, 2080, 2090, 2100,

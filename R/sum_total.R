@@ -81,8 +81,10 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
     .groups <- setdiff(.colnames, c(group, value, weight))
 
     .groups.old <- c()
-    for (i in 1:length(groups(data)))
-        .groups.old <- c(.groups.old, deparse(groups(data)[[i]]))
+    if (1 < n_groups(data)) {
+        for (i in 1:n_groups(data))
+            .groups.old <- c(.groups.old, deparse(groups(data)[[i]]))
+    }
 
     if (is.na(weight)) {
         summarise.list <- setNames(
