@@ -25,4 +25,4 @@ NULL
 #     read.quitte()
 #
 # save(quitte_example_data, file = './data/quitte_example_data.rda',
-#      compress = 'xz')
+#      compress = 'xz', version = 2)
