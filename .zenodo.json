@@ -1,6 +1,6 @@
 {
   "title": "quitte: Bits and pieces of code to use with quitte-style data frames",
-  "version": "0.3079.2",
+  "version": "0.3080.0",
   "description": "<p>A collection of functions for easily dealing with\n    quitte-style data frames, doing multi-model comparisons and plots.<\/p>",
   "creators": [
     {

@@ -11,12 +11,14 @@
 #' @param colNames string vector of column names to override dimension names
 #' @param factors return non-numerical columns as factors (default) or character
 #'        vectors
+#' @param squeeze if TRUE, squeeze out any zero or EPS stored in the GDX
+#'        container
 #' @return quitte data frame
 #' @author Michaja Pehl
 #'
 #' @export
 read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
-                     factors = TRUE) {
+                     factors = TRUE, squeeze = TRUE) {
 
     # Check if gdxrrw package is installed
     if (!any(.packages(all.available = TRUE) == "gdxrrw"))
@@ -54,10 +56,10 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
     # read the first (or only) field
     if (read.fields) {
         requestList <- list(name = requestList.name, field = fields[[1]])
-        item <- gdxrrw::rgdx(gdxName, requestList, squeeze = FALSE)
+        item <- gdxrrw::rgdx(gdxName, requestList, squeeze = squeeze)
     } else {
         requestList <- list(name = requestList.name)
-        item <- gdxrrw::rgdx(gdxName, requestList, squeeze = TRUE)
+        item <- gdxrrw::rgdx(gdxName, requestList, squeeze = squeeze)
     }
 
     # if item is a scalar, return a named vector
@@ -90,7 +92,7 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
         for (field in fields[-1]) {
             d <- d + 1
             requestList <- list(name = requestList.name, field = field)
-            item <- gdxrrw::rgdx(gdxName, requestList, squeeze = FALSE)
+            item <- gdxrrw::rgdx(gdxName, requestList, squeeze = squeeze)
             data[[d]] <- c(item$val[,item$dim + 1])
         }
     }
