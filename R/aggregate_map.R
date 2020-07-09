@@ -38,6 +38,7 @@
 #'         if \code{"weigths"} is a data frame
 #' @param weight_item_col name of the item column in the \code{"weigths"} data frame,
 #'         if \code{"weigths"} is a data frame. The item column is the column corresponding to the mapping
+#' @param fun aggregation function to use.  Defaults to \code{sum}.
 #'
 #' @return A data frame.
 #'
@@ -110,7 +111,8 @@ aggregate_map <- function(data,
                           value = "value",
                           unit = "unit",
                           weight_val_col = "weight_val_col",
-                          weight_item_col = NULL ){
+                          weight_item_col = NULL,
+                          fun = sum){
 
 
   .colnames = colnames(data)
@@ -170,9 +172,9 @@ aggregate_map <- function(data,
     if(!(weight_item_col %in% colnames(weights)))    stop("No column '", weight_item_col, "' found in the weights'")
     weight_item_col
   }
-  
+
   if (.mapnamesright %in% .bynamesleft) stop("The mapping column name '",.mapnamesright,"' equals the data colum name '",.bynamesleft,"'. Please remove that ambiguity")
-  
+
   if (! autodetect %in% c("auto","disaggregate","aggregate")) stop("autodetect must take 'auto', 'disaggregate', 'aggregate")
   #-------- Determine whether there is a "unit" column------------------
 
@@ -190,7 +192,7 @@ aggregate_map <- function(data,
   } else if (autodetect == "disaggregate"){
     aggregation = F
   }
-  
+
   .nameDetailedColumn = ifelse(aggregation,.bynamesleft,.mapnamesright)
 
 
@@ -231,7 +233,7 @@ aggregate_map <- function(data,
 
       warning(message_mismatch)
       inter_data_map = intersect(items_map, items_data)
-     
+
       .data = .data %>%  filter_(.dots = lazyeval::interp(~.bynamesleft %in% inter_data_map,
                                                           .bynamesleft = as.name(.bynamesleft),
                                                           inter_data_map = inter_data_map))
@@ -308,7 +310,7 @@ aggregate_map <- function(data,
 
     .data = .data %>%
     group_by_(.dots = .colGroups) %>%
-    summarise_( .dots = setNames( list(lazyeval::interp(~sum(value, na.rm = na.rm),
+    summarise_( .dots = setNames( list(lazyeval::interp(~fun(value, na.rm = na.rm),
                                            value = as.name(value),
                                            na.rm = na.rm))
                           ,value)) %>%
