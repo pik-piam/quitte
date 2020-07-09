@@ -16,6 +16,8 @@
 #' @return quitte data frame
 #' @author Michaja Pehl
 #'
+#' @importFrom tibble as_tibble
+#'
 #' @export
 read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
                      factors = TRUE, squeeze = TRUE) {
@@ -113,7 +115,7 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
         names(data) <- colNames
     }
 
-    data <- tbl_df(data.frame(data))
+    data <- as_tibble(data.frame(data))
 
     if (!factors) {
         data <- data %>%

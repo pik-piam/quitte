@@ -18,7 +18,8 @@
 #' @keywords classes
 #' @importFrom reshape2 melt
 #' @importFrom forcats fct_explicit_na
-
+#' @importFrom tibble as_tibble
+#'
 #' @export
 as.quitte <- function(x, periodClass = 'integer', addNA=FALSE, na.rm=FALSE) {
     UseMethod('as.quitte', x)
@@ -217,7 +218,7 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE,
       x <- qaddNA(x)
     if (na.rm)
       x <- x[!is.na(x$value), ]
-    x <- tbl_df(x)
+    x <- as_tibble(x)
 
     class(x) <- c('quitte', class(x))
 

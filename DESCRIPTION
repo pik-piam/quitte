@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: quitte
 Type: Package
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3080.0
+Version: 0.3081.0
 Date: 2020-07-08
 Authors@R: c(person("Michaja", "Pehl", role = c("aut", "cre"),
 		            email = "pehl@pik-potsdam.de"),
@@ -48,5 +48,5 @@ Suggests: gdxrrw,
     testthat
 Repository: CRAN
 RoxygenNote: 7.1.1
-ValidationKey: 568290800
+ValidationKey: 568475310
 VignetteBuilder: knitr
