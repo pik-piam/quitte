@@ -21,6 +21,7 @@
 #'
 #' @import dplyr
 #' @import utils
+#' @importFrom tibble as_tibble
 #'
 #' @export
 inline.data.frame <- function(..., sep = ";", quote = "") {
@@ -47,5 +48,5 @@ inline.data.frame <- function(..., sep = ";", quote = "") {
         read.table(header = TRUE, sep = sep, quote = quote, comment.char = "",
                    strip.white = TRUE, stringsAsFactors = FALSE,
                    check.names = FALSE) %>%
-        tbl_df()
+        as_tibble()
 }
