@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: quitte
 Type: Package
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3083.0
-Date: 2020-07-13
+Version: 0.3083.1
+Date: 2020-07-15
 Authors@R: c(person("Michaja", "Pehl", role = c("aut", "cre"),
 		            email = "pehl@pik-potsdam.de"),
 		     person("Nico", "Bauer", role = "aut",
@@ -40,6 +40,7 @@ Imports:
     tidyr, 
     tidyselect,
     tidyverse, 
+    stringr,
     zoo 
 LazyData: TRUE
 Suggests: gdxrrw,
@@ -50,5 +51,5 @@ Suggests: gdxrrw,
     testthat
 Repository: CRAN
 RoxygenNote: 7.1.1
-ValidationKey: 568998480
+ValidationKey: 569078598
 VignetteBuilder: knitr

@@ -16,6 +16,7 @@
 #' @importFrom tidyr spread unite
 #' @importFrom tidyselect everything matches
 #' @importFrom readr write_lines
+#' @importFrom stringr str_to_title
 #'
 #' @export
 write.mif <- function(x, path) {
@@ -29,10 +30,10 @@ write.mif <- function(x, path) {
 
     # make column names upper-case
     x <- x %>%
-        rename_with(.fn = toupper, .cols = matches('^[A-Za-z]+$')) %>%
-        select('MODEL', 'SCENARIO', 'REGION', 'VARIABLE', 'UNIT', 'PERIOD',
-               'VALUE') %>%
-        spread(!!sym('PERIOD'), !!sym('VALUE'))
+        rename_with(.fn = str_to_title, .cols = matches('^[A-Za-z]+$')) %>%
+        select('Model', 'Scenario', 'Region', 'Variable', 'Unit', 'Period',
+               'Value') %>%
+        spread(6, 7)
 
     paste(c(colnames(x), ''), collapse = ';') %>%
         write_lines(path, append = FALSE)
