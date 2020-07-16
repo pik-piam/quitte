@@ -112,7 +112,7 @@ read.quitte <- function(file,
 
     # convert to long format
     data <- data %>%
-        gather_("period", "value", periods)
+        pivot_longer(periods, names_to = 'period')
 
     # convert periods
     if (convert.periods) {

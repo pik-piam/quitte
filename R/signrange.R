@@ -26,7 +26,7 @@ signrange <- function(x, na.rm = TRUE) {
 
     x %>%
         range(na.rm = na.rm) %>%
-        sign() %>%
+        sign(x = .) %>%
         unique() %>%
         rev() %>%
         as.character() %>%

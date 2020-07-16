@@ -86,48 +86,40 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
             .groups.old <- c(.groups.old, deparse(groups(data)[[i]]))
     }
 
+    # do not create duplicates
+    data <- data %>%
+        filter(!!sym(group) != name)
+
+    sum_data <- data %>%
+        group_by(.dots = .groups, .add = TRUE)
+
     if (is.na(weight)) {
-        summarise.list <- setNames(
-            list(lazyeval::interp(~sum(value, na.rm = na.rm),
-                                  value = as.name(value))),
-            value)
+        sum_data <- sum_data %>%
+            summarise(!!sym(value) := sum(!!sym(value), na.rm = na.rm))
     } else {
-        summarise.list <- setNames(
-            list(
-                lazyeval::interp(
-                    `_obj` = ~( sum(value * weight, na.rm = na.rm)
-                              / sum(weight, na.rm = na.rm)),
-                    value  = as.name(value),
-                    weight = as.name(weight)),
-                lazyeval::interp(
-                    `_obj` = ~sum(weight, na.rm = na.rm),
-                    weight = as.name(weight))),
-            c(value, weight))
+        sum_data <- sum_data %>%
+            summarise(!!sym(value) := sum(!!sym(value) * !!sym(weight),
+                                          na.rm = na.rm)
+                                    / sum(!!sym(weight), na.rm = na.rm),
+                      !!sym(weight) := sum(!!sym(weight), na.rm = na.rm))
     }
 
-    mutate.list <- setNames(
-        list(lazyeval::interp(~name, name = as.character(name))),
-        group)
-
-    data <- data %>%
-        filter_(lazyeval::interp(~group != name, group = as.name(group),
-                                 name = name))
+    sum_data <- sum_data %>%
+        ungroup() %>%
+        mutate(!!sym(group) := name) %>%
+        select(!!!syms(.colnames))
 
     .data <- rbind(
         data %>%
             ungroup(),
-        data %>%
-            group_by_(.dots = .groups, add = TRUE) %>%
-            summarise_(.dots = summarise.list) %>%
-            mutate_(.dots = mutate.list) %>%
-            select_(.dots = .colnames) %>%
-            ungroup()
+
+        sum_data
     ) %>%
-        arrange_(.dots = c(.groups, group))
+        arrange(!!!syms(c(.groups, group)))
 
     if (length(groups(data)) > 0)
         .data <- .data %>%
-        group_by_(.groups.old)
+        group_by(.dots = .groups.old)
 
     return(.data)
 }

@@ -92,15 +92,14 @@ replace_column_ <- function(data, mask, old_column, match_column, new_column,
     value <- suppressWarnings(
         left_join(data, mask, stats::setNames(match_column, old_column))
     ) %>%
-        select_(.dots = c(setdiff(colnames(data), old_column), new_column)) %>%
-        rename_(.dots = stats::setNames(new_column, old_column)) %>%
-        select_(.dots = colnames(data)) %>% # restore original order
+        select(!!!syms(c(setdiff(colnames(data), old_column), new_column))) %>%
+        rename(!!sym(old_column) := !!sym(new_column)) %>%
+        select(!!!syms(colnames(data))) %>% # restore original order
         droplevels()
 
     if (drop.extra)
         value <- value %>%
-            filter_(.dots = lazyeval::interp(~ !is.na(x),
-                                             x = as.name(old_column)))
+            filter(!is.na(!!sym(old_column)))
 
     if (is.quitte(data))
         value <- as.quitte(value)

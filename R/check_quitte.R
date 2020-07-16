@@ -144,75 +144,71 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
     }
 
     quitte <- quitte %>%
-        mutate_(.dots = list(
-            region   = lazyeval::interp(~as.character(region)),
-            variable = lazyeval::interp(~as.character(variable))))
+        mutate(!!sym('region') := as.character(!!sym('region')),
+               !!sym('variable') := as.character(!!sym('variable')))
 
     variable.error <- inner_join(
         quitte %>%
-            filter_(lazyeval::interp(~region %in% all_regions),
-                    lazyeval::interp(~variable %in% names(check_variables))),
+            filter(!!sym('region') %in% all_regions,
+                   !!sym('variable') %in% names(check_variables)),
 
         inner_join(
             quitte %>%
-                filter_(lazyeval::interp(~region %in% all_regions)),
+                filter(!!sym('region') %in% all_regions),
 
             suppressWarnings(
                 check_variables %>%
                     as.data.frame(optional = TRUE) %>%
-                    gather_("name", "item",
-                            check_variables %>%
-                                as.data.frame(optional = TRUE) %>%
-                                colnames())
+                    pivot_longer(check_variables %>%
+                                     as.data.frame(optional = TRUE) %>%
+                                     colnames(),
+                                 names_to = 'name', values_to = 'item')
             ) %>%
                 distinct(),
 
             by = c("variable" = "item")
         ) %>%
-            group_by_("model", "scenario", "region", "period", "name") %>%
-            summarise_(
-                .dots = list(sum.value = lazyeval::interp(~sum(value)))) %>%
+            group_by(!!!syms(c("model", "scenario", "region", "period",
+                               "name"))) %>%
+            summarise(!!sym('sum.value') := sum(!!sym('value'))) %>%
             ungroup(),
 
         by = c("model", "scenario", "region", "period", "variable" = "name")
     ) %>%
-        filter_(lazyeval::interp(~sum.value != value))
+        filter(!!sym('sum.value') != !!sym('value'))
 
     if (is.null(check_regions)) {
         region.error <- NULL
     } else {
         region.error <- inner_join(
             quitte %>%
-                filter_(lazyeval::interp(~variable %in%
-                                             .getAllNames(check_variables)),
-                        lazyeval::interp(~region %in% names(check_regions))),
+                filter(!!sym('variable') %in% .getAllNames(check_variables),
+                       !!sym('region') %in% names(check_regions)),
 
             inner_join(
                 quitte %>%
-                    filter_(
-                        lazyeval::interp(~variable %in%
-                                             .getAllNames(check_variables))),
+                    filter(!!sym('variable') %in% .getAllNames(check_variables)),
 
                 suppressWarnings(
                     check_regions %>%
                         as.data.frame(optional = TRUE) %>%
-                        gather_("name", "item",
-                                check_regions %>%
-                                    as.data.frame(optional = TRUE) %>%
-                                    colnames())
+                        pivot_longer(check_regions %>%
+                                         as.data.frame(optional = TRUE) %>%
+                                         colnames(),
+                                     names_to = 'name', values_to = 'item')
                 ) %>%
                     distinct(),
 
                 by = c("region" = "item")
             ) %>%
-                group_by_("model", "scenario", "variable", "period", "name") %>%
-                summarise_(
-                    .dots = list(sum.value = lazyeval::interp(~sum(value)))) %>%
+                group_by(!!!syms(c("model", "scenario", "variable", "period",
+                                   "name"))) %>%
+                summarise(!!sym('sum.value') := sum(!!sym('value'))) %>%
                 ungroup(),
 
             by = c("model", "scenario", "region" = "name", "variable", "period")
         ) %>%
-            filter_(lazyeval::interp(~sum.value != value))
+            filter(!!sym('sum.value') != !!sym('value'))
     }
 
     rbind(variable.error, region.error) %>%

@@ -59,7 +59,7 @@ calcCumulatedDiscount = function(data,
   #group for all other columns:
   col_grp = names(data)[!(names(data) %in% c('varToAggregate','disRate','period','year'))]
   #calculate discount factor from discount rate:
-  erg = data  %>% group_by_(.dots=col_grp)   %>% mutate_(
+  erg = data  %>% group_by(!!!syms(col_grp))   %>% mutate_(
       discFactor = ~cumprod((1 + disRate)^(- (year - lag(year,default=first(year),order_by=year)))),
       w = ~(year - first(year)) , # just for diagnostics
       discFactor2 = ~(1 + disRate)^(- (year - first(year)))    ## just for diagnostics this equals discFactor for time-indep disRate
@@ -67,7 +67,7 @@ calcCumulatedDiscount = function(data,
 
   #AJS question: how can I keep a column in the dataframe without grouping it?
   #this calculated annually compounded weight factors according to Elmar's method
-  erg = erg  %>% group_by_(.dots=col_grp)   %>% mutate_(
+  erg = erg  %>% group_by(!!!syms(col_grp))   %>% mutate_(
     weight1 = ~mapply( function(dt,dr) (sum( (1+dr)^(- seq(as.double(0.5),as.double(dt-0.5)) ) * (1 - seq(as.double(0.5),as.double(dt-0.5))/dt)  )),   # Why no use (1:dt) instead??
                       ( year - lag(year,default=first(year),order_by=year)),  # first element in year here doesnt matter anyways, will be thrown out later on..
                       disRate
@@ -85,13 +85,14 @@ calcCumulatedDiscount = function(data,
   #yrs = yrs[yrs != min(yrs)]  ## all time steps but the first one.
   #calculate the whole discounted time series: FIXME how to do this more elegantly?
   erg_allT = do.call(rbind,lapply(yrs,function(p){
-    tmp = erg  %>% filter_(~year <= p) %>%
-      group_by_(.dots=col_grp)  %>%
-       summarize_( discountedAggregate =
-                 ~sum(
-                   ( varToAggregate * discFactor * weight2  + lag(varToAggregate,order_by=year) * lag(discFactor,order_by=year) * weight1 )[-1]
-                 )
-        ) %>% ungroup()
+    tmp <- erg %>%
+      filter(!!sym('year') <= p) %>%
+      group_by(!!!syms(col_grp))  %>%
+      summarize_( discountedAggregate =
+                ~sum(
+                  ( varToAggregate * discFactor * weight2  + lag(varToAggregate,order_by=year) * lag(discFactor,order_by=year) * weight1 )[-1]
+                  )
+      ) %>% ungroup()
     tmp$period = p
     tmp
   }))
@@ -103,7 +104,7 @@ calcCumulatedDiscount = function(data,
   #shift resulting time series by the value in the year fixYear
   if(fixYear != 'none'){
 #     if(! 'POSIXct' %in% class(fixYear)) fixYear = ISOYear(fixYear)
-    erg_allT = erg_allT %>% group_by_(.dots=col_grp) %>% mutate_(value = ~value - value[period == fixYear])
+    erg_allT = erg_allT %>% group_by(!!!syms(col_grp)) %>% mutate_(value = ~value - value[period == fixYear])
   }
 
   return(as.quitte(as.data.frame(erg_allT)))

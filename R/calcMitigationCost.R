@@ -51,7 +51,12 @@ calcMitigationCost = function(data,scenBau,scenPol,
                                          discount=discount))
   #calculate mitigaton costs
   res = tmp %>%
-   filter_(~period == yearTo) %>% group_by_(~model,~region) %>% arrange_(~scenario == scenPol) %>% summarize_(value = ~100* (value[1] - value[2])/value[1]) %>% ungroup()
+   filter(!!sym('period') == yearTo) %>%
+    group_by(!!sym('model'), !!sym('region')) %>%
+    arrange(!!sym('scenario') == scenPol) %>%
+    summarise(
+      !!sym('value') := 100 * (1 - !!sym('value')[2] / !!sym('value')[1])) %>%
+    ungroup()
   res$scenario = scenPol
   res$variable = 'Mitigation cost'
   res$unit = 'pp'

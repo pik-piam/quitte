@@ -137,11 +137,9 @@ aggregate_map <- function(data,
 
     res = weight_data %>%
       left_join(mapping_df, by = .by) %>%
-      group_by_(.dots = .cols) %>%
-      mutate_(.dots = setNames(list(lazyeval::interp(~value_col/sum(value_col, na.rm = na.rm_val),
-                                       value_col = as.name(value_col),
-                                       na.rm_val = na.rm_val)),
-                               value_col)) %>%
+      group_by(!!!syms(.cols)) %>%
+      mutate(!!sym(value_col) := !!sym(value_col)
+                               / sum(!!sym(value_col), na.rm = na.rm_val)) %>%
       ungroup()
 
       res[.mapCoarseCol] = NULL
@@ -201,9 +199,7 @@ aggregate_map <- function(data,
   #Ajouter weights si c'est character.
   if (!is.null(subset2agg)){
     .data <- data %>%
-    filter_(.dots = lazyeval::interp(~variable %in% subset2agg,
-                                     variable = as.name(variable),
-                                     subset2agg = subset2agg))
+    filter(!!sym(variable) %in% subset2agg)
   } else{
     .data <- data
   }
@@ -234,9 +230,7 @@ aggregate_map <- function(data,
       warning(message_mismatch)
       inter_data_map = intersect(items_map, items_data)
 
-      .data = .data %>%  filter_(.dots = lazyeval::interp(~.bynamesleft %in% inter_data_map,
-                                                          .bynamesleft = as.name(.bynamesleft),
-                                                          inter_data_map = inter_data_map))
+      .data = .data %>%  filter(!!sym(.bynamesleft) %in% inter_data_map)
     }
 
   }
@@ -253,14 +247,12 @@ aggregate_map <- function(data,
 
       #considers the character vector points to a variable in the data frame
       .weights_df <- data %>%
-        filter_(.dots = lazyeval::interp(~variable %in% weights,
-                                         variable = as.name(variable),
-                                         weights = weights))
+        filter(!!sym(variable) %in% weights)
       names(.weights_df)[names(.weights_df) == value] = weight_val_col
 
-      .weights_df = .weights_df %>% select_(.dots = lazyeval::interp(~-variable, variable = as.name(variable)))
+      .weights_df = .weights_df %>% select(-!!sym(variable))
 
-      if (UnitInData) .weights_df = .weights_df %>% select_(.dots = lazyeval::interp(~-unit, unit = as.name(unit)))
+      if (UnitInData) .weights_df = .weights_df %>% select(-!!sym(unit))
 
       if (scaleWeights) .weights_df <- scale_weights(.weights_df,mapping,.nameDetailedColumn, by,weight_val_col,na.rm)
 
@@ -297,10 +289,8 @@ aggregate_map <- function(data,
 
   .data = .data %>% left_join(mapping, by = by) %>%
     left_join(.weights_df, by = .colGroups_weight )   %>%  #.nameDetailedColumn
-    mutate_(.dots = setNames( list(lazyeval::interp(~value * weight_val_col,
-                                               value = as.name(value),
-                                               weight_val_col = as.name(weight_val_col)))
-                              ,value))
+    mutate(!!sym(value) := !!sym(value) * !!sym(weight_val_col))
+
   .data[weight_val_col] = NULL
   #---- For aggregations, sum over the more detailed column
   #---- For disaggregations, delete the less detailed column and rename the more detailed one.
@@ -309,11 +299,8 @@ aggregate_map <- function(data,
     .colGroups = setdiff(colnames(.data), c(.bynamesleft,value,weight_val_col))
 
     .data = .data %>%
-    group_by_(.dots = .colGroups) %>%
-    summarise_( .dots = setNames( list(lazyeval::interp(~fun(value, na.rm = na.rm),
-                                           value = as.name(value),
-                                           na.rm = na.rm))
-                          ,value)) %>%
+    group_by(!!!syms(.colGroups)) %>%
+    summarise(!!sym(value) := fun(!!sym(value), na.rm = na.rm)) %>%
     ungroup()
 
     } else {

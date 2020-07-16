@@ -14,10 +14,10 @@
 quitte2quantiles <- function (x,probs=c(q0=0,q25=0.25,q50=0.5,q75=0.75,q100=1),
                               grouping=c("region","variable","period","scenario")  ){
    x %>%
-        group_by_(.dots = grouping) %>%
+        group_by(!!!syms(grouping)) %>%
         calc_quantiles(probs = probs ) %>%
         ungroup() %>%
-        spread_(key_col="quantile",value_col="value") ->
+        pivot_wider(names_from = 'quantile', values_from = 'value') ->
         x
     return(x)
 }

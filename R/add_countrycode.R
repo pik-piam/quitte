@@ -19,6 +19,8 @@
 #'
 #' @author Michaja Pehl
 #'
+#' @importFrom countrycode countrycode
+#'
 #' @examples
 #' library(dplyr)
 #' data <- tibble(
@@ -60,19 +62,16 @@ add_countrycode_ <- function(data, origin, destination, warn = TRUE,
                                  names(destination))
 
     data <- data %>%
-        mutate_(.dots = stats::setNames(list(
-            lazyeval::interp(
-                ~countrycode::countrycode(sourcevar, origin, destination, warn),
-                sourcevar   = as.name(source.column),
-                origion     = source.type,
+        mutate(
+            !!sym(destination.column) := countrycode(
+                sourcevar   = !!sym(source.column),
+                origin      = source.type,
                 destination = destination.type,
-                warn        = warn)),
-            destination.column))
+                warn = warn))
 
     if (na.rm) {
         data <- data %>%
-            filter_(.dots = lazyeval::interp(~!is.na(x),
-                                             x = as.name(destination.column)))
+            filter(!is.na(!!sym(destination.column)))
     }
 
     return(data)

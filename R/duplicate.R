@@ -38,13 +38,11 @@ duplicate_ <- function(data, column) {
     if (!names(column[1]) %in% colnames(data))
         stop('No column \'', names(column[1]), '\' found in data.')
 
-    column[[1]] <- lazyeval::interp(~column_value,
-                                    column_value = column[[1]])
     overwrite(
         data,
 
         data %>%
-            mutate_(.dots = column[1]),
+            mutate(!!sym(names(column[1])) := column[[1]]),
 
         except = NA
     )

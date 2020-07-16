@@ -71,12 +71,12 @@ calc_quantiles_ <- function(.data,
     names(rename.list) <- value
 
     .data %>%
-        do(tibble_(
-            list("quantile" = lazyeval::interp(~factor(names(probs),
-                                             levels = names(probs))),
-                 "value"    = lazyeval::interp(~quantile(getElement(., value),
-                                               probs, na.rm, names = FALSE,
-                                               type))))
-        ) %>%
-        rename_(.dots = rename.list)
+        summarise(
+            across(!!sym(value),
+                   list(quantile = ~factor(names(probs), levels = names(probs)),
+                        value = ~quantile(x = !!sym(value), probs = probs,
+                                          na.rm = na.rm, names = FALSE,
+                                          type = type)),
+                   .names = '{fn}')) %>%
+        rename(!!sym(value) := !!sym('value'))
 }

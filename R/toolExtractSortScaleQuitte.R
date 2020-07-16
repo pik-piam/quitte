@@ -24,11 +24,15 @@ toolExtractSortScaleQuitte <- function(x,scen,vars,
                                        prd=getPeriods(x)) {
 
   x <- x %>%
-    filter_(~region %in% regi,~variable %in% vars,~scenario %in% scen,~period %in% prd) %>%
-    mutate_(variable=~factor(x=variable,levels=vars,ordered=TRUE) ) %>%
-    mutate_(value=~value * var.scaling ) %>%
-    factor.data.frame
-  
+    filter(!!sym('region') %in% regi,
+           !!sym('variable') %in% vars,
+           !!sym('scenario') %in% scen,
+           !!sym('period') %in% prd) %>%
+    mutate(!!sym('variable') := factor(x = !!sym('variable'),
+                                       levels = vars, ordered=TRUE),
+           !!sym('value') := !!sym('value') * var.scaling) %>%
+    factor.data.frame()
+
 
   x$variable <- factor(x$variable,levels=vars,ordered=TRUE)
 
