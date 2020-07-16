@@ -40,7 +40,7 @@
 #'              \code{NA}.
 #' @param completeMissing If \code{TRUE}, implictly missing data, i.e. missing combinations
 #'        of data, are replaced with 0. Alternatively, you can provide a character vector
-#'        with the names of the columns to be expanded. Can interfere with na.rm.              
+#'        with the names of the columns to be expanded. Can interfere with na.rm.
 #' @param only.new If \code{FALSE} (the default), add new variables to existing
 #'                 ones. If \code{TRUE}, return only new variables.
 #' @param variable Column name of variables. Defaults to \code{"variable"}.
@@ -77,24 +77,24 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE, completeMissin
                              only.new = FALSE, variable = variable, unit = NA,
                              value = value) {
 
-    .dots    <- list(...)
+  .dots    <- list(...)
 
-    if (!all(is.na(units))) {
-        if (length(units) == length(.dots)) {
-            for (i in 1:length(.dots))
-                .dots[i][[1]] <- c(.dots[i][[1]], units[i])
-        } else if (1 == length(units)) {
-            for (i in 1:length(.dots))
-                .dots[i][[1]] <- c(.dots[i][[1]], units)
-        } else
-            stop("units must be of the same length as ... or of length one.")
-    }
+  if (!all(is.na(units))) {
+    if (length(units) == length(.dots)) {
+      for (i in 1:length(.dots))
+        .dots[i][[1]] <- c(.dots[i][[1]], units[i])
+    } else if (1 == length(units)) {
+      for (i in 1:length(.dots))
+        .dots[i][[1]] <- c(.dots[i][[1]], units)
+    } else
+      stop("units must be of the same length as ... or of length one.")
+  }
 
-    variable <- deparse(substitute(variable))
-    unit     <- ifelse(is.na(NA), NA, deparse(substitute(unit)))
-    value    <- deparse(substitute(value))
+  variable <- deparse(substitute(variable))
+  unit     <- ifelse(is.na(NA), NA, deparse(substitute(unit)))
+  value    <- deparse(substitute(value))
 
-    calc_addVariable_(data, .dots, na.rm,completeMissing, only.new, variable, unit, value)
+  calc_addVariable_(data, .dots, na.rm,completeMissing, only.new, variable, unit, value)
 }
 
 #' @export
@@ -103,131 +103,123 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE, completeMissing = FALSE
                               variable = "variable", unit = NA,
                               value = "value") {
 
-    # guardians
-    if (!is.data.frame(data))
-        stop("Only works with data frames")
+  # guardians
+  if (!is.data.frame(data))
+    stop("Only works with data frames")
 
-    if (!is.list(.dots))
-        stop("'.dots' must be a list of formula strings")
+  if (!is.list(.dots))
+    stop("'.dots' must be a list of formula strings")
 
-    .colnames <- colnames(data)
+  .colnames <- colnames(data)
 
-    if (!variable %in% .colnames)
-        stop("No column '", variable, "' found'")
+  if (!variable %in% .colnames)
+    stop("No column '", variable, "' found'")
 
-    if (!value %in% .colnames)
-        stop("No column '", value, "' found'")
+  if (!value %in% .colnames)
+    stop("No column '", value, "' found'")
 
-    if (is.na(unit)) {
-        if ("unit" %in% .colnames)
-            unit <- "unit"
-    } else {
-        if (!unit %in% .colnames)
-            stop("No column '", unit, "' found.")
-    }
-
-      
-    .units <- lapply(.dots, function(l) { l[2] }) %>%
-        unlist()
-
-    .dots <- lapply(.dots,
-                    function(l) {
-                        paste0("~", l[[1]]) %>%
-                            stats::formula() %>%
-                            lazyeval::interp()
-                    })
-    names(.dots) <- gsub("`", "", names(.dots))
-
-    .dots.names <- lapply(.dots, all.vars) %>%
-        unlist() %>%
-        unique() %>%
-        setdiff(names(.dots))
-
-    # filter for variables used on rhs
-    .data <- data %>%
-        filter_(.dots = lazyeval::interp(~variable %in% .dots.names,
-                               variable = as.name(variable),
-                               .dots.names = .dots.names))
+  if (is.na(unit)) {
+    if ("unit" %in% .colnames)
+      unit <- "unit"
+  } else {
+    if (!unit %in% .colnames)
+      stop("No column '", unit, "' found.")
+  }
 
 
-    # drop unit column, if necessary
-    if (!is.na(unit)) {
-        variables.units <- .data %>%
-            select_(variable, unit) %>%
-            distinct() %>%
-            filter_(.dots = lazyeval::interp(~variable %in% .dots.names,
-                                   variable = as.name(variable),
-                                   .dots.names = .dots.names))
+  .units <- lapply(.dots, function(l) { l[2] }) %>%
+    unlist()
 
-        .data <- .data %>%
-            select_(.dots = lazyeval::interp(~-unit, unit = as.name(unit)))
-    }
+  .dots <- lapply(.dots,
+                  function(l) {
+                    paste0("~", l[[1]]) %>%
+                      stats::formula() %>%
+                      lazyeval::interp()
+                  })
+  names(.dots) <- gsub("`", "", names(.dots))
 
-    # Fill missing data
-    if(is.logical(completeMissing)){
-      if(completeMissing){
-        completeMissing_test = TRUE
-            .expand_cols = setdiff(colnames(removeColNa(.data)), value)
-      } else {
-        completeMissing_test = FALSE
-      }} else{
-        completeMissing_test = TRUE
-        .expand_cols = completeMissing
-      }
-      
-      if (completeMissing_test){
-      .fill_list = list(0)
-      names(.fill_list) = value
-      
-      #quickfix: complete takes the levels instead of the values present in the DF
-      .data = factor.data.frame(.data)
-      .data = .data %>% complete_(cols = .expand_cols,
-                                  fill = .fill_list)
-    }
-    # calculation
+  .dots.names <- lapply(.dots, all.vars) %>%
+    unlist() %>%
+    unique() %>%
+    setdiff(names(.dots))
+
+  # filter for variables used on rhs
+  .data <- data %>%
+    filter(!!sym(variable) %in% .dots.names)
+
+
+  # drop unit column, if necessary
+  if (!is.na(unit)) {
+    variables.units <- .data %>%
+      distinct(!!sym(variable), !!sym(unit)) %>%
+      filter(!!sym(variable) %in% .dots.names)
+
     .data <- .data %>%
-        spread_(variable, value) %>%
-        mutate_(.dots = .dots) %>%
-        gather_(variable, value, unique(c(.dots.names, names(.dots))))
+      select(-!!sym(unit))
+  }
 
-    # filter new variables
-    if (only.new) {
-        .data <- .data %>%
-            filter_(.dots = lazyeval::interp(~variable %in% names(.dots),
-                                   variable = as.name(variable)))
+  # Fill missing data
+  if(is.logical(completeMissing)){
+    if(completeMissing){
+      completeMissing_test = TRUE
+      .expand_cols = setdiff(colnames(removeColNa(.data)), value)
+    } else {
+      completeMissing_test = FALSE
+    }} else{
+      completeMissing_test = TRUE
+      .expand_cols = completeMissing
     }
 
-    # filter NAs
-    if (na.rm) {
-        .data <- .data %>%
-            filter_(.dots = lazyeval::interp(~!is.na(value),
-                                             value = as.name(value)))
-    }
+  if (completeMissing_test){
+    .fill_list = list(0)
+    names(.fill_list) = value
 
-    # restore unit column, if necessary
-    if (!is.na(unit)) {
+    #quickfix: complete takes the levels instead of the values present in the DF
+    .data = factor.data.frame(.data)
+    .data = .data %>% complete(!!sym('cols') := .expand_cols,
+                               !!sym('fill') := .fill_list)
+  }
+  # calculation
+  .data <- .data %>%
+    pivot_wider(names_from = !!sym(variable), values_from = !!sym(value)) %>%
+    mutate_(.dots = .dots) %>%
+    pivot_longer(unique(c(.dots.names, names(.dots))),
+                 names_to = variable, values_to = value)
 
-        .units <- data.frame(variable = gsub("`", "", names(.units)),
-                             unit = as.character(.units))
-        colnames(.units) <- c(variable, unit)
+  # filter new variables
+  if (only.new) {
+    .data <- .data %>%
+      filter(!!sym(variable) %in% names(.dots))
+  }
 
-        .data <- inner_join(
-            .data,
-            rbind(variables.units, .units),
-            by = variable
-        )
-    }
+  # filter NAs
+  if (na.rm) {
+    .data <- .data %>%
+      filter(!is.na(!!sym(value)))
+  }
 
-    # add unaffected variables
-    if (!only.new) {
-        .data <- rbind(
-            data %>%
-                filter_(.dots = lazyeval::interp(~!variable %in% .dots.names,
-                                       variable = as.name(variable),
-                                       .dots.names = .dots.names)),
-            .data
-        )
-    }
+  # restore unit column, if necessary
+  if (!is.na(unit)) {
 
-    return(.data %>% select_(.dots = .colnames))
+    .units <- data.frame(variable = gsub("`", "", names(.units)),
+                         unit = as.character(.units))
+    colnames(.units) <- c(variable, unit)
+
+    .data <- inner_join(
+      .data,
+      rbind(variables.units, .units),
+      by = variable
+    )
+  }
+
+  # add unaffected variables
+  if (!only.new) {
+    .data <- rbind(
+      data %>%
+        filter(!(!!sym(variable) %in% .dots.names)),
+      .data
+    )
+  }
+
+  return(.data %>% select(!!!syms(.colnames)))
 }

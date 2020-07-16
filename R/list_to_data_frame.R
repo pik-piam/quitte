@@ -41,11 +41,10 @@ list_to_data_frame <- function(l, ...) {
 list_to_data_frame_ <- function(l, category = 'category', item = 'item') {
     d <- tibble()
     for (name in names(l))
-        d <- bind_rows(d,
-                       tibble_(
-                           stats::setNames(
-                               list(~name, ~getElement(l, name)),
-                               c(category, item))
-                       ))
+        d <- bind_rows(
+            d,
+            tibble(!!sym(category) := name,
+                   !!sym(item)     := l[[name]])
+        )
     return(d)
 }
