@@ -49,13 +49,14 @@ calcMitigationCost = function(data,scenBau,scenPol,
   tmp = data.frame(calcCumulatedDiscount(data,nameVar=nameVar,
                                          nameDisrate=nameDisrate,
                                          discount=discount))
-  #calculate mitigaton costs
+  #calculate mitigation costs
   res = tmp %>%
    filter(!!sym('period') == yearTo) %>%
     group_by(!!sym('model'), !!sym('region')) %>%
     arrange(!!sym('scenario') == scenPol) %>%
     summarise(
-      !!sym('value') := 100 * (1 - !!sym('value')[2] / !!sym('value')[1])) %>%
+      !!sym('value') :=
+        100 * (1 - nth(!!sym('value'), 2) / nth(!!sym('value'), 1))) %>%
     ungroup()
   res$scenario = scenPol
   res$variable = 'Mitigation cost'
