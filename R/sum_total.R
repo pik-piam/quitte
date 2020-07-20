@@ -80,11 +80,8 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
     .colnames <- colnames(data)
     .groups <- setdiff(.colnames, c(group, value, weight))
 
-    .groups.old <- c()
-    if (1 < n_groups(data)) {
-        for (i in 1:n_groups(data))
-            .groups.old <- c(.groups.old, deparse(groups(data)[[i]]))
-    }
+    # preserve groups
+    .groups.old <- group_vars(data)
 
     # do not create duplicates
     data <- data %>%
