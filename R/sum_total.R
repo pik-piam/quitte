@@ -92,18 +92,27 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
 
     if (is.na(weight)) {
         sum_data <- sum_data %>%
-            summarise(!!sym(value) := sum(!!sym(value), na.rm = na.rm))
+            summarise(!!sym(value) := sum(!!sym(value), na.rm = na.rm),
+                      .groups = 'keep')
     } else {
         sum_data <- sum_data %>%
             summarise(!!sym(value) := sum(!!sym(value) * !!sym(weight),
                                           na.rm = na.rm)
                                     / sum(!!sym(weight), na.rm = na.rm),
-                      !!sym(weight) := sum(!!sym(weight), na.rm = na.rm))
+                      !!sym(weight) := sum(!!sym(weight), na.rm = na.rm),
+                      .groups = 'keep')
+    }
+
+    # The parameter name is erroneously masked if there happens to be a column
+    # named name.  Work around this by supplying the name parameter through a
+    # function.
+    just_return_the_name <- function() {
+        return(name)
     }
 
     sum_data <- sum_data %>%
         ungroup() %>%
-        mutate(!!sym(group) := name) %>%
+        mutate(!!sym(group) := just_return_the_name()) %>%
         select(!!!syms(.colnames))
 
     .data <- rbind(
