@@ -99,7 +99,8 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE, completeMissin
 
 #' @export
 #' @rdname calc_addVariable
-calc_addVariable_ <- function(data, .dots, na.rm = TRUE, completeMissing = FALSE, only.new = FALSE,
+calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
+                              completeMissing = FALSE, only.new = FALSE,
                               variable = "variable", unit = NA,
                               value = "value") {
 
@@ -125,7 +126,6 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE, completeMissing = FALSE
     if (!unit %in% .colnames)
       stop("No column '", unit, "' found.")
   }
-
 
   .units <- lapply(.dots, function(l) { l[2] }) %>%
     unlist()
@@ -161,24 +161,25 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE, completeMissing = FALSE
   # Fill missing data
   if(is.logical(completeMissing)){
     if(completeMissing){
-      completeMissing_test = TRUE
-      .expand_cols = setdiff(colnames(removeColNa(.data)), value)
+      completeMissing_test <- TRUE
+      .expand_cols <- setdiff(colnames(removeColNa(.data)), value)
     } else {
-      completeMissing_test = FALSE
-    }} else{
-      completeMissing_test = TRUE
-      .expand_cols = completeMissing
+      completeMissing_test <- FALSE
     }
+  } else {
+    completeMissing_test <- TRUE
+    .expand_cols <- completeMissing
+  }
 
   if (completeMissing_test){
-    .fill_list = list(0)
-    names(.fill_list) = value
+    .fill_list <- list(0)
+    names(.fill_list) <- value
 
-    #quickfix: complete takes the levels instead of the values present in the DF
-    .data = factor.data.frame(.data)
-    .data = .data %>% complete(!!sym('cols') := .expand_cols,
-                               !!sym('fill') := .fill_list)
+    .data <- .data %>%
+      droplevels() %>%
+      complete(!!!syms(.expand_cols), fill = .fill_list)
   }
+
   # calculation
   .data <- .data %>%
     pivot_wider(names_from = !!sym(variable), values_from = !!sym(value)) %>%

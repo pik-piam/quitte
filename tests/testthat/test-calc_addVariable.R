@@ -56,4 +56,23 @@ test_that(
         mutate(result = 0) %>%
         filter('REMIND' != model)
     )
+
+    expect_equal(
+      object = tibble(model    = 'M',
+                      scenario = c('A', 'A', 'B'),
+                      region   = 'R',
+                      variable = c('X', 'Y', 'X'),
+                      unit     = 'U',
+                      period   = 2020,
+                      value    = c(1, 2, 4)) %>%
+        calc_addVariable('Z' = 'X + Y', units = 'U', na.rm = FALSE,
+                         completeMissing = TRUE),
+      expected = tibble(model    = 'M',
+                        scenario = rep(c('A', 'B'), each = 3),
+                        region   = 'R',
+                        variable = rep(c('X', 'Y', 'Z'), 2),
+                        unit     = 'U',
+                        period   = 2020,
+                        value    = c(1:4, 0, 4))
+    )
   })
