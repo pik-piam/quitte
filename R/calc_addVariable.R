@@ -31,22 +31,23 @@
 #' existing columns, including \code{period}, can be referenced, but this is
 #' not supported and the results are considered \emph{undefined}.
 #'
+#' @md
 #' @param data A data frame.
 #' @param ... Name-value pairs of calculation formulas. See details.
-#' @param units Character vector of units corresponding to new variables.
-#'              Must be of length equal to \code{...} or of length one (in
-#'              which case all new variables receive the same unit).
-#' @param na.rm If \code{TRUE} (the default), remove items calculated as
-#'              \code{NA}.
-#' @param completeMissing If \code{TRUE}, implictly missing data, i.e. missing combinations
-#'        of data, are replaced with 0. Alternatively, you can provide a character vector
-#'        with the names of the columns to be expanded. Can interfere with na.rm.
-#' @param only.new If \code{FALSE} (the default), add new variables to existing
-#'                 ones. If \code{TRUE}, return only new variables.
-#' @param variable Column name of variables. Defaults to \code{"variable"}.
-#' @param unit Column name of units. Defaults to \code{"unit"}.
-#' @param value Column name of values. Defaults to \code{"value"}.
-#' @param .dots Used to work around non-standard evaluation. See details.
+#' @param units Character vector of units corresponding to new variables.  Must
+#'   be of length equal to `...` or of length one (in which case all new
+#'   variables receive the same unit).
+#' @param na.rm If `TRUE` (the default), remove items calculated as `NA`.
+#' @param completeMissing If `TRUE`, implicitly missing data, i.e. missing
+#'   combinations of data, are replaced with 0.  Alternatively, you can provide
+#'   a character vector with the names of the columns to be expanded. Can
+#'   interfere with `na.rm`.
+#' @param only.new If `FALSE` (the default), add new variables to existing
+#'   ones.  If `TRUE`, return only new variables.
+#' @param variable Column name of variables.  Defaults to `"variable"`.
+#' @param unit Column name of units.  Defaults to `"unit"`.
+#' @param value Column name of values.  Defaults to `"value"`.
+#' @param .dots Used to work around non-standard evaluation.  See details.
 #'
 #' @return A data frame.
 #'
@@ -72,10 +73,14 @@
 #'
 #' @author Michaja Pehl
 #'
+#' @importFrom dplyr filter distinct mutate_ inner_join
+#' @importFrom rlang sym syms
+#' @importFrom tidyr complete pivot_wider pivot_longer
+#'
 #' @export
-calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE, completeMissing = FALSE,
-                             only.new = FALSE, variable = variable, unit = NA,
-                             value = value) {
+calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
+                             completeMissing = FALSE, only.new = FALSE,
+                             variable = variable, unit = NA, value = value) {
 
   .dots    <- list(...)
 

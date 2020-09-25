@@ -10,6 +10,8 @@
 #'     p <- x.minmax = quitte2quantiles(x,probs=c("min"=0,"max"=1))
 #'   }
 #'
+#' @importFrom tidyr pivot_wider
+#'
 #' @export
 quitte2quantiles <- function (x,probs=c(q0=0,q25=0.25,q50=0.5,q75=0.75,q100=1),
                               grouping=c("region","variable","period","scenario")  ){

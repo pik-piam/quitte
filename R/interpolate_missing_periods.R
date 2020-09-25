@@ -80,6 +80,8 @@
 #' interpolate_missing_periods_(data, periods = list(year = seq(2010, 2035, 5)),
 #'                              value = 'coeff', expand.values = TRUE)
 
+#' @importFrom tidyr complete nesting crossing
+
 #' @export
 interpolate_missing_periods <- function(data, ..., value = 'value',
                                         expand.values = FALSE,
