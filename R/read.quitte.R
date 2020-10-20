@@ -113,8 +113,8 @@ read.quitte <- function(file,
     # check for duplicate entries, ignoring values
     if (check.duplicates) {
         distinct_rows <- quitte %>%
-            distinct(!!!syms(c('model', 'scenario', 'region', 'variable',
-                               'unit', 'period'))) %>%
+            select(-'value') %>%
+            distinct() %>%
             nrow()
         if (nrow(quitte) != distinct_rows)
             warning('Duplicates in resulting quitte')

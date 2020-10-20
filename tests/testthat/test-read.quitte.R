@@ -22,3 +22,12 @@ test_that(
       expected = 0
     )
   })
+
+test_that(
+  'extra columns are included in duplicate checks',
+  {
+    expect_warning(object = read.quitte(system.file('extdata',
+                                                    'extra_column.mif',
+                                                    package = 'quitte')),
+                   regexp = NA)
+  })

@@ -1,0 +1,4 @@
+Model;Scenario;Region;Variable;Unit;Hour;2005;2010;2015
+DIETER;Baseline;World;Something;none;1;100;105;110
+DIETER;Baseline;World;Something;none;2;102;107;112
+DIETER;Baseline;World;Something;none;3;104;109;114
