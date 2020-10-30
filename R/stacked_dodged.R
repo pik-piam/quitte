@@ -3,13 +3,13 @@
 #' Utility functions for plotting stacked (on top of each other) _and_ dodged
 #' (next to each other) bars in the same figure.
 #'
-#' @md
 #' `add_stacked_dodged_xpos()` adds x-axis positions to a data frame for
 #' plotting two categorical variables within a bar plot.
 #' `calc_stacked_dodged_xlabels()` calculates matching label positions on
 #' the x-axis.
 #' `ggplot_bar_stacked_dodged()` uses both functions to generate a plot.
 #'
+#' @md
 #' @param data A data frame
 #' @param ... A selection of two columns.  Both will be combined to form x-axis
 #'   coordinates.  The first will form the outer iteration (groups), the second

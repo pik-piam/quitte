@@ -23,7 +23,8 @@
 #' }
 #'
 #' @importFrom dplyr last as_tibble tibble bind_rows distinct
-#' @importFrom rlang syms
+#' @importFrom forcats as_factor
+#' @importFrom rlang sym syms
 #' @importFrom tidyr pivot_longer
 #' @importFrom utils read.table
 #'
@@ -108,7 +109,10 @@ read.quitte <- function(file,
         )
     }
 
-    quitte <- factor.data.frame(quitte)
+    quitte <- quitte %>%
+        # preserve order of scenarios for order of .mif files
+        mutate(!!sym('scenario') := as_factor(!!sym('scenario'))) %>%
+        factor.data.frame()
 
     # check for duplicate entries, ignoring values
     if (check.duplicates) {

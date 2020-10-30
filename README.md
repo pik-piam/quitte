@@ -1,6 +1,6 @@
 # Bits and pieces of code to use with quitte-style data frames
 
-R package **quitte**, version **0.3085.1**
+R package **quitte**, version **0.3086.0**
 
   
 
@@ -49,7 +49,7 @@ To cite package **quitte** in publications use:
 
 Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich
 J (2020). _quitte: Bits and pieces of code to use with quitte-style
-data frames_. R package version 0.3085.1, <URL:
+data frames_. R package version 0.3086.0, <URL:
 https://CRAN.R-project.org/package=quitte>.
 
 A BibTeX entry for LaTeX users is
@@ -59,7 +59,7 @@ A BibTeX entry for LaTeX users is
   title = {quitte: Bits and pieces of code to use with quitte-style data frames},
   author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich},
   year = {2020},
-  note = {R package version 0.3085.1},
+  note = {R package version 0.3086.0},
   url = {https://CRAN.R-project.org/package=quitte},
 }
 ```
