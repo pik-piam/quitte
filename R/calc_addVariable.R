@@ -76,6 +76,7 @@
 #' @importFrom dplyr filter distinct mutate_ inner_join
 #' @importFrom rlang sym syms
 #' @importFrom tidyr complete pivot_wider pivot_longer
+#' @importFrom lazyeval f_eval
 #'
 #' @export
 calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
@@ -99,7 +100,8 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
   unit     <- ifelse(is.na(NA), NA, deparse(substitute(unit)))
   value    <- deparse(substitute(value))
 
-  calc_addVariable_(data, .dots, na.rm,completeMissing, only.new, variable, unit, value)
+  calc_addVariable_(data, .dots, na.rm,completeMissing, only.new, variable,
+                    unit, value)
 }
 
 #' @export
@@ -108,8 +110,7 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
                               completeMissing = FALSE, only.new = FALSE,
                               variable = "variable", unit = NA,
                               value = "value") {
-
-  # guardians
+  # ---- guardians ----
   if (!is.data.frame(data))
     stop("Only works with data frames")
 
@@ -132,6 +133,10 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
       stop("No column '", unit, "' found.")
   }
 
+  # ignore magrittr dot
+  . <- NULL
+
+  # ---- parse .dots ----
   .units <- lapply(.dots, function(l) { l[2] }) %>%
     unlist()
 
@@ -148,26 +153,26 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
     unique() %>%
     setdiff(names(.dots))
 
-  # filter for variables used on rhs
-  .data <- data %>%
+  # --- filter for variables used on rhs ----
+  data_ <- data %>%
     filter(!!sym(variable) %in% .dots.names)
 
 
-  # drop unit column, if necessary
+  # ---- drop unit column, if necessary ----
   if (!is.na(unit)) {
-    variables.units <- .data %>%
+    variables.units <- data_ %>%
       distinct(!!sym(variable), !!sym(unit)) %>%
       filter(!!sym(variable) %in% .dots.names)
 
-    .data <- .data %>%
+    data_ <- data_ %>%
       select(-!!sym(unit))
   }
 
-  # Fill missing data
+  # ---- fill missing data ----
   if(is.logical(completeMissing)){
     if(completeMissing){
       completeMissing_test <- TRUE
-      .expand_cols <- setdiff(colnames(removeColNa(.data)), value)
+      .expand_cols <- setdiff(colnames(removeColNa(data_)), value)
     } else {
       completeMissing_test <- FALSE
     }
@@ -180,52 +185,58 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
     .fill_list <- list(0)
     names(.fill_list) <- value
 
-    .data <- .data %>%
+    data_ <- data_ %>%
       droplevels() %>%
       complete(!!!syms(.expand_cols), fill = .fill_list)
   }
 
-  # calculation
-  .data <- .data %>%
-    pivot_wider(names_from = !!sym(variable), values_from = !!sym(value)) %>%
-    mutate_(.dots = .dots) %>%
+  # ---- calculation ----
+  data_ <- data_ %>%
+    pivot_wider(names_from = variable, values_from = value)
+
+  for (i in 1:length(.dots))
+  {
+    data_ <- data_ %>%
+      mutate(!!sym(names(.dots[i])) := f_eval(f = .dots[[i]], data = .))
+  }
+
+  data_ <- data_ %>%
     pivot_longer(unique(c(.dots.names, names(.dots))),
                  names_to = variable, values_to = value)
 
-  # filter new variables
+  # ---- filter new variables ----
   if (only.new) {
-    .data <- .data %>%
+    data_ <- data_ %>%
       filter(!!sym(variable) %in% names(.dots))
   }
 
-  # filter NAs
+  # ---- filter NAs ----
   if (na.rm) {
-    .data <- .data %>%
+    data_ <- data_ %>%
       filter(!is.na(!!sym(value)))
   }
 
-  # restore unit column, if necessary
+  # ---- restore unit column, if necessary ----
   if (!is.na(unit)) {
-
     .units <- data.frame(variable = gsub("`", "", names(.units)),
                          unit = as.character(.units))
     colnames(.units) <- c(variable, unit)
 
-    .data <- inner_join(
-      .data,
+    data_ <- inner_join(
+      data_,
       rbind(variables.units, .units),
       by = variable
     )
   }
 
-  # add unaffected variables
+  # ---- add unaffected variables ----
   if (!only.new) {
-    .data <- rbind(
+    data_ <- rbind(
       data %>%
         filter(!(!!sym(variable) %in% .dots.names)),
-      .data
+      data_
     )
   }
 
-  return(.data %>% select(!!!syms(.colnames)))
+  return(data_ %>% select(!!!syms(.colnames)))
 }
