@@ -11,7 +11,8 @@ test_that(
         variable = "GDP",
         unit     = "US$2005",
         period   = 2005,
-        value    = c(3, 1, 1)
+        value    = c(3, 1, 1),
+        stringsAsFactors = TRUE
       ),
 
       data.frame(
@@ -21,7 +22,8 @@ test_that(
         variable = c("FE|Total", "FE|Solids", "FE|Electricity"),
         unit     = "EJ/a",
         period   = 2005,
-        value    = c(3, 1, 1)
+        value    = c(3, 1, 1),
+        stringsAsFactors = TRUE
       )
     )
 
