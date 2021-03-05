@@ -88,7 +88,7 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
         filter(!!sym(group) != name)
 
     sum_data <- data %>%
-        group_by(.dots = .groups, .add = TRUE)
+        group_by(!!!syms(.groups), .add = TRUE)
 
     if (is.na(weight)) {
         sum_data <- sum_data %>%
@@ -125,7 +125,7 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
 
     if (length(groups(data)) > 0)
         .data <- .data %>%
-        group_by(.dots = .groups.old)
+        group_by(!!!syms(.groups.old))
 
     return(.data)
 }
