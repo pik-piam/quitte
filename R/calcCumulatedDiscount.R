@@ -59,25 +59,38 @@ calcCumulatedDiscount = function(data,
   #group for all other columns:
   col_grp = names(data)[!(names(data) %in% c('varToAggregate','disRate','period','year'))]
   #calculate discount factor from discount rate:
-  erg = data  %>% group_by(!!!syms(col_grp))   %>% mutate_(
-      discFactor = ~cumprod((1 + disRate)^(- (year - lag(year,default=first(year),order_by=year)))),
-      w = ~(year - first(year)) , # just for diagnostics
-      discFactor2 = ~(1 + disRate)^(- (year - first(year)))    ## just for diagnostics this equals discFactor for time-indep disRate
+  erg = data %>%
+    group_by(!!!syms(col_grp)) %>%
+    mutate(
+      discFactor = cumprod((1 + !!sym('disRate'))^(-(!!sym('year') - lag(!!sym('year'),default=first(!!sym('year')),order_by=!!sym('year'))))),
+      w = (!!sym('year') - first(!!sym('year'))) , # just for diagnostics
+      discFactor2 = (1 + !!sym('disRate'))^(-(!!sym('year') - first(!!sym('year'))))    ## just for diagnostics this equals discFactor for time-indep disRate
   )
 
   #AJS question: how can I keep a column in the dataframe without grouping it?
   #this calculated annually compounded weight factors according to Elmar's method
-  erg = erg  %>% group_by(!!!syms(col_grp))   %>% mutate_(
-    weight1 = ~mapply( function(dt,dr) (sum( (1+dr)^(- seq(as.double(0.5),as.double(dt-0.5)) ) * (1 - seq(as.double(0.5),as.double(dt-0.5))/dt)  )),   # Why no use (1:dt) instead??
-                      ( year - lag(year,default=first(year),order_by=year)),  # first element in year here doesnt matter anyways, will be thrown out later on..
-                      disRate
-                    ),
-    weight2 = ~mapply( function(dt,dr) (sum( (1+dr)^(- (seq(as.double(0.5),as.double(dt-0.5)) - dt)) * (seq(as.double(0.5),as.double(dt-0.5))/dt)  )),
-                      ( year - lag(year,default=first(year),order_by=year)),
-                      disRate
-                      ),
-    weightSum=~weight2+weight1  # just for diagnostics
-
+  erg = erg %>%
+    group_by(!!!syms(col_grp)) %>%
+    mutate(
+      weight1 = mapply(
+        function(dt,dr) {
+          sum( (1+dr)^(-seq(as.double(0.5),as.double(dt-0.5)) )
+             * (1 - seq(as.double(0.5),as.double(dt-0.5))/dt)
+              )
+          },   # Why no use (1:dt) instead??
+        (!!sym('year') - lag(!!sym('year'), default = first(!!sym('year')), order_by = !!sym('year'))),  # first element in year here doesnt matter anyways, will be thrown out later on..
+        !!sym('disRate')
+      ),
+    weight2 = mapply(
+      function(dt,dr) {
+        sum( (1+dr)^(-(seq(as.double(0.5),as.double(dt-0.5)) - dt))
+           * (seq(as.double(0.5),as.double(dt-0.5))/dt)
+           )
+         },
+      (!!sym('year') - lag(!!sym('year'), default = first(!!sym('year')), order_by = !!sym('year'))),
+      !!sym('disRate')
+    ),
+    weightSum = !!sym('weight2') + !!sym('weight1')  # just for diagnostics
     )
 
 
@@ -88,10 +101,13 @@ calcCumulatedDiscount = function(data,
     tmp <- erg %>%
       filter(!!sym('year') <= p) %>%
       group_by(!!!syms(col_grp))  %>%
-      summarize_( discountedAggregate =
-                ~sum(
-                  ( varToAggregate * discFactor * weight2  + lag(varToAggregate,order_by=year) * lag(discFactor,order_by=year) * weight1 )[-1]
-                  )
+      summarise(
+        discountedAggregate = sum(
+          ( !!sym('varToAggregate') * !!sym('discFactor') * !!sym('weight2')
+          + ( lag(!!sym('varToAggregate'), order_by = !!sym('year'))
+            * lag(!!sym('discFactor'), order_by = !!sym('year')) * !!sym('weight1')
+            )
+          )[-1]       )
       ) %>% ungroup()
     tmp$period = p
     tmp
@@ -104,7 +120,9 @@ calcCumulatedDiscount = function(data,
   #shift resulting time series by the value in the year fixYear
   if(fixYear != 'none'){
 #     if(! 'POSIXct' %in% class(fixYear)) fixYear = ISOYear(fixYear)
-    erg_allT = erg_allT %>% group_by(!!!syms(col_grp)) %>% mutate_(value = ~value - value[period == fixYear])
+    erg_allT = erg_allT %>%
+      group_by(!!!syms(col_grp)) %>%
+      mutate(value = !!sym('value') - !!sym('value')[!!sym('period') == !!sym('fixYear')])
   }
 
   return(as.quitte(as.data.frame(erg_allT)))
