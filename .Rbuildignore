@@ -3,3 +3,5 @@
 ^\.git$
 ^.*\.zenodo.json$
 ^\.buildlibrary$
+^\.github$
+^codecov\.yml$
