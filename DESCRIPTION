@@ -17,7 +17,7 @@ Authors@R: c(person("Michaja", "Pehl", role = c("aut", "cre"),
 		     person("Anselm", "Schultes", role = "aut",
 		            email = "schultes@pik-potsdam.de"),
 		     person("Jan Philipp", "Dietrich", role = "aut",
-		            email = "schultes@pik-potsdam.de"))
+		            email = "dietrich@pik-potsdam.de"))
 Maintainer: Michaja Pehl <michaja.pehl@pik-potsdam.de>
 Description: A collection of functions for easily dealing with
     quitte-style data frames, doing multi-model comparisons and plots.
