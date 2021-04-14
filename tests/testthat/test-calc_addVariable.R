@@ -1,18 +1,20 @@
 context('calc_addVariable()')
 
+library(tidyverse)
+
+data <- inline.data.frame(c(
+  "model;    scenario;   region;   variable;     unit;                 period;   value",
+  "REMIND;   Baseline;   USA;      GDP|MER;      billion US$2005/yr;   2010;     12990",
+  "REMIND;   Baseline;   USA;      Population;   million;              2010;       310.4",
+  "REMIND;   Baseline;   USA;      PE;           EJ/yr;                2010;        91.62",
+  "REMIND;   Baseline;   CHN;      GDP|MER;      billion US$2005/yr;   2020;      8882",
+  "REMIND;   Baseline;   CHN;      GDP|MER;      billion US$2005/yr;   2010;      4119",
+  "REMIND;   Baseline;   CHN;      Population;   million;              2020;      1387",
+  "REMIND;   Baseline;   CHN;      Population;   million;              2010;      1349"))
+
 test_that(
   'Test calc_addVariable() results',
   {
-    data <- inline.data.frame(c(
-      "model;    scenario;   region;   variable;     unit;                 period;   value",
-      "REMIND;   Baseline;   USA;      GDP|MER;      billion US$2005/yr;   2010;     12990",
-      "REMIND;   Baseline;   USA;      Population;   million;              2010;       310.4",
-      "REMIND;   Baseline;   USA;      PE;           EJ/yr;                2010;        91.62",
-      "REMIND;   Baseline;   CHN;      GDP|MER;      billion US$2005/yr;   2020;      8882",
-      "REMIND;   Baseline;   CHN;      GDP|MER;      billion US$2005/yr;   2010;      4119",
-      "REMIND;   Baseline;   CHN;      Population;   million;              2020;      1387",
-      "REMIND;   Baseline;   CHN;      Population;   million;              2010;      1349"))
-
     result <- tibble(
       model    = 'REMIND',
       scenario = 'Baseline',
@@ -75,4 +77,22 @@ test_that(
                         period   = 2020,
                         value    = c(1:4, 0, 4))
     )
+  })
+
+test_that(
+  'Test calc_addVariable() unit column substitution',
+  {
+    expect_equal(
+      object = data %>%
+        rename(foo = unit) %>%
+        calc_addVariable("GDPpC" = "`GDP|MER` / Population * 1e3",
+                         "`ln GDPpC`" = "log(GDPpC)",
+                         units = c("US$2005/cap", NA),
+                         unit = foo) %>%
+        rename(unit = foo),
+      expected = data %>%
+        calc_addVariable("GDPpC" = "`GDP|MER` / Population * 1e3",
+                         "`ln GDPpC`" = "log(GDPpC)",
+                         units = c("US$2005/cap", NA))
+        )
   })

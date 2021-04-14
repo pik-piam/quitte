@@ -97,7 +97,8 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
   }
 
   variable <- deparse(substitute(variable))
-  unit     <- ifelse(is.na(NA), NA, deparse(substitute(unit)))
+  unit     <- ifelse('NA' == deparse(substitute(unit)), NA,
+                     deparse(substitute(unit)))
   value    <- deparse(substitute(value))
 
   calc_addVariable_(data, .dots, na.rm,completeMissing, only.new, variable,
