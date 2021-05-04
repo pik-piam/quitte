@@ -12,6 +12,8 @@
 #' @param check.duplicates If \code{TRUE} a duplicates check will be performed
 #'        on the data. For time- and memory-critical applications this can be
 #'        switched off.
+#' @md
+#' @param factors Return columns as factors (`TRUE`) or not.
 #' @return A quitte data frame.
 #'
 #' @author Michaja Pehl
@@ -34,7 +36,8 @@ read.quitte <- function(file,
                         quote = "",
                         na.strings = c("UNDF", "NA", "N/A", "n_a"),
                         convert.periods = FALSE,
-                        check.duplicates = TRUE) {
+                        check.duplicates = TRUE,
+                        factors = TRUE) {
 
     if (!length(file))
         stop('\'file\' is empty.')
@@ -109,10 +112,12 @@ read.quitte <- function(file,
         )
     }
 
-    quitte <- quitte %>%
-        # preserve order of scenarios for order of .mif files
-        mutate(!!sym('scenario') := as_factor(!!sym('scenario'))) %>%
-        factor.data.frame()
+    if (factors) {
+        quitte <- quitte %>%
+            # preserve order of scenarios for order of .mif files
+            mutate(!!sym('scenario') := as_factor(!!sym('scenario'))) %>%
+            factor.data.frame()
+    }
 
     # check for duplicate entries, ignoring values
     if (check.duplicates) {
