@@ -193,7 +193,7 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
 
   # ---- calculation ----
   data_ <- data_ %>%
-    pivot_wider(names_from = variable, values_from = value)
+    pivot_wider(names_from = sym(variable), values_from = sym(value))
 
   for (i in 1:length(.dots))
   {

@@ -4,7 +4,7 @@ author: "Michaja Pehl"
 date: "`r as.Date(file.mtime('./quitte-data-analysis.Rmd'))`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{quitte-data-analysis}
+  %\VignetteIndexEntry{REMIND/IAM Data Analysis Using quitte}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
