@@ -79,3 +79,38 @@ test_that(
         as.quitte()
     )
   })
+
+test_that(
+  desc = 'replace_column() warning for ambiguous mask',
+  code = {
+    model_data <- data.frame(
+      model  = c('Model1', '2ndModel', 'Model Three'),
+      region = c('Region 1', 'Region 2', 'Region 3'),
+      value  = 1:3)
+
+    mask <- data.frame(
+      model  = c('Model1', '2ndModel', 'Model Three')[c(1, 2, 3, 3, 2)],
+      clear_name = paste('Model', 1:5))
+
+    expect_warning(
+      object = replace_column(model_data, mask, model, clear_name),
+      regexp = 'No unambiguous match for.*')
+
+    expect_failure(
+      expect_warning(
+        object = replace_column(model_data, mask, model, clear_name,
+                                ignore.ambiguous.match = TRUE),
+        regexp = 'No unambiguous match for.*')
+    )
+
+    mask <- data.frame(
+      model  = c('Model1', '2ndModel', 'Model Three')[c(1, 2, 3)],
+      clear_name = paste('Model', 1:3))
+
+    expect_failure(
+      expect_warning(
+        object = replace_column(model_data, mask, model, clear_name),
+        regexp = 'No unambiguous match for.*')
+    )
+  }
+)

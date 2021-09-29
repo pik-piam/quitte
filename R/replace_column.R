@@ -2,24 +2,28 @@
 #'
 #' Replaces the column of a data frame with that from a mask data frame.
 #'
-#' Replaces the \emph{old} column in data frame \code{data} by the \emph{new}
-#' column from data frame \code{mask} based on the matching between \emph{old}
-#' (\code{data}) and \emph{match} (\code{mask}) columns.
+#' Replaces the _old_ column in data frame `data` by the _new_ column from data
+#' frame `mask` based on the matching between _old_ (`data`) and _match_
+#' (`mask`) columns.
 #'
 #' This can be used to replace columns based on a mapping to, e.g., rename
 #' scenarios, regions, etc. in model data.
 #'
+#' @md
 #' @param data A data frame or a quitte object.
-#' @param mask A data frame containing the \code{match_column} and the
-#'             \code{new_column}.
-#' @param ... Definition of \emph{old}, \emph{match}, and \emph{new} columns.
-#'            See details.
-#' @param drop.extra Drop rows not present in \emph{match} column?
-#' @param old_column \emph{old} column name, see details.
-#' @param match_column \emph{match} column name, see details.
-#' @param new_column \emph{new} column name, see details.
+#' @param mask A data frame containing the `match_column` and the
+#'     `new_column`.
+#' @param ... Definition of _old_, _match_, and _new_ columns, see details.
+#' @param drop.extra Drop rows not present in _match_ column?
+#' @param ignore.ambiguous.match `replace_column()` will issue a warning if the
+#'     _match_ column in `mask` does not map unambiguously to `data`, unless it
+#'     is suppressed (`TRUE`).  Using ambiguous matches can be desired for
+#'     duplicating specific rows.
+#' @param old_column _old_ column name, see details.
+#' @param match_column _match_ column name, see details.
+#' @param new_column _new_ column name, see details.
 #'
-#' @return A data frame or a quitte object, same as \code{data}.
+#' @return A data frame or a quitte object, same as `data`.
 #'
 #' @examples
 #' # simple example with matching old and match column names
@@ -70,7 +74,9 @@
 #' @author Michaja Pehl
 
 #' @export
-replace_column <- function(data, mask, ..., drop.extra = FALSE) {
+replace_column <- function(data, mask, ..., drop.extra = FALSE,
+                           ignore.ambiguous.match = FALSE)
+{
 
     .dots <- lazyeval::lazy_dots(...)
 
@@ -82,13 +88,14 @@ replace_column <- function(data, mask, ..., drop.extra = FALSE) {
         old_column <- match_column
 
     replace_column_(data, mask, old_column, match_column, new_column,
-                    drop.extra)
+                    drop.extra, ignore.ambiguous.match)
 }
 
 #' @export
 #' @rdname replace_column
 replace_column_ <- function(data, mask, old_column, match_column, new_column,
-                            drop.extra = FALSE) {
+                            drop.extra = FALSE, ignore.ambiguous.match = FALSE)
+{
     value <- suppressWarnings(
         left_join(data, mask, stats::setNames(match_column, old_column))
     ) %>%
@@ -103,6 +110,15 @@ replace_column_ <- function(data, mask, old_column, match_column, new_column,
 
     if (is.quitte(data))
         value <- as.quitte(value)
+
+    ambiguous <- mask[which(duplicated(pull(mask, match_column))),match_column]
+
+    if (!ignore.ambiguous.match & length(ambiguous))
+    {
+        warning('No unambiguous match for ',
+                paste(paste0('\'', ambiguous, '\''), collapse = ', '),
+                ' in column \'', match_column, '\'')
+    }
 
     return(value)
 }
