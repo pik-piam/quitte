@@ -170,8 +170,8 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
   }
 
   # ---- fill missing data ----
-  if(is.logical(completeMissing)){
-    if(completeMissing){
+  if (is.logical(completeMissing)) {
+    if (completeMissing) {
       completeMissing_test <- TRUE
       .expand_cols <- setdiff(colnames(removeColNa(data_)), value)
     } else {
@@ -182,7 +182,7 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
     .expand_cols <- completeMissing
   }
 
-  if (completeMissing_test){
+  if (completeMissing_test) {
     .fill_list <- list(0)
     names(.fill_list) <- value
 
