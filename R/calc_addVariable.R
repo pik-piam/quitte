@@ -39,9 +39,9 @@
 #'   variables receive the same unit).
 #' @param na.rm If `TRUE` (the default), remove items calculated as `NA`.
 #' @param completeMissing If `TRUE`, implicitly missing data, i.e. missing
-#'   combinations of data, are replaced with 0.  Alternatively, you can provide
-#'   a character vector with the names of the columns to be expanded. Can
-#'   interfere with `na.rm`.
+#'   combinations of input data, are filled up with 0 before the calculation.
+#'   Alternatively, you can provide a character vector with the names of the
+#'   columns to be expanded.  Can interfere with `na.rm`.
 #' @param only.new If `FALSE` (the default), add new variables to existing
 #'   ones.  If `TRUE`, return only new variables.
 #' @param variable Column name of variables.  Defaults to `"variable"`.
