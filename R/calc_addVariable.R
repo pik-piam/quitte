@@ -191,6 +191,16 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
       complete(!!!syms(.expand_cols), fill = .fill_list)
   }
 
+  # ---- check for duplicated rows ----
+  duplicates <- data_ %>%
+    group_by(!!!syms(setdiff(colnames(data_), value))) %>%
+    filter(1 < n()) %>%
+    ungroup()
+  if (nrow(duplicates)) {
+    stop(paste(c('Duplicate rows in data.frame', format(duplicates)),
+               collapse = '\n'))
+  }
+
   # ---- calculation ----
   data_ <- data_ %>%
     pivot_wider(names_from = sym(variable), values_from = sym(value))

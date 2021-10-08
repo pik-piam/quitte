@@ -96,3 +96,21 @@ test_that(
                          units = c("US$2005/cap", NA))
         )
   })
+
+test_that(
+  desc = 'Test calc_addVariable() testing for duplicated data',
+  code = {
+    test_data <- quitte_example_data %>%
+      filter(first(.data$model)    == .data$model,
+             first(.data$scenario) == .data$scenario,
+             first(.data$region)   == .data$region,
+             first(.data$period)   == .data$period,
+             .data$variable %in% c('PE', 'Population')) %>%
+      `[`(c(1, 2, 2),)
+
+    expect_error(
+      object = calc_addVariable_(
+        data = test_data,
+        .dots = list('PE per capita' = c('PE / Population', unit = 'TJ/yr'))),
+      regexp = 'Duplicate rows in data.frame.*')
+  })
