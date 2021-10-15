@@ -1,7 +1,8 @@
 context('read.quitte()')
 
+# read.quitte() results ----
 test_that(
-  'Test read.quitte() results',
+  'read.quitte() results',
   {
     expect_equal(
       object = full_join(
@@ -23,6 +24,7 @@ test_that(
     )
   })
 
+# extra columns are included in duplicate checks ----
 test_that(
   'extra columns are included in duplicate checks',
   {
@@ -30,4 +32,17 @@ test_that(
                                                     'extra_column.mif',
                                                     package = 'quitte')),
                    regexp = NA)
+  })
+
+# read .mif file with comment header ----
+test_that(
+  desc = 'read .mif file with comment header',
+  code = {
+    d <- quitte_example_data %>%
+      slice_sample(n = 10)
+    write.mif(d, f1 <- tempfile(), comment_header = c('foo: bar', 'fuzz: baz'))
+    write.mif(d, f2 <- tempfile())
+    expect_equal(
+      object = read.quitte(f1),
+      expected =  read.quitte(f2))
   })

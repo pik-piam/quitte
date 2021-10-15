@@ -1,11 +1,14 @@
 
 #' Write .mif file
 #'
-#' A wrapper around \code{\link[readr]{write_lines}()} for writing files
-#' conforming to the .mif standard.
+#' A wrapper around [`readr::write_lines] for writing files conforming to the
+#' [`.mif` standard](https://redmine.pik-potsdam.de/projects/mo/wiki/Model_Intercomparison_File_Format_(mif)).
 #'
-#' @param x A \code{\link{quitte}} data frame.
+#' @md
+#' @param x A [`quitte`] data frame.
 #' @param path Path or connection to write to.
+#' @param comment_header Comment header to be written to the `.mif` file.
+#' @param comment A character to prepend to comment header lines.
 #'
 #' @author Michaja Pehl
 #'
@@ -13,13 +16,18 @@
 #' write.mif(quitte_example_data, tempfile())
 #'
 #' @importFrom dplyr mutate pull rename_with select
-#' @importFrom tidyr spread unite
+#' @importFrom tidyr pivot_wider unite
 #' @importFrom tidyselect everything matches
 #' @importFrom readr write_lines
 #' @importFrom stringr str_to_title
-#'
+
 #' @export
-write.mif <- function(x, path) {
+write.mif <- function(x, path, comment_header = NULL, comment = '#') {
+
+    default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
+                         'Period', 'Value')
+
+    . <- NULL
 
     # guardians
     if (any(
@@ -30,17 +38,28 @@ write.mif <- function(x, path) {
 
     # make column names upper-case
     x <- x %>%
-        rename_with(.fn = str_to_title, .cols = matches('^[A-Za-z]+$')) %>%
-        select('Model', 'Scenario', 'Region', 'Variable', 'Unit', 'Period',
-               'Value') %>%
-        spread(6, 7)
+        rename_with(.fn = str_to_title,
+                    .cols = matches('^[A-Za-z][A-Za-z0-9_]*$')) %>%
+        select(setdiff(default_columns, last(default_columns)),
+               setdiff(colnames(.), default_columns),
+               last(default_columns)) %>%
+        arrange(.data$Period) %>%
+        pivot_wider(names_from = 'Period', values_from = 'Value')
 
+    # write comment header
+    if (!is.null(comment_header)) {
+        write_lines(x = paste('#', comment_header), file = path, append = FALSE)
+    }
+
+    # write column header
     paste(c(colnames(x), ''), collapse = ';') %>%
-        write_lines(path, append = FALSE)
+        write_lines(file = path,
+                    append = ifelse(is.null(comment_header), FALSE, TRUE))
 
+    # write data
     x %>%
         unite(!!sym('text'), everything(), sep = ';') %>%
         mutate(!!sym('text') := paste0(!!sym('text'), ';')) %>%
         pull(!!sym('text')) %>%
-        write_lines(path, append = TRUE)
+        write_lines(file = path, append = TRUE)
 }

@@ -12,6 +12,10 @@
 #' @param check.duplicates If \code{TRUE} a duplicates check will be performed
 #'        on the data. For time- and memory-critical applications this can be
 #'        switched off.
+#' @param drop.na Should NA values be dropped from the `quitte`?
+#' @param comment A character which at line start signifies the optional comment
+#'   header with metadata at the head of `file`.
+#'
 #' @md
 #' @param factors Return columns as factors (`TRUE`) or not.
 #' @return A quitte data frame.
@@ -24,10 +28,12 @@
 #' read.quitte("some/data/file.csv", sep = ",", quote = '"')
 #' }
 #'
-#' @importFrom dplyr last as_tibble tibble bind_rows distinct
+#' @importFrom dplyr as_tibble bind_rows distinct first last tibble
 #' @importFrom forcats as_factor
-#' @importFrom rlang sym syms
+#' @importFrom rlang .data
+#' @importFrom readr read_delim read_lines
 #' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect all_of
 #' @importFrom utils read.table
 #'
 #' @export
@@ -37,32 +43,54 @@ read.quitte <- function(file,
                         na.strings = c("UNDF", "NA", "N/A", "n_a"),
                         convert.periods = FALSE,
                         check.duplicates = TRUE,
-                        factors = TRUE) {
+                        factors = TRUE,
+                        drop.na = FALSE,
+                        comment = '#') {
 
     if (!length(file))
         stop('\'file\' is empty.')
 
-    .read.quitte <- function(file, sep, quote, na.strings, convert.periods) {
+    .read.quitte <- function(file, sep, quote, na.strings, convert.periods,
+                             drop.na, comment) {
+
+        . <- NULL
 
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
-        header <- read.table(file, header = TRUE, sep = sep, quote = quote,
-                             na.strings = na.strings, nrows = 1,
-                             check.names = FALSE, strip.white = TRUE) %>%
-            colnames() %>%
+
+        # read header ----
+        # Read as much of the file as is necessary to collect the comment header
+        # and the column header
+        n_max <- 1
+        while (all(grepl('^#',
+                         header <- read_lines(file = file, n_max = n_max)))) {
+            n_max = n_max * 2
+        }
+
+        ## get the comment header ----
+        comment_header <- header %>%
+            grep(paste0('^', comment), ., value = TRUE) %>%
+            sub(paste0('^', comment, '\\s*'), '', .)
+
+        ## get the column header ----
+        header <- header %>%
+            grep(paste0('^', comment), ., value = TRUE, invert = TRUE) %>%
+            first()
+
+        # Check if the last column of df is of class logical, i.e. if it was a
+        # propper .mif file with the pointless trailing semi-colon.
+        useless.last.column <- grepl(paste0(sep, '$'), header)
+
+        # Convert column header into column names
+        header <- header %>%
+            strsplit(sep) %>%
+            unlist() %>%
             tolower()
 
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
         # FIXME: relax to handle other than 4-digit periods
-        period.columns   <- grep("^[0-9]{4}$", header)
+        period.columns <- grep("^[0-9]{4}$", header)
 
-
-        # Check if the last column of df is of class logical, i.e. if it was a
-        # propper .mif file with the pointless trailing semi-colon.
-        useless.last.column <- last(header) == ""
-
-        if (useless.last.column)
-            header <- header[-length(header)]
 
         if (!all(header[1:5] == default.columns))
             stop("missing default columns in header of file ", file)
@@ -75,24 +103,21 @@ read.quitte <- function(file,
 
         periods <- header[period.columns]
 
-        colClasses <- c(rep("character", period.columns[1] - 1),
-                        rep("numeric",   length(period.columns)))
-        if (useless.last.column)
-            colClasses <- c(colClasses, "NULL")
+        colClasses <- paste(c(rep('c', period.columns[1] - 1),
+                              rep('n',   length(period.columns)),
+                              ifelse(useless.last.column, '-', '')),
+                            collapse = '')
 
-        # read actual data
-        data <- read.table(file, header = TRUE, sep = sep, quote = quote,
-                           na.strings = na.strings, colClasses = colClasses,
-                           check.names = FALSE, strip.white = TRUE) %>%
-            as_tibble()
+        # read data ----
+        data <- read_delim(file = file, quote = quote, col_names = c(header),
+                           col_types = colClasses, delim = sep, na = na.strings,
+                           skip = length(comment_header) + 1,
+                           comment = comment) %>%
+            # convert to long format
+            pivot_longer(all_of(periods), names_to = 'period',
+                         values_drop_na = drop.na)
 
-        colnames(data) <- tolower(colnames(data))
-
-        # convert to long format
-        data <- data %>%
-            pivot_longer(periods, names_to = 'period')
-
-        # convert periods
+        # convert periods ----
         if (convert.periods) {
             ISOyear <- make.ISOyear(seq(2005, 2150, by = 5))
             data$period <- ISOyear(data$period)
@@ -100,22 +125,23 @@ read.quitte <- function(file,
             data$period <- as.integer(as.character(data$period))
         }
 
-        return(as_tibble(data))
+        return(data)
     }
 
-    # read quitte for all supplied files
+    # read quitte for all supplied files ----
     quitte <- tibble()
     for (f in file) {
         quitte <- bind_rows(
             quitte,
-            .read.quitte(f, sep, quote, na.strings, convert.periods)
+            .read.quitte(f, sep, quote, na.strings, convert.periods, drop.na,
+                         comment)
         )
     }
 
     if (factors) {
         quitte <- quitte %>%
             # preserve order of scenarios for order of .mif files
-            mutate(!!sym('scenario') := as_factor(!!sym('scenario'))) %>%
+            mutate(scenario = as_factor(.data$scenario)) %>%
             factor.data.frame()
     }
 

@@ -179,7 +179,8 @@ calcDecompEff <- function(df, x, bau=NULL, pol=NULL, gap = "policy"){
 
     # prepare the dataset by computing the differences and spreading all variables
 
-    kaya = kaya %>% spread(key = .data$scenario,  value = .data$value) %>%
+    kaya = kaya %>%
+      pivot_wider(names_from = 'scenario',  values_from =  'value') %>%
       mutate(delta = .data$pol - .data$bau) %>%
       pivot_longer(cols = c("pol","bau","delta"), names_to  = "var", values_to = "value") %>%
       mutate(variable = paste(.data$variable, .data$var,sep = "__")) %>%
