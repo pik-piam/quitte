@@ -12,7 +12,8 @@
 #' @param x An object that should be either tested or transformed as/to an
 #' quitte-object.
 #' @param periodClass integer or POSIXct
-#' @param addNA modifies a factor by turning NA into an extra level (so that NA values are counted in tables, for instance).
+#' @param addNA modifies a factor by turning NA into an extra level (so that NA
+#' values are counted in tables, for instance).
 #' @param na.rm if set to TRUE entries with value NA will be removed
 #' @author Jan Philipp Dietrich
 #' @keywords classes
@@ -21,16 +22,16 @@
 #' @importFrom tibble as_tibble
 #'
 #' @export
-as.quitte <- function(x, periodClass = 'integer', addNA=FALSE, na.rm=FALSE) {
-    UseMethod('as.quitte', x)
+as.quitte <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
+    UseMethod("as.quitte", x)
 }
 
 #' @export
-as.quitte.character <- function(x, periodClass = "integer", addNA=FALSE, na.rm=FALSE) {
+as.quitte.character <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
     if (file.exists(x) &
         grepl("\\.(mif|csv)$", x))
         return(as.quitte(read.quitte(x), periodClass =
-                                  periodClass, addNA=addNA, na.rm=na.rm))
+                                  periodClass, addNA = addNA, na.rm = na.rm))
     stop(
         "Provided character cannot be converted to quitte as it does not seem to be a valid file path!"
     )
@@ -38,25 +39,25 @@ as.quitte.character <- function(x, periodClass = "integer", addNA=FALSE, na.rm=F
 
 #' @method as.quitte quitte
 #' @export
-as.quitte.quitte <- function(x, periodClass = "integer", addNA=FALSE, na.rm=FALSE) {
+as.quitte.quitte <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
     if (is.quitte(x, warn = FALSE)) {
-        if(addNA) x <- qaddNA(x)
-        if(na.rm) x <- x[!is.na(x$value),]
+        if (addNA) x <- qaddNA(x)
+        if (na.rm) x <- x[!is.na(x$value), ]
         return(x)
     } else {
         class(x) <- class(x)[class(x) != "quitte"]
-        return(as.quitte.data.frame(x, periodClass = periodClass, addNA=addNA, na.rm=na.rm))
+        return(as.quitte.data.frame(x, periodClass = periodClass, addNA = addNA, na.rm = na.rm))
     }
 }
 
 #' @method as.quitte data.frame
 #' @export
-as.quitte.data.frame <- function(x, periodClass = "integer", addNA=FALSE, na.rm=FALSE) {
+as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
     if (!(periodClass %in% c("integer", "POSIXct")))
         stop("periodClass must be in c('integer', 'POSIXct')")
-    store_attributes <- attributes(x)[-match(c('names', 'row.names', 'class'),
+    storeAttributes <- attributes(x)[-match(c("names", "row.names", "class"),
                                              names(attributes(x)))]
-    mandatory_columns <-
+    mandatoryColumns <-
         c("model",
           "scenario",
           "region",
@@ -64,7 +65,7 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA=FALSE, na.rm=
           "unit",
           "period",
           "value")
-    factor_columns <- c("model", "scenario", "region", "variable", "unit")
+    factorColumns <- c("model", "scenario", "region", "variable", "unit")
     colnames(x) <- tolower(colnames(x))
     colnames(x)[colnames(x) == "year"] <- "period"
     colnames(x)[colnames(x) == paste0("data", 1)] <- "scenario"
@@ -73,10 +74,10 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA=FALSE, na.rm=
 
     if (!("value" %in% colnames(x)) & any(!is.na(suppressWarnings(as.integer(colnames(x)))))) {
       x <- suppressMessages(melt(x))
-      colnames(x)[which(colnames(x)=="value")-1] <- "period"
+      colnames(x)[which(colnames(x) == "value") - 1] <- "period"
     }
 
-    if (!all(mandatory_columns %in% colnames(x))) {
+    if (!all(mandatoryColumns %in% colnames(x))) {
         if (!("model"    %in% colnames(x)))
             x <- cbind(x, model = fct_explicit_na(factor(NA)))
         if (!("scenario" %in% colnames(x)))
@@ -96,56 +97,55 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA=FALSE, na.rm=
         if (!("value"    %in% colnames(x)))
               stop("Data frame cannot be converted. A column \"value\" has to be provided!")
     }
-    factor_check <- sapply(x[, factor_columns], is.factor)
-    if (!all(factor_check)) {
-        for (i in names(factor_check)[!factor_check])
+    factorCheck <- sapply(x[, factorColumns], is.factor) # nolint
+    if (!all(factorCheck)) {
+        for (i in names(factorCheck)[!factorCheck])
             x[[i]] <- as.factor(x[[i]])
     }
-    if(is.factor(x$period)) {
+    if (is.factor(x$period)) {
       x$period <- as.integer(as.character(x$period))
     }
 
     if (periodClass == "integer")
         x$period <- as.integer(x$period)
     if (periodClass == "POSIXct") {
-        ISOyear <- make.ISOyear()
+        ISOyear <- make.ISOyear() # nolint
         if (!("POSIXct" %in% attr(x$period, "class")))
             x$period <- ISOyear(x$period)
     }
     if (!is.numeric(x$value))
         stop("Value column must contain numeric data!")
 
-    #rearrange data for better readability
+    # rearrange data for better readability
     reorder <-
-        c(mandatory_columns[mandatory_columns != "value"], names(x)[!(names(x) %in% mandatory_columns)], "value")
+        c(mandatoryColumns[mandatoryColumns != "value"], names(x)[!(names(x) %in% mandatoryColumns)], "value")
     x <- x[reorder]
 
     # add NA entrys to factors
-    if(addNA) x <- qaddNA(x)
-    if(na.rm) x <- x[!is.na(x$value),]
+    if (addNA) x <- qaddNA(x)
+    if (na.rm) x <- x[!is.na(x$value), ]
 
     attributes(x) <- c(attributes(x)[match(setdiff(names(attributes(x)),
-                                                   names(store_attributes)),
+                                                   names(storeAttributes)),
                                            names(attributes(x)))],
-                       store_attributes)
+                       storeAttributes)
     class(x) <- c("quitte", class(x))
     return(x)
 }
 
 #' @method as.quitte magpie
 #' @export
-as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE,
-                             na.rm = FALSE) {
+as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
     if (!(periodClass %in% c("integer", "POSIXct")))
       stop("periodClass must be in c('integer', 'POSIXct')")
 
     x <- magclass::clean_magpie(x, what = "sets")
-    if (magclass::ndim(x, dim = 3) == 1 && 
+    if (magclass::ndim(x, dim = 3) == 1 &&
         !(magclass::getSets(x, fulldim = FALSE)[3] %in% c("model", "scenario", "unit"))) {
       magclass::getSets(x, fulldim = FALSE)[3] <- "variable"
     }
-    if (  !("unit" %in% magclass::getSets(x))
-        & ("variable" %in% magclass::getSets(x))) {
+    if (!("unit" %in% magclass::getSets(x))        &
+ ("variable" %in% magclass::getSets(x))) {
       if (all(grepl(" \\(.*\\)$",
                     magclass::getNames(x, fulldim = TRUE)$variable))) {
         magclass::getNames(x) <- sub(" \\(([^\\()]*)\\)($|\\.)", ".\\1\\2",
@@ -160,7 +160,7 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE,
     if (!is.null(names(d)[[3]])) {
       datanames <- strsplit(names(d)[[3]], "\\.")[[1]]
       datanames <- make.unique(c("cell", "region", "year", "value", datanames),
-                               sep = "")[-(1:4)]
+                               sep = "")[- (1:4)]
     } else {
       datanames <- NULL
     }
@@ -168,21 +168,21 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE,
     x <- magclass::as.data.frame(x)
 
     if (all(is.na(x$Cell)))
-      x$Cell <- NULL
+      x$Cell <- NULL # nolint
 
     if (length(datanames) > 0) {
-      for (i in 1:length(datanames))
+      for (i in seq_along(datanames))
         colnames(x)[colnames(x) == paste0("Data", i)] <- datanames[i]
     } else {
       if ("Data1" %in% colnames(x))
         if (all(levels(x$Data1) == "NA"))
-          x$Data1 <- NULL
+          x$Data1 <- NULL # nolint
     }
 
-    quitte_columns <- c('model', 'scenario', 'region', 'variable', 'unit',
-                        'period', 'value')
+    quitteColumns <- c("model", "scenario", "region", "variable", "unit",
+                        "period", "value")
 
-    for (cn in quitte_columns) {
+    for (cn in quitteColumns) {
       colnames(x)[tolower(colnames(x)) == cn] <- cn
     }
     colnames(x)[tolower(colnames(x)) == "year"] <- "period"
@@ -195,27 +195,27 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE,
     } else if (periodClass == "integer") {
       x$period <- as.integer(as.character(x$period))
     } else if (periodClass == "POSIXct") {
-      ISOyear <- make.ISOyear()
+      ISOyear <- make.ISOyear() # nolint
       x$period <- ISOyear(x$period)
     }
 
     # add missing columns
-    missing_columns <- setdiff(quitte_columns, colnames(x))
+    missingColumns <- setdiff(quitteColumns, colnames(x))
 
-    if (length(missing_columns) > 0) {
+    if (length(missingColumns) > 0) {
       x <- data.frame(
         x,
         stats::setNames(
-          as.list(rep(fct_explicit_na(factor(NA)), length(missing_columns))),
-          missing_columns)
+          as.list(rep(fct_explicit_na(factor(NA)), length(missingColumns))),
+          missingColumns)
       )
     } else {
       x <- data.frame(x)
     }
 
     # reorder columns
-    x <- x[c(match(quitte_columns, colnames(x)),
-             match(setdiff(colnames(x), quitte_columns), colnames(x)))]
+    x <- x[c(match(quitteColumns, colnames(x)),
+             match(setdiff(colnames(x), quitteColumns), colnames(x)))]
 
     # add NA entrys to factors
     if (addNA)
@@ -224,7 +224,7 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE,
       x <- x[!is.na(x$value), ]
     x <- as_tibble(x)
 
-    class(x) <- c('quitte', class(x))
+    class(x) <- c("quitte", class(x))
 
     return(x)
   }

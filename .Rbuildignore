@@ -6,3 +6,4 @@
 ^\.github$
 ^codecov\.yml$
 ^data-raw$
+^\.pre-commit-config\.yaml$
