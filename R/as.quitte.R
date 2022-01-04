@@ -140,8 +140,7 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
       stop("periodClass must be in c('integer', 'POSIXct')")
 
     x <- magclass::clean_magpie(x, what = "sets")
-    if (magclass::ndim(x, dim = 3) == 1 &&
-        !(magclass::getSets(x, fulldim = FALSE)[3] %in% c("model", "scenario", "unit"))) {
+    if (magclass::getSets(x, fulldim = FALSE)[3] == "d3") {
       magclass::getSets(x, fulldim = FALSE)[3] <- "variable"
     }
     if (!("unit" %in% magclass::getSets(x))        &
