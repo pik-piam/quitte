@@ -1,7 +1,7 @@
 #' Madrat Mule
 #'
 #' Convert _anything_ to a [`magpie`][magclass::magclass] object and back to
-#' traffic data across those [`madrat`][madrat::madrat] borders.
+#' traffic data across `madrat` borders.
 #'
 #' @md
 #' @param x Anything.
