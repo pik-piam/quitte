@@ -54,3 +54,4 @@ Suggests:
 Repository: CRAN
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
+URL: https://pik-piam.github.io/quitte/
