@@ -9,6 +9,13 @@
 \description{
 Bits and pieces for easier handling of quitte-style data frames.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://pik-piam.github.io/quitte/}
+}
+
+}
 \author{
 Michaja Pehl
 }
