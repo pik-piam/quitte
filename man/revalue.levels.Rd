@@ -2,25 +2,24 @@
 % Please edit documentation in R/revalue.levels.R
 \name{revalue.levels}
 \alias{revalue.levels}
-\alias{revalue.levels_}
 \title{Revalue data frame factor levels.}
 \usage{
 revalue.levels(df, ...)
-
-revalue.levels_(df, dots)
 }
 \arguments{
 \item{df}{A data frame (or quitte object).}
 
-\item{...}{Name-value pairs assigning a named vector with new names to a column from the dataframe.}
-
-\item{dots}{A named list of columns containing the named vector with the old and new names for each column}
+\item{...}{Named vectors of named chr, or a list of named vectors of named chr. 
+The names of the vectors must correspond to column names of df. The vectors themselves
+should have as names the the current values in the column to be replaced, and as values the new 
+(replacement) values.}
 }
 \value{
 A data frame (or quitte object, same as \code{data}).
 }
 \description{
-Revalue the names of a level or character column in a dataframe, according to a named vector given as an input
+Revalue the names of a level or character column in a dataframe, according to 
+a named vector given as an input.
 }
 \examples{
 
@@ -31,13 +30,12 @@ data <- inline.data.frame(c(
   "REMIND;   Baseline;   CHN;      GDP per Capita|MER; US$2005/yr;   2010;     7000"))
   
 reg_vec = c(USA = "United States")
-var_vec = c("GDP per Capita|MER" = "gdp",
-           Population = "pop")
+var_vec = c("GDP per Capita|MER" = "gdp", Population = "pop")
 
-revalue.levels(data,region = reg_vec)
-revalue.levels_(data,list(region = reg_vec, variable = var_vec))
-                       
+revalue.levels(data, region = reg_vec)
+revalue.levels(data, list(region = reg_vec, variable = var_vec))
+
 }
 \author{
-Antoine Levesque
+Antoine Levesque, Johannes Koch
 }
