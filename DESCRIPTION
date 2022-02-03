@@ -32,7 +32,6 @@ Imports:
     lubridate, 
     magclass,
     methods, 
-    plyr, 
     readr,
     reshape2, 
     rlang,
