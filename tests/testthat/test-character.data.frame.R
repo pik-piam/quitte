@@ -21,9 +21,8 @@ test_that(
             expected = nrow(df))
 
         # identical object attributes
-        expect_equal(
-            object   = names(attributes(cdf)),
-            expected = names(attributes(df)))
+        expect_true(
+            object = setequal(names(attributes(df)), names(attributes(cdf))))
 
         # no 'dim' or 'dimnames' attributes
         expect_equal(
