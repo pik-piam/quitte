@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: quitte
 Type: Package
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3094.1
-Date: 2022-02-10
+Version: 0.3095.0
+Date: 2022-03-18
 Authors@R: c(person("Michaja", "Pehl", role = c("aut", "cre"),
 		            email = "pehl@pik-potsdam.de"),
 		     person("Nico", "Bauer", role = "aut",
