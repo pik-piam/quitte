@@ -144,6 +144,7 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
   .dots <- lapply(.dots,
                   function(l) {
                     paste0("~", l[[1]]) %>%
+                          gsub('\\n *', ' ', .) %>%
                       stats::formula() %>%
                       lazyeval::interp()
                   })
