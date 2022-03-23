@@ -8,7 +8,11 @@
 #' @param x A [`quitte`] data frame.
 #' @param path Path or connection to write to.
 #' @param comment_header Comment header to be written to the `.mif` file.
-#' @param comment A character to prepend to comment header lines.
+#'   Ignored if `append` is `TRUE`.
+#' @param comment A character to prefix comment header lines with.  Must match
+#'   existing comment characters in file `path` if `append` is `TRUE`.
+#' @param append Overwrite existing files (`FALSE`, default), or append to them
+#'   (`TRUE`).
 #'
 #' @author Michaja Pehl
 #'
@@ -22,7 +26,8 @@
 #' @importFrom stringr str_to_title
 
 #' @export
-write.mif <- function(x, path, comment_header = NULL, comment = '#') {
+write.mif <- function(x, path, comment_header = NULL, comment = '#',
+                      append = FALSE) {
 
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
                          'Period', 'Value')
@@ -30,11 +35,13 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#') {
     . <- NULL
 
     # guardians
-    if (any(
+    no_quitte <- any(
         !is.data.frame(x),
         !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
-               'value') %in% tolower(names(x)))))
+               'value') %in% tolower(names(x))))
+    if (no_quitte) {
         stop('x must be a quitte data frame')
+    }
 
     # make column names upper-case
     x <- x %>%
@@ -46,15 +53,28 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#') {
         arrange(.data$Period) %>%
         pivot_wider(names_from = 'Period', values_from = 'Value')
 
-    # write comment header
-    if (!is.null(comment_header)) {
-        write_lines(x = paste('#', comment_header), file = path, append = FALSE)
-    }
+    # check existing header
+    if (append) {
+        # read the header, comment_header, and useless.last.column from file and
+        # assign them to the environment
+        header <- read_mif_header(path, ';', comment)$header
 
-    # write column header
-    paste(c(colnames(x), ''), collapse = ';') %>%
-        write_lines(file = path,
-                    append = ifelse(is.null(comment_header), FALSE, TRUE))
+        if (any(header != tolower(colnames(x)))) {
+            stop('Column headers of x and path do not match.')
+        }
+    # or write a new one
+    } else {
+        # write comment header
+        if (!is.null(comment_header)) {
+            write_lines(x = paste('#', comment_header), file = path,
+                        append = FALSE)
+        }
+
+        # write column header
+        paste(c(colnames(x), ''), collapse = ';') %>%
+            write_lines(file = path,
+                        append = ifelse(is.null(comment_header), FALSE, TRUE))
+    }
 
     # write data
     x %>%
