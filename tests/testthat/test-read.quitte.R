@@ -44,5 +44,5 @@ test_that(
     write.mif(d, f2 <- tempfile())
     expect_equal(
       object = read.quitte(f1),
-      expected =  read.quitte(f2))
+      expected = read.quitte(f2))
   })

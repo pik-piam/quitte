@@ -2,6 +2,7 @@
 #'
 #' Reads IAMC-style .csv files into a quitte data frame.
 #'
+#' @md
 #' @param file Path of IAMC-style .csv file or vector of paths to read.
 #' @param sep Column separator, defaults to ";".
 #' @param quote Quote characters, empty by default.
@@ -15,9 +16,8 @@
 #' @param drop.na Should NA values be dropped from the `quitte`?
 #' @param comment A character which at line start signifies the optional comment
 #'   header with metadata at the head of `file`.
-#'
-#' @md
 #' @param factors Return columns as factors (`TRUE`) or not.
+#'
 #' @return A quitte data frame.
 #'
 #' @author Michaja Pehl
@@ -59,33 +59,12 @@ read.quitte <- function(file,
         # additional columns after the periods
 
         # read header ----
-        # Read as much of the file as is necessary to collect the comment header
-        # and the column header
-        n_max <- 1
-        while (all(grepl('^#',
-                         header <- read_lines(file = file, n_max = n_max)))) {
-            n_max = n_max * 2
-        }
-
-        ## get the comment header ----
-        comment_header <- header %>%
-            grep(paste0('^', comment), ., value = TRUE) %>%
-            sub(paste0('^', comment, '\\s*'), '', .)
-
-        ## get the column header ----
-        header <- header %>%
-            grep(paste0('^', comment), ., value = TRUE, invert = TRUE) %>%
-            first()
-
-        # Check if the last column of df is of class logical, i.e. if it was a
-        # propper .mif file with the pointless trailing semi-colon.
-        useless.last.column <- grepl(paste0(sep, '$'), header)
-
-        # Convert column header into column names
-        header <- header %>%
-            strsplit(sep) %>%
-            unlist() %>%
-            tolower()
+        # read the header, comment_header, and useless.last.column from file and
+        # assign them to the environment
+        foo <- read_mif_header(file, sep, comment)
+        header              <- foo$header
+        comment_header      <- foo$comment_header
+        useless.last.column <- foo$useless.last.column
 
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
         # FIXME: relax to handle other than 4-digit periods
