@@ -349,6 +349,29 @@ test_that(
     }
 )
 
+test_that(
+  desc = 'the arguments of add_timesteps_columns() with default values work',
+  code = {
+    timesteps <- data.frame(tau = c(rep(1,2),rep(2,4), rep(3,1)),
+                            hour = 1:7,
+                            weight = 1)
+    data <- data.frame(tau = 1:3)
+
+    object <- add_timesteps_columns(data, timesteps,
+                                    periods = 'tau',
+                                    gaps = 0.1,
+                                    intervalFactor = c(-1, 0),
+                                    timesteps_period = 'tau',
+                                    timesteps_timeUnit = 'hour')
+
+    expected <- data.frame(tau = 1:3,
+                          xpos = c(1, 4, 6.5),
+                          width = c(1.9, 3.9, 0.9))
+
+    expect_equal(object,
+                 expected)
+  }
+  )
 # ---- add_remind_timesteps_columns() calculations ----
 test_that(
     desc = 'add_remind_timesteps_columns() calculations',
