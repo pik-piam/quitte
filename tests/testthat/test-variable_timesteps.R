@@ -360,9 +360,9 @@ test_that(
     object <- add_timesteps_columns(data, timesteps,
                                     periods = 'tau',
                                     gaps = 0.1,
-                                    intervalFactor = c(-1, 0),
+                                    interval_shift = c(-1, 0),
                                     timesteps_period = 'tau',
-                                    timesteps_timeUnit = 'hour')
+                                    timesteps_interval = 'hour')
 
     expected <- data.frame(tau = 1:3,
                           xpos = c(1, 4, 6.5),
