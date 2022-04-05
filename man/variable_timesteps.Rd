@@ -7,7 +7,15 @@
 \alias{ggplot_bar_remind_vts}
 \title{Bar plots with variable time steps}
 \usage{
-add_timesteps_columns(data, timesteps, periods = "period", gaps = 0)
+add_timesteps_columns(
+  data,
+  timesteps,
+  periods = "period",
+  gaps = 0,
+  intervalFactor = c(-0.5, 0.5),
+  timesteps_period = "period",
+  timesteps_timeUnit = "year"
+)
 
 add_remind_timesteps_columns(data, periods = "period", gaps = 0)
 
@@ -16,7 +24,8 @@ ggplot_bar_vts(
   timesteps,
   mapping = aes_string(x = "period", y = "value", fill = "variable"),
   gaps = 0.1,
-  position_fill = FALSE
+  position_fill = FALSE,
+  ...
 )
 
 ggplot_bar_remind_vts(
@@ -40,11 +49,25 @@ columns \code{period}, \code{year}, and \code{weight}, where
 \item{gaps}{Gaps between bars as a fraction of the smallest bar width.
 Defaults to 0.1 (e.g. 0.1 * 5 years = 0.5 years).}
 
+\item{intervalFactor}{numeric of length 2. Factor correcting for beginning
+and end of time interval.
+If the interval for period 1 should be [0.5,1.5], \code{intervalFactor}
+should be set to c(-0.5,0.5) (default). If the interval for period 1
+should be [0,1], \code{intervalFactor} should be set to c(-1,0).}
+
+\item{timesteps_period}{character string giving the column name of the
+\code{period} in the \code{timesteps} dataframe. Default to \code{period}}
+
+\item{timesteps_timeUnit}{character string giving the column name of the
+time unit in the \code{timesteps} dataframe. Default to \code{year}}
+
 \item{mapping}{\code{\link[ggplot2:aes]{aes()}} mapping with aesthetics
 \code{x}, \code{y}, and optionally \code{fill}.}
 
 \item{position_fill}{If \code{TRUE}, stacks bars and standardises each stack
 to have constant height.}
+
+\item{...}{arguments to be passed to \code{add_timesteps_columns}}
 }
 \value{
 \code{add_timesteps_columns()} and
@@ -95,6 +118,24 @@ ggplot_bar_remind_vts(
                                      levels(quitte_example_data$variable),
                                      value = TRUE))) +
     facet_wrap(~ scenario)
+
+# another data set with a different time column
+data2 <- data.frame(variable = c('Wind', 'Solar', 'Wind', 'Solar'),
+    tau = c(1,1,2,2),
+    value = 1:4)
+
+# some timesteps dataframe with hourly data
+timesteps <- data.frame(tau = c(rep(1,2),rep(2,4)),
+                            hour = 1:6,
+                            weight = 1)
+
+# plotting with different timesteps than periods and years
+ggplot_bar_vts(data2, timesteps,
+              mapping = aes_string('tau','value',
+                                     group = 'variable', fill = 'variable'),
+              timesteps_period = 'tau',
+              timesteps_timeUnit = 'hour',
+              intervalFactor = c(-1,0))
 }
 \author{
 Michaja Pehl

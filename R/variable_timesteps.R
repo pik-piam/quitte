@@ -1,35 +1,42 @@
 #' Bar plots with variable time steps
 #'
+#' @md
 #' Utility functions for plotting stacked bars with variable widths for
 #' displaying time-series data with variable time steps (like REMIND data).
 #'
-#' \code{add_timesteps_columns()} calculates the x-axis position and width of
-#' bars based on the information in \code{timesteps} and joins it to
-#' \code{data}.  \code{add_remind_timesteps_columns()} uses the
-#' \code{\link{remind_timesteps}} data frame.  \code{ggplot_bar_vts()} produces
-#' a bar plot with bars positioned according to \code{timesteps}.
-#' \code{ggplot_bar_remind_vts()} uses the \code{\link{remind_timesteps}} data
+#' `add_timesteps_columns()` calculates the x-axis position and width of bars
+#' based on the information in `timesteps` and joins it to `data`.
+#' `add_remind_timesteps_columns()` uses the [`remind_timesteps`] data frame.
+#' `ggplot_bar_vts()` produces a bar plot with bars positioned according to
+#' `timesteps`.  `ggplot_bar_remind_vts()` uses the [`remind_timesteps`] data
 #' frame.
 #'
-#'
 #' @param data A data frame.
-#' @param timesteps A data frame like \code{\link{remind_timesteps}} with
-#'     columns \code{period}, \code{year}, and \code{weight}, where
-#'     \code{weight} determines which share of \code{year} belongs to
-#'     \code{period}.
-#' @param periods The column holding the period information in \code{data}
-#'     (either a string or an object).  Defaults to \code{'period'}.
-#' @param mapping \code{\link[ggplot2:aes]{aes()}} mapping with aesthetics
-#'     \code{x}, \code{y}, and optionally \code{fill}.
+#' @param timesteps A data frame like [`remind_timesteps`] with columns
+#'   `period`, `year`, and `weight`, where `weight` determines which share of
+#'   `year` belongs to `period`.
+#' @param periods The column holding the period information in `data` (either a
+#'   string or an object).  Defaults to `'period'`.
+#' @param mapping [`aes()`][ggplot2::aes] mapping with aesthetics `x`, `y`, and
+#'   optionally `fill`.
 #' @param gaps Gaps between bars as a fraction of the smallest bar width.
 #'     Defaults to 0.1 (e.g. 0.1 * 5 years = 0.5 years).
-#' @param position_fill If \code{TRUE}, stacks bars and standardises each stack
-#'     to have constant height.
+#' @param position_fill If `TRUE`, stacks bars and standardises each stack to
+#'   have constant height.
+#' @param timesteps_period character string giving the column name of the
+#'   `period` in the `timesteps` data frame.  Defaults to `'period'`.
+#' @param timesteps_interval character string giving the column name of the time
+#'   interval in the `timesteps` data frame.  Defaults to `'year'`.
+#' @param interval_shift numeric of length 2.  Shifts added to the interval fix
+#'   point to obtain the beginning and end of time interval.
+#'   If the interval for period 1 should be `[0.5, 1.5]`, `interval_shift`
+#'   should be set to `c(-0.5, 0.5)` (default).  If the interval for period 1
+#'   should be `[0, 1]`, `interval_shift` should be set to `c(-1, 0)`.
 #'
-#' @return \code{add_timesteps_columns()} and
-#'     \code{add_remind_timesteps_columns()} return a data frame.
-#'     \code{ggplot_bar_vts()} and \code{ggplot_bar_remind_vts()} return a
-#'     \code{\link[ggplot2:ggplot]{ggplot()}}-like object.
+#' @return `add_timesteps_columns()` and `add_remind_timesteps_columns()` return
+#'   a data frame.
+#'   `ggplot_bar_vts()` and `ggplot_bar_remind_vts()` return a
+#'   [`ggplot()`][ggplot2::ggplot]-like object.
 #'
 #' @author Michaja Pehl
 #'
@@ -65,11 +72,32 @@
 #'                                      levels(quitte_example_data$variable),
 #'                                      value = TRUE))) +
 #'     facet_wrap(~ scenario)
+#'
+#' # another data set with a different time column
+#' data2 <- data.frame(variable = c('Wind', 'Solar', 'Wind', 'Solar'),
+#'     tau = c(1,1,2,2),
+#'     value = 1:4)
+#'
+#' # some timesteps dataframe with hourly data
+#' timesteps <- data.frame(tau = c(rep(1,2),rep(2,4)),
+#'                             hour = 1:6,
+#'                             weight = 1)
+#'
+#' # plotting with different timesteps than periods and years
+#' ggplot_bar_vts(data2, timesteps,
+#'               mapping = aes_string('tau','value',
+#'                                      group = 'variable', fill = 'variable'),
+#'               timesteps_period = 'tau',
+#'               timesteps_interval = 'hour',
+#'               interval_shift = c(-1,0))
 
 #' @rdname variable_timesteps
 #' @export
 add_timesteps_columns <- function(data, timesteps, periods = 'period',
-                                  gaps = 0) {
+                                  gaps = 0,
+                                  interval_shift = c(-0.5, 0.5),
+                                  timesteps_period = 'period',
+                                  timesteps_interval = 'year') {
     # ---- parse `periods` parameter ----
     periods <- substitute(periods)
     # is it a variable to be evaluated in the parent frame?
@@ -91,8 +119,12 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
     if (!periods %in% colnames(data))
         stop('Column `', periods, '` is missing in `data`.')
 
-    missing.columns <- setdiff(c('period', 'year', 'weight'),
-                               colnames(timesteps))
+    if (!all(is.character(timesteps_period), is.character(timesteps_interval)))
+        stop('`timesteps_period` and `timesteps_interval` must be characters')
+
+    missing.columns <- setdiff(
+        c(timesteps_period, timesteps_interval, 'weight'), colnames(timesteps))
+
     if (length(missing.columns))
         stop('Column', ifelse(1 < length(missing.columns), 's', ''), ' ',
              paste(paste0('`', missing.columns, '`'), collapse = ', '), ' ',
@@ -106,7 +138,7 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
     # ---- join data frames ----
     # calculate absolute gap as fraction of smallest bar width
     gaps <- gaps * (timesteps %>%
-                        group_by(!!sym('period')) %>%
+                        group_by(!!sym(timesteps_period)) %>%
                         summarise(width = sum(!!sym('weight'))) %>%
                         getElement('width') %>%
                         min())
@@ -114,14 +146,15 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
         data,
 
         timesteps %>%
-            group_by(!!sym('period')) %>%
+            arrange(!!sym(timesteps_interval)) %>%
+            group_by(!!sym(timesteps_period)) %>%
             summarise(
                 # start at first year belonging to period
                 # whole numbers are mid-year, -0.5 is year start
                 # add fractional part of the first year, if any
                 # half of the gap on the left
-                !!sym('start') := first(!!sym('year'))
-                                - 0.5
+                !!sym('start') := first(!!sym(timesteps_interval))
+                                + interval_shift[1]
                                 + first(!!sym('weight')) %% 1
                                 + gaps / 2,
 
@@ -129,17 +162,17 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
                 # whole numbers are mid-year, +0.5 is year end
                 # add fractional part of the last year, if any
                 # half a gap on the right
-                !!sym('end')   := last(!!sym('year'))
-                                + 0.5
+                !!sym('end')   := last(!!sym(timesteps_interval))
+                                + interval_shift[2]
                                 - last(!!sym('weight')) %% 1
                                 - gaps / 2,
 
                 !!sym('xpos')  := (!!sym('start') + !!sym('end')) / 2,
                 !!sym('width') := !!sym('end') - !!sym('start')) %>%
             ungroup() %>%
-            select('period', 'xpos', 'width'),
+            select(timesteps_period, 'xpos', 'width'),
 
-        setNames('period', periods)
+        setNames(timesteps_period, periods)
     )
 }
 
@@ -176,7 +209,10 @@ add_remind_timesteps_columns <- function(data, periods = 'period', gaps = 0) {
 ggplot_bar_vts <- function(data, timesteps,
                            mapping = aes_string(x = 'period', y = 'value',
                                                 fill = 'variable'),
-                           gaps = 0.1, position_fill = FALSE) {
+                           gaps = 0.1, position_fill = FALSE,
+                           interval_shift = c(-0.5, 0.5),
+                           timesteps_period = 'period',
+                           timesteps_interval = 'year') {
 
     # ---- parse mapping ----
     x    <- as.character(get_expr(mapping$x))
@@ -212,11 +248,13 @@ ggplot_bar_vts <- function(data, timesteps,
 
     # ---- plot ----
     ggplot() +
-        geom_col(data = data %>%
-                     add_timesteps_columns(timesteps, x, gaps),
-                 mapping = aes_string(x = 'xpos', y = y, width = 'width',
-                                      fill = fill),
-                 position = ifelse(position_fill, 'fill', 'stack'))
+        geom_col(
+            data = data %>%
+                add_timesteps_columns(timesteps, x, gaps, interval_shift,
+                                      timesteps_period, timesteps_interval),
+            mapping = aes_string(x = 'xpos', y = y, width = 'width',
+                                 fill = fill),
+            position = ifelse(position_fill, 'fill', 'stack'))
 }
 
 #' @rdname variable_timesteps
