@@ -2,7 +2,7 @@
 
 R package **quitte**, version **0.3097.0**
 
-[![CRAN status](https://www.r-pkg.org/badges/version/quitte)](https://cran.r-project.org/package=quitte)  [![R build status](https://github.com/pik-piam/quitte/workflows/check/badge.svg)](https://github.com/pik-piam/quitte/actions) [![codecov](https://codecov.io/gh/pik-piam/quitte/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/quitte) [![r-universe](https://pik-piam.r-universe.dev/badges/quitte)](https://pik-piam.r-universe.dev/ui#builds)
+[![CRAN status](https://www.r-pkg.org/badges/version/quitte)](https://cran.r-project.org/package=quitte)  [![R build status](https://pik.github.com/pik-piam/quitte/workflows/check/badge.svg)](https://pik.github.com/pik-piam/quitte/actions) [![codecov](https://codecov.io/gh/pik-piam/quitte/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/quitte) [![r-universe](https://pik-piam.r-universe.dev/badges/quitte)](https://pik-piam.r-universe.dev/ui#builds)
 
 ## Purpose and Functionality
 
