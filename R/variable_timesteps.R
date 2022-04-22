@@ -1,6 +1,5 @@
 #' Bar plots with variable time steps
 #'
-#' @md
 #' Utility functions for plotting stacked bars with variable widths for
 #' displaying time-series data with variable time steps (like REMIND data).
 #'
@@ -11,6 +10,7 @@
 #' `timesteps`.  `ggplot_bar_remind_vts()` uses the [`remind_timesteps`] data
 #' frame.
 #'
+#' @md
 #' @param data A data frame.
 #' @param timesteps A data frame like [`remind_timesteps`] with columns
 #'   `period`, `year`, and `weight`, where `weight` determines which share of
