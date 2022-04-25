@@ -8,25 +8,25 @@
 #' @return A data frame (or quitte object, same as \code{data}).
 #' @author Antoine Levesque
 #' @examples
-#' 
+#'
 #' data <- inline.data.frame(c(
 #'   "model;    scenario;   region;   variable;           unit;         period;   value",
 #'   "REMIND;   Baseline;   USA;      GDP per Capita|MER; US$2005/yr;   2010;     40000",
 #'   "REMIND;   Baseline;   USA;      Population;         million;      2010;     300",
 #'   "REMIND;   Baseline;   CHN;      GDP per Capita|MER; US$2005/yr;   2010;     7000"))
-#'   
+#'
 #'reg_vec = c(USA = "United States")
 #'var_vec = c("GDP per Capita|MER" = "gdp",
 #'            Population = "pop")
 #'
 #'revalue.levels(data,region = reg_vec)
 #'revalue.levels_(data,list(region = reg_vec, variable = var_vec))
-#'                        
+#'
 #'@export
 revalue.levels <- function(df, ...) {
-  
+
   dots <- list(...)
-  
+
   revalue.levels_(df, dots)
 }
 
@@ -34,20 +34,19 @@ revalue.levels <- function(df, ...) {
 #' @export
 #' @rdname revalue.levels
 revalue.levels_ <- function(df, dots) {
-  
+
   # guardians
   if (!is.data.frame(df))
     stop('only works on data frames')
-  
+
   dot.names <- names(dots)
-  
+
   for (column in dot.names) {
-   
+
     reval_vec = getElement(dots, column)
       df[, column] <-revalue(getElement(df, column), replace = reval_vec)
-      
+
   }
-  
+
   return(df)
 }
-

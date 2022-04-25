@@ -9,8 +9,8 @@
 #' df = data.frame(x = c(1,2),
 #'                 y = c(3,4))
 #' form = "z = x + y"
-#' mutate_text(df,form)                 
-#' 
+#' mutate_text(df,form)
+#'
 #' @author Antoine Levesque
 #'
 #' @export

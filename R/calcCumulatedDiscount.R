@@ -127,5 +127,3 @@ calcCumulatedDiscount = function(data,
 
   return(as.quitte(as.data.frame(erg_allT)))
 }
-
-

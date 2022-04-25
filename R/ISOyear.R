@@ -34,4 +34,3 @@ make.ISOyear <- function(years = seq(from = 1900, to = 2200, by = 5)) {
 
   return(f)
 }
-

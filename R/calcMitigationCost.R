@@ -65,4 +65,3 @@ calcMitigationCost = function(data,scenBau,scenPol,
   return(as.quitte(data.frame(res)))
 
 }
-

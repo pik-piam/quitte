@@ -53,4 +53,3 @@ order.levels_ <- function(df, dots, drop.extra.levels = TRUE) {
 
     return(df)
 }
-

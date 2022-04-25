@@ -315,4 +315,3 @@ aggregate_map <- function(data,
 
 return(.data)
 }
-

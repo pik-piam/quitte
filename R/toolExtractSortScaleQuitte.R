@@ -43,4 +43,3 @@ toolExtractSortScaleQuitte <- function(x,scen,vars,
   return(x)
 
 }
-
