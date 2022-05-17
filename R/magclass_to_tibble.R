@@ -11,6 +11,7 @@
 #' @importFrom magclass as.data.frame getItems
 #' @importFrom rlang sym syms
 #' @importFrom tibble as_tibble
+#' @importFrom tidyselect all_of
 #'
 #' @examples
 #' magclass_to_tibble(magclass::maxample('pop'))
@@ -21,14 +22,33 @@ magclass_to_tibble <- function(m) {
         stop('m is not a magclass')
     }
 
+    n <- m %>%
+        as.data.frame() %>%
+        as_tibble()
+
+    na_columns <- n %>%
+        as.list() %>%
+        sapply(function(x) { all(is.na(x)) }) %>%
+        which(useNames = TRUE) %>%
+        names()
+
+    rename_columns <- n %>%
+        colnames() %>%
+        setdiff(c(na_columns, 'Region', 'Year', 'Value'))
+
     col_names <- c(unlist(strsplit(names(getItems(m)), '\\.')), 'value')
 
-    m %>%
-        as.data.frame() %>%
-        as_tibble() %>%
-        select(!!!syms(c('Region', 'Year',
-                         paste0('Data', 1:(length(col_names) - 3)),
-                         'Value'))) %>%
+    if (length(rename_columns) > length(col_names) - 3) {
+        col_names <- c(
+            col_names[1:2],
+            paste(col_names[c(-1, -2, -length(col_names))],
+                  1:length(rename_columns),
+                  sep = '.'),
+            col_names[length(col_names)])
+    }
+
+    n %>%
+        select(!all_of(na_columns)) %>%
         `colnames<-`(col_names) %>%
         character.data.frame() %>%
         mutate(!!sym(col_names[2]) := as.integer(!!sym(col_names[2])))
