@@ -4,6 +4,8 @@
 #'
 #' @md
 #' @param m A [`magpie`][magclass::magclass] object.
+#' @param colnames Column names for the returned `tibble`.  Must match the
+#'   number of columns.
 #'
 #' @return A [`tibble`][tibble::tibble].
 #'
@@ -17,7 +19,7 @@
 #' magclass_to_tibble(magclass::maxample('pop'))
 
 #' @export
-magclass_to_tibble <- function(m) {
+magclass_to_tibble <- function(m, colnames = NULL) {
     if (!'magpie' %in% class(m)) {
         stop('m is not a magclass')
     }
@@ -47,9 +49,16 @@ magclass_to_tibble <- function(m) {
             col_names[length(col_names)])
     }
 
-    n %>%
+    n <- n %>%
         select(!all_of(na_columns)) %>%
         `colnames<-`(col_names) %>%
         character.data.frame() %>%
         mutate(!!sym(col_names[2]) := as.integer(!!sym(col_names[2])))
+
+    if (!is.null(colnames)) {
+        n <- n %>%
+            `colnames<-`(colnames)
+    }
+
+    return(n)
 }
