@@ -149,6 +149,10 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
     # columns for which combinations are to be preserved/expanded
     combination_columns <- setdiff(colnames(data), c(period, value))
 
+
+    # store column names ----
+    col_names <- colnames(data)
+
     if ('nesting' == combinations) {
         data <- data %>%
             complete(nesting(!!!syms(combination_columns)),
@@ -162,7 +166,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
     }
 
     data <- data %>%
-        group_by_at(combination_columns)
+        group_by(!!!syms(combination_columns))
 
     # ---- fill in missing periods ----
     # choose method
@@ -174,7 +178,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         }
     }
 
-    # ---- calculate missing values ----
+     # ---- calculate missing values ----
     .set_na <- function(a, b) {   # !diagnostics suppress=.set_na
         # set a to NA for all NA on the fringes of b
         if (!all(is.na(b))) {
@@ -189,6 +193,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
 
     if ('linear' == method) {
         data <- data %>%
+            arrange(!!!syms(c(combination_columns, period))) %>%
             mutate(!!sym(value) := na.approx(
                 object = !!sym(value),
                 x = !!sym(period),
@@ -197,19 +202,21 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
                 na.rm = FALSE) %>%
                     .set_na(!!sym(value)))
 
-        # if there is only one non-NA value, zoo::na.approx() does nothing, so
-        # replace NAs with the one non-NA value
-        data <- bind_rows(
-            # all groups that don't consist of just one non-NA value (including
-            # all NAs)
-            data %>%
-                filter(1 != sum(!is.na(!!sym(value)))),
+        if (expand.values) {
+            # if there is only one non-NA value, zoo::na.approx() does nothing,
+            # so replace NAs with the one non-NA value
+            data <- bind_rows(
+                # all groups that don't consist of just one non-NA value
+                # (including all NAs)
+                data %>%
+                    filter(1 != sum(!is.na(!!sym(value)))),
 
-            # all groups consisting of just one non-NA value
-            data %>%
-                filter(1 == sum(!is.na(!!sym(value)))) %>%
-                mutate(!!sym(value) := na.omit(!!sym(value)))
-        )
+                # all groups consisting of just one non-NA value
+                data %>%
+                    filter(1 == sum(!is.na(!!sym(value)))) %>%
+                    mutate(!!sym(value) := na.omit(!!sym(value)))
+            )
+        }
     } else {
         data <- bind_rows(
             # if all values are NA, no interpolation is possible
@@ -219,6 +226,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
             # if not all values are NA, then interpolate
             data %>%
                 filter(!all(is.na(!!sym(value)))) %>%
+                arrange(!!!syms(c(combination_columns, period))) %>%
                 mutate(!!sym(value) := spline(x = !!sym(period),
                                               y = !!sym(value),
                                               method = method,
@@ -230,7 +238,10 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
     }
 
     # ---- return data ----
-    data <- ungroup(data)
+    data <- data %>%
+        ungroup() %>%
+        select(all_of(col_names))
+
 
     if (return_POSIXct)
         data <- data %>%
