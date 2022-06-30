@@ -31,7 +31,7 @@
 #' @importFrom dplyr as_tibble bind_rows distinct first last tibble
 #' @importFrom forcats as_factor
 #' @importFrom rlang .data
-#' @importFrom readr read_delim read_lines
+#' @importFrom readr problems read_delim read_lines
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.table
@@ -50,7 +50,7 @@ read.quitte <- function(file,
     if (!length(file))
         stop('\'file\' is empty.')
 
-    .read.quitte <- function(file, sep, quote, na.strings, convert.periods,
+    .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment) {
 
         . <- NULL
@@ -59,9 +59,9 @@ read.quitte <- function(file,
         # additional columns after the periods
 
         # read header ----
-        # read the header, comment_header, and useless.last.column from file and
+        # read the header, comment_header, and useless.last.column from f and
         # assign them to the environment
-        foo <- read_mif_header(file, sep, comment)
+        foo <- read_mif_header(f, sep, comment)
         header              <- foo$header
         comment_header      <- foo$comment_header
         useless.last.column <- foo$useless.last.column
@@ -72,13 +72,13 @@ read.quitte <- function(file,
 
 
         if (!all(header[1:5] == default.columns))
-            stop("missing default columns in header of file ", file)
+            stop("missing default columns in header of file ", f)
 
         if (last(period.columns) != length(header))
-            stop("unallowed extra columns in header of file ", file)
+            stop("unallowed extra columns in header of file ", f)
 
         if (!all(seq_range(range(period.columns)) == period.columns))
-            stop("period columns not all in one block in header of file ", file)
+            stop("period columns not all in one block in header of file ", f)
 
         periods <- header[period.columns]
 
@@ -88,10 +88,19 @@ read.quitte <- function(file,
                             collapse = '')
 
         # read data ----
-        data <- read_delim(file = file, quote = quote, col_names = c(header),
-                           col_types = colClasses, delim = sep, na = na.strings,
-                           skip = length(comment_header) + 1,
-                           comment = comment) %>%
+        data <- suppressWarnings(
+            read_delim(file = f, quote = quote, col_names = c(header),
+                       col_types = colClasses, delim = sep, na = na.strings,
+                       skip = length(comment_header) + 1,
+                       comment = comment)
+        )
+
+        # catch any parsing problems
+        data_problems <- if (nrow(problems(data))) {
+            problems(data)
+        }
+
+        data <- data %>%
             # convert to long format
             pivot_longer(all_of(periods), names_to = 'period',
                          values_drop_na = drop.na)
@@ -104,17 +113,20 @@ read.quitte <- function(file,
             data$period <- as.integer(as.character(data$period))
         }
 
+        # re-attach parsing problems
+        attr(data, 'problems') <- data_problems
+
         return(data)
     }
 
     # read quitte for all supplied files ----
     quitte <- tibble()
+    quitte_problems <- tibble()
     for (f in file) {
-        quitte <- bind_rows(
-            quitte,
-            .read.quitte(f, sep, quote, na.strings, convert.periods, drop.na,
-                         comment)
-        )
+        data <- .read.quitte(f, sep, quote, na.strings, convert.periods,
+                             drop.na, comment)
+        quitte <- bind_rows(quitte, data)
+        quitte_problems <- bind_rows(quitte_problems, attr(data, 'problems'))
     }
 
     if (factors) {
@@ -136,6 +148,16 @@ read.quitte <- function(file,
 
     # apply quitte "class" attribute
     class(quitte) <- c('quitte', class(quitte))
+
+    # pass parsing problems along and issue warning
+    attr(quitte, 'problems') <- if (nrow(quitte_problems)) {
+        quitte_problems
+    }
+
+    if (nrow(quitte_problems)) {
+        warning('One or more parsing issues, see `problems()` for details',
+                call. = FALSE)
+    }
 
     return(quitte)
 }
