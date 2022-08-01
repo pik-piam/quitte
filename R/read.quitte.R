@@ -155,8 +155,9 @@ read.quitte <- function(file,
     }
 
     if (nrow(quitte_problems)) {
-        warning('One or more parsing issues, see `problems()` for details',
-                call. = FALSE)
+        warning(
+            'One or more parsing issues, call `readr::problems()` for details',
+            call. = FALSE)
     }
 
     return(quitte)
