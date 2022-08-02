@@ -155,9 +155,21 @@ read.quitte <- function(file,
     }
 
     if (nrow(quitte_problems)) {
-        warning(
-            'One or more parsing issues, call `readr::problems()` for details',
-            call. = FALSE)
+        if (interactive()) {
+            warning('One or more parsing issues, call `readr::problems()` for ',
+                    'details.',
+                    call. = FALSE)
+        } else {
+            warning.length <- getOption('warning.length')
+            options(warning.length = 8170)
+            warning('One or more parsing issues:\n',
+                    quitte_problems %>%
+                        as.data.frame() %>%
+                        format() %>%
+                        capture.output() %>%
+                        paste(collapse = '\n'))
+            options(warning.length = warning.length)
+        }
     }
 
     return(quitte)
