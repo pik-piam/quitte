@@ -43,6 +43,7 @@
 #' @importFrom rlang get_expr
 #'
 #' @examples
+#' \dontrun{
 #' require(tidyverse)
 #'
 #' # some example data
@@ -90,6 +91,7 @@
 #'               timesteps_period = 'tau',
 #'               timesteps_interval = 'hour',
 #'               interval_shift = c(-1,0))
+#' }
 
 #' @rdname variable_timesteps
 #' @export

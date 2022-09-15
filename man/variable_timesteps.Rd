@@ -12,9 +12,9 @@ add_timesteps_columns(
   timesteps,
   periods = "period",
   gaps = 0,
-  intervalFactor = c(-0.5, 0.5),
+  interval_shift = c(-0.5, 0.5),
   timesteps_period = "period",
-  timesteps_timeUnit = "year"
+  timesteps_interval = "year"
 )
 
 add_remind_timesteps_columns(data, periods = "period", gaps = 0)
@@ -25,7 +25,9 @@ ggplot_bar_vts(
   mapping = aes_string(x = "period", y = "value", fill = "variable"),
   gaps = 0.1,
   position_fill = FALSE,
-  ...
+  interval_shift = c(-0.5, 0.5),
+  timesteps_period = "period",
+  timesteps_interval = "year"
 )
 
 ggplot_bar_remind_vts(
@@ -38,54 +40,50 @@ ggplot_bar_remind_vts(
 \arguments{
 \item{data}{A data frame.}
 
-\item{timesteps}{A data frame like \code{\link{remind_timesteps}} with
-columns \code{period}, \code{year}, and \code{weight}, where
-\code{weight} determines which share of \code{year} belongs to
-\code{period}.}
+\item{timesteps}{A data frame like \code{\link{remind_timesteps}} with columns
+\code{period}, \code{year}, and \code{weight}, where \code{weight} determines which share of
+\code{year} belongs to \code{period}.}
 
-\item{periods}{The column holding the period information in \code{data}
-(either a string or an object).  Defaults to \code{'period'}.}
+\item{periods}{The column holding the period information in \code{data} (either a
+string or an object).  Defaults to \code{'period'}.}
 
 \item{gaps}{Gaps between bars as a fraction of the smallest bar width.
 Defaults to 0.1 (e.g. 0.1 * 5 years = 0.5 years).}
 
-\item{intervalFactor}{numeric of length 2. Factor correcting for beginning
-and end of time interval.
-If the interval for period 1 should be [0.5,1.5], \code{intervalFactor}
-should be set to c(-0.5,0.5) (default). If the interval for period 1
-should be [0,1], \code{intervalFactor} should be set to c(-1,0).}
+\item{interval_shift}{numeric of length 2.  Shifts added to the interval fix
+point to obtain the beginning and end of time interval.
+If the interval for period 1 should be \verb{[0.5, 1.5]}, \code{interval_shift}
+should be set to \code{c(-0.5, 0.5)} (default).  If the interval for period 1
+should be \verb{[0, 1]}, \code{interval_shift} should be set to \code{c(-1, 0)}.}
 
 \item{timesteps_period}{character string giving the column name of the
-\code{period} in the \code{timesteps} dataframe. Default to \code{period}}
+\code{period} in the \code{timesteps} data frame.  Defaults to \code{'period'}.}
 
-\item{timesteps_timeUnit}{character string giving the column name of the
-time unit in the \code{timesteps} dataframe. Default to \code{year}}
+\item{timesteps_interval}{character string giving the column name of the time
+interval in the \code{timesteps} data frame.  Defaults to \code{'year'}.}
 
-\item{mapping}{\code{\link[ggplot2:aes]{aes()}} mapping with aesthetics
-\code{x}, \code{y}, and optionally \code{fill}.}
+\item{mapping}{\code{\link[ggplot2:aes]{aes()}} mapping with aesthetics \code{x}, \code{y}, and
+optionally \code{fill}.}
 
-\item{position_fill}{If \code{TRUE}, stacks bars and standardises each stack
-to have constant height.}
-
-\item{...}{arguments to be passed to \code{add_timesteps_columns}}
+\item{position_fill}{If \code{TRUE}, stacks bars and standardises each stack to
+have constant height.}
 }
 \value{
-\code{add_timesteps_columns()} and
-    \code{add_remind_timesteps_columns()} return a data frame.
-    \code{ggplot_bar_vts()} and \code{ggplot_bar_remind_vts()} return a
-    \code{\link[ggplot2:ggplot]{ggplot()}}-like object.
+\code{add_timesteps_columns()} and \code{add_remind_timesteps_columns()} return
+a data frame.
+\code{ggplot_bar_vts()} and \code{ggplot_bar_remind_vts()} return a
+\code{\link[ggplot2:ggplot]{ggplot()}}-like object.
 }
 \description{
 Utility functions for plotting stacked bars with variable widths for
 displaying time-series data with variable time steps (like REMIND data).
 }
 \details{
-\code{add_timesteps_columns()} calculates the x-axis position and width of
-bars based on the information in \code{timesteps} and joins it to
-\code{data}.  \code{add_remind_timesteps_columns()} uses the
-\code{\link{remind_timesteps}} data frame.  \code{ggplot_bar_vts()} produces
-a bar plot with bars positioned according to \code{timesteps}.
-\code{ggplot_bar_remind_vts()} uses the \code{\link{remind_timesteps}} data
+\code{add_timesteps_columns()} calculates the x-axis position and width of bars
+based on the information in \code{timesteps} and joins it to \code{data}.
+\code{add_remind_timesteps_columns()} uses the \code{\link{remind_timesteps}} data frame.
+\code{ggplot_bar_vts()} produces a bar plot with bars positioned according to
+\code{timesteps}.  \code{ggplot_bar_remind_vts()} uses the \code{\link{remind_timesteps}} data
 frame.
 }
 \examples{
@@ -134,8 +132,8 @@ ggplot_bar_vts(data2, timesteps,
               mapping = aes_string('tau','value',
                                      group = 'variable', fill = 'variable'),
               timesteps_period = 'tau',
-              timesteps_timeUnit = 'hour',
-              intervalFactor = c(-1,0))
+              timesteps_interval = 'hour',
+              interval_shift = c(-1,0))
 }
 \author{
 Michaja Pehl

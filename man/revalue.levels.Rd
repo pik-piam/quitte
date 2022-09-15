@@ -29,14 +29,14 @@ data <- inline.data.frame(c(
   "REMIND;   Baseline;   USA;      GDP per Capita|MER; US$2005/yr;   2010;     40000",
   "REMIND;   Baseline;   USA;      Population;         million;      2010;     300",
   "REMIND;   Baseline;   CHN;      GDP per Capita|MER; US$2005/yr;   2010;     7000"))
-  
+
 reg_vec = c(USA = "United States")
 var_vec = c("GDP per Capita|MER" = "gdp",
            Population = "pop")
 
 revalue.levels(data,region = reg_vec)
 revalue.levels_(data,list(region = reg_vec, variable = var_vec))
-                       
+
 }
 \author{
 Antoine Levesque
