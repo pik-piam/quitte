@@ -1,49 +1,43 @@
-Encoding: UTF-8
-Package: quitte
 Type: Package
+Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
 Version: 0.3102.1
 Date: 2022-09-15
-Authors@R: c(person("Michaja", "Pehl", role = c("aut", "cre"),
-		            email = "pehl@pik-potsdam.de"),
-		     person("Nico", "Bauer", role = "aut",
-		            email = "nicolasb@pik-potsdam.de"),
-		     person("Jérôme", "Hilaire", role = "aut",
-		            email = "jeromehilaire@pik-potsdam.de"),
-		     person("Antoine", "Levesque", role = "aut",
-		            email = "levesque@pik-potsdam.de"),
-		     person("Gunnar", "Luderer", role = "aut",
-		            email = "luderer@pik-potsdam.de"),
-		     person("Anselm", "Schultes", role = "aut",
-		            email = "schultes@pik-potsdam.de"),
-		     person("Jan Philipp", "Dietrich", role = "aut",
-		            email = "dietrich@pik-potsdam.de"))
+Authors@R: c(
+    person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
+    person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
+    person("Jérôme", "Hilaire", , "jeromehilaire@pik-potsdam.de", role = "aut"),
+    person("Antoine", "Levesque", , "levesque@pik-potsdam.de", role = "aut"),
+    person("Gunnar", "Luderer", , "luderer@pik-potsdam.de", role = "aut"),
+    person("Anselm", "Schultes", , "schultes@pik-potsdam.de", role = "aut"),
+    person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut")
+  )
 Maintainer: Michaja Pehl <michaja.pehl@pik-potsdam.de>
 Description: A collection of functions for easily dealing with
     quitte-style data frames, doing multi-model comparisons and plots.
 License: GPL-2
-Depends: R (>= 3.0)
-Imports: 
-    countrycode, 
-    dplyr (>= 0.7.0), 
+Depends:
+    R (>= 3.0)
+Imports:
+    countrycode,
+    dplyr (>= 0.7.0),
     forcats,
-    ggplot2, 
-    lazyeval, 
-    lubridate, 
+    ggplot2,
+    lazyeval,
+    lubridate,
     magclass,
-    methods, 
-    plyr, 
+    methods,
+    plyr,
     readr,
-    reshape2, 
+    reshape2,
     rlang,
-    stats, 
-    tibble,
-    tidyr, 
-    tidyselect,
+    stats,
     stringr,
-    zoo 
-LazyData: TRUE
-Suggests: 
+    tibble,
+    tidyr,
+    tidyselect,
+    zoo
+Suggests:
     covr,
     gdxrrw,
     knitr,
@@ -51,6 +45,9 @@ Suggests:
     rmarkdown,
     testthat,
     tidyverse
+VignetteBuilder:
+    knitr
+Encoding: UTF-8
+LazyData: TRUE
 Repository: CRAN
 RoxygenNote: 7.2.1
-VignetteBuilder: knitr
