@@ -47,7 +47,7 @@ In case of questions / problems please contact Michaja Pehl <michaja.pehl@pik-po
 
 To cite package **quitte** in publications use:
 
-Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich J (2022). _quitte: Bits and pieces of code to use with quitte-style data frames_. R package version 0.3102.1, <https://CRAN.R-project.org/package=quitte>.
+Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich J (2022). _quitte: Bits and pieces of code to use with quitte-style data frames_. R package version 0.3102.1, <https://github.com/pik-piam/quitte>.
 
 A BibTeX entry for LaTeX users is
 
@@ -57,6 +57,6 @@ A BibTeX entry for LaTeX users is
   author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich},
   year = {2022},
   note = {R package version 0.3102.1},
-  url = {https://CRAN.R-project.org/package=quitte},
+  url = {https://github.com/pik-piam/quitte},
 }
 ```

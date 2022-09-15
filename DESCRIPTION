@@ -51,5 +51,4 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: TRUE
-Repository: CRAN
 RoxygenNote: 7.2.1
