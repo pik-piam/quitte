@@ -50,7 +50,7 @@ Suggests:
     mip,
     rmarkdown,
     testthat,
-    tidyverse, 
+    tidyverse
 Repository: CRAN
 RoxygenNote: 7.2.1
 VignetteBuilder: knitr
