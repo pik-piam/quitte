@@ -33,9 +33,9 @@ to an quitte-object (if possible).
 }
 \section{Functions}{
 \itemize{
-\item \code{is.quitte}: quitte check
-}}
+\item \code{is.quitte()}: quitte check
 
+}}
 \author{
 Jan Philipp Dietrich
 }
