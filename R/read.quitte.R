@@ -15,7 +15,10 @@
 #'        switched off.
 #' @param drop.na Should NA values be dropped from the `quitte`?
 #' @param comment A character which at line start signifies the optional comment
-#'   header with metadata at the head of `file`.
+#'   header with metadata at the head of `file`.  The comment header, if
+#'   present, is returned as a `comment_header` attribute.  If multiple files
+#'   are read, the `comment_header` attribute is a list of comment headers with
+#'   file paths as names.
 #' @param factors Return columns as factors (`TRUE`) or not.
 #'
 #' @return A quitte data frame.
@@ -30,7 +33,7 @@
 #'
 #' @importFrom dplyr as_tibble bind_rows distinct first last tibble
 #' @importFrom forcats as_factor
-#' @importFrom rlang .data
+#' @importFrom rlang .data is_empty
 #' @importFrom readr problems read_delim read_lines
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
@@ -115,6 +118,7 @@ read.quitte <- function(file,
 
         # re-attach parsing problems
         attr(data, 'problems') <- data_problems
+        attr(data, 'comment_header') <- comment_header
 
         return(data)
     }
@@ -122,11 +126,14 @@ read.quitte <- function(file,
     # read quitte for all supplied files ----
     quitte <- tibble()
     quitte_problems <- tibble()
+    comment_header <- list()
     for (f in file) {
         data <- .read.quitte(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment)
         quitte <- bind_rows(quitte, data)
         quitte_problems <- bind_rows(quitte_problems, attr(data, 'problems'))
+        comment_header <- c(comment_header,
+                            setNames(list(attr(data, 'comment_header')), f))
     }
 
     if (factors) {
@@ -170,6 +177,14 @@ read.quitte <- function(file,
                         paste(collapse = '\n'))
             options(warning.length = warning.length)
         }
+    }
+
+    # pass comment_header along as attribute, if any
+    if (!is_empty(unlist(comment_header))) {
+        if (1 == length(file)) {
+            comment_header <- unlist(comment_header, use.names = FALSE)
+        }
+        attr(quitte, 'comment_header') <- comment_header
     }
 
     return(quitte)
