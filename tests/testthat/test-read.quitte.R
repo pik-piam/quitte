@@ -37,9 +37,17 @@ test_that(
   code = {
     d <- quitte_example_data %>%
       slice_sample(n = 10)
-    write.mif(d, f1 <- tempfile(), comment_header = c('foo: bar', 'fuzz: baz'))
+
+    comment_header <- c('foo: bar', 'fuzz: baz')
+
+    write.mif(d, f1 <- tempfile(), comment_header = comment_header)
     write.mif(d, f2 <- tempfile())
+
+    d1 <- read.quitte(f1)
+    d2 <- read.quitte(f2)
+    attr(d2, 'comment_header') <- comment_header
+
     expect_equal(
-      object = read.quitte(f1),
-      expected = read.quitte(f2))
+      object = d1,
+      expected = d2)
   })

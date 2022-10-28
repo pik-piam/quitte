@@ -170,7 +170,7 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
                 !!sym('xpos')  := (!!sym('start') + !!sym('end')) / 2,
                 !!sym('width') := !!sym('end') - !!sym('start')) %>%
             ungroup() %>%
-            select(timesteps_period, 'xpos', 'width'),
+            select(all_of(timesteps_period), 'xpos', 'width'),
 
         setNames(timesteps_period, periods)
     )
