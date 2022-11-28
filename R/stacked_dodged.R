@@ -53,7 +53,7 @@
 #'     facet_wrap(~ d, ncol = 1, scales = 'free_x')
 
 #' @importFrom dplyr mutate filter left_join
-#' @importFrom ggplot2 aes_string geom_col ggplot scale_x_continuous
+#' @importFrom ggplot2 aes geom_col ggplot scale_x_continuous
 #' @importFrom tidyr crossing
 #' @importFrom rlang get_expr sym
 
@@ -89,8 +89,9 @@ ggplot_bar_stacked_dodged <- function(data, mapping, gap = 1) {
         ggplot() +
             geom_col(
                 data = add_stacked_dodged_xpos(data, xpos, gap = gap),
-                mapping = aes_string(x = names(xpos), y = as.character(y),
-                                     fill = as.character(fill))) +
+                mapping = aes(x = !!sym(names(xpos)),
+                              y = !!sym(as.character(y)),
+                              fill = !!sym(as.character(fill)))) +
             scale_x_continuous(
                 breaks = calc_stacked_dodged_xlabels(data, xpos[[1]],
                                                      gap = gap)))

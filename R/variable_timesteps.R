@@ -40,7 +40,7 @@
 #'
 #' @author Michaja Pehl
 #'
-#' @importFrom rlang get_expr
+#' @importFrom rlang get_expr is_empty
 #'
 #' @examples
 #' require(tidyverse)
@@ -85,8 +85,7 @@
 #'
 #' # plotting with different timesteps than periods and years
 #' ggplot_bar_vts(data2, timesteps,
-#'               mapping = aes_string('tau','value',
-#'                                      group = 'variable', fill = 'variable'),
+#'               mapping = aes(tau, value, group = variable, fill = variable),
 #'               timesteps_period = 'tau',
 #'               timesteps_interval = 'hour',
 #'               interval_shift = c(-1,0))
@@ -207,8 +206,9 @@ add_remind_timesteps_columns <- function(data, periods = 'period', gaps = 0) {
 #' @rdname variable_timesteps
 #' @export
 ggplot_bar_vts <- function(data, timesteps,
-                           mapping = aes_string(x = 'period', y = 'value',
-                                                fill = 'variable'),
+                           mapping = aes(x = !!sym('period'),
+                                         y = !!sym('value'),
+                                         fill = !!sym('variable')),
                            gaps = 0.1, position_fill = FALSE,
                            interval_shift = c(-0.5, 0.5),
                            timesteps_period = 'period',
@@ -218,8 +218,6 @@ ggplot_bar_vts <- function(data, timesteps,
     x    <- as.character(get_expr(mapping$x))
     y    <- as.character(get_expr(mapping$y))
     fill <- as.character(get_expr(mapping$fill))
-    if (!length(fill))
-        fill <- NULL
 
     # ---- guardians ----
     if (!is.data.frame(data))
@@ -228,14 +226,10 @@ ggplot_bar_vts <- function(data, timesteps,
     if (!is.data.frame(timesteps))
         stop('`timesteps` must be a data frame.')
 
-    missing.mappings <- NULL
-    if (!length(x))
-        missing.mappings <- 'x'
-    if (!length(y))
-        missing.mappings <- c(missing.mappings, 'y')
-    if (length(missing.mappings))
+    missing.mappings <- which(sapply(list(x = x, y = y, fill = fill), is_empty))
+    if (!is_empty(missing.mappings))
         stop('Mapping', ifelse(1 < length(missing.mappings), 's', ''), ' ',
-             paste(missing.mappings, collapse = ', '), ' ',
+             paste(names(missing.mappings), collapse = ', '), ' ',
              ifelse(1 < length(missing.mappings), 'are', 'is'), ' missing.')
     rm(missing.mappings)
 
@@ -252,17 +246,17 @@ ggplot_bar_vts <- function(data, timesteps,
             data = data %>%
                 add_timesteps_columns(timesteps, x, gaps, interval_shift,
                                       timesteps_period, timesteps_interval),
-            mapping = aes_string(x = 'xpos', y = y, width = 'width',
-                                 fill = fill),
+            mapping = aes(x = !!sym('xpos'), y = !!sym(y),
+                          width = !!sym('width'), fill = !!sym(fill)),
             position = ifelse(position_fill, 'fill', 'stack'))
 }
 
 #' @rdname variable_timesteps
 #' @export
 ggplot_bar_remind_vts <- function(data,
-                                  mapping = aes_string(x = 'period',
-                                                       y = 'value',
-                                                       fill = 'variable'),
+                                  mapping = aes(x = !!sym('period'),
+                                                y = !!sym('value'),
+                                                fill = !!sym('variable')),
                                   gaps = 0.1, position_fill = FALSE) {
     # ---- call ggplot_bar_vts() ----
     ggplot_bar_vts(data, quitte::remind_timesteps, mapping, gaps, position_fill)

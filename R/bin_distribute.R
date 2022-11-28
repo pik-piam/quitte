@@ -32,9 +32,8 @@
 #' @export
 bin_distribute <- function(x, binsize) {
     bins <- bin_distribute_sizes(length(x), binsize)
-    l <- list()
 
-    lapply(1:length(bins), function(i) {
+    lapply(seq_along(bins), function(i) {
         x[(cumsum(bins) - bins  + 1)[i]:cumsum(bins)[i]]
     })
 }

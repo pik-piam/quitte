@@ -1,34 +1,34 @@
 #' Sample Quantiles
 #'
-#' This is a wrapper function for \code{\link[stats]{quantile}} or easy use with
-#' data frames.
+#' This is a wrapper function for [quantile] for easy use with data frames.
 #'
-#' @author Michaja Pehl
-#'
+#' @md
 #' @param .data a data frame, possibly grouped
 #' @param value column name for which sample quantiles should be calculated
 #' @param probs named numeric vector of probabilities with values in
-#'              \eqn{[0, 1]}.
-#' @param na.rm logical; if true, any \code{\link{NA}} and \code{\link{NaN}}s
-#'              are removed from x before the quantiles are computed.
-#' @param type an integer between 1 and 9 select one of the nine quantile.
-#'             algorithms detailed in \code{\link[stats]{quantile}} to be used.
+#'     \eqn{[0, 1]}.
+#' @param na.rm logical; if `TRUE`, any [NA] and [NaN]s are removed from `data`
+#'     before the quantiles are computed.
+#' @param type an integer between 1 and 9 select one of the nine quantile
+#'     algorithms detailed in [quantile] to be used.
 #'
-#' @return a data frame.
+#' @return A data frame.
+#'
+#' @author Michaja Pehl
 #'
 #' @examples
 #' require(dplyr)
 #' require(tidyr)
-#' data <- tibble(group = rep(c("A", "B"), 10),
-#'                    value = 1:20) %>%
-#'                    arrange(group) %>%
-#'                    group_by(group)
 #'
-#' data %>%
-#'  calc_quantiles() %>%
-#'  spread(quantile, value)
+#' tibble(group = rep(c("A", "B"), 10),
+#'                value = 1:20) %>%
+#'     group_by(group) %>%
+#'     calc_quantiles() %>%
+#'     pivot_wider(names_from = 'quantile')
 #'
-#' @importFrom tibble tibble_
+#' @importFrom dplyr across rename summarise
+#' @importFrom rlang !! sym
+# #' @importFrom tibble tibble_
 #'
 #' @export
 calc_quantiles <- function(.data,

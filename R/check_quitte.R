@@ -3,6 +3,7 @@
 #' Check an IAMC-style data frame to see if values across variables and regions
 #' sum up to the totals specified within the data frame.
 #'
+#' @md
 #' @param quitte IAMC-style data frame.
 #' @param check_variables List, string or file of variables to check.
 #' @param check_regions List, string or file of regions to check.
@@ -12,29 +13,34 @@
 #' @author Michaja Pehl
 #'
 #' @details Checking is performed for all variables and regions in
-#' \code{check_variables} and \code{check_regions}, which can be passed as a
-#' list of format \code{list("sum" = c("summand1", "summand2", ...))}, a
-#' character string of format
-#' \preformatted{
+#' `check_variables` and `check_regions`, which can be passed as a list of
+#' format
+#' ```
+#' list("sum" = c("summand1", "summand2", ...))
+#' ```
+#' a character string of format
+#' ```
 #' sum1
 #' summand1a
 #' summand1b
 #'
 #' sum2
 #' summand2a
-#' ...} or as the path to a text file with this format.
+#' ...
+#' ```
+#' or as the path to a text file with this format.
 #'
 #' If checking should be performed for variables or regions that are neither sum
 #' nor summand (e.g., the variable 'GDP' should be summed across regions, but is
 #' itself not a sum of other variables), include them as sum and their only
-#' summand in the respective list (i.e., \code{list("GDP" = "GDP")} or as a
-#' double line in the character string or file.
+#' summand in the respective list (i.e., `list("GDP" = "GDP")` or as a double
+#' line in the character string or file.
 #'
-#' If \code{check_regions} is \code{NULL}, variables are check across all
-#' regions in \code{quitte}.
+#' If `check_regions` is `NULL`, variables are check across all regions in
+#' `quitte`.
 #'
 #' @examples
-#' require(dplyr)
+#' require(dplyr, quietly = TRUE, warn.conflicts = FALSE)
 #' quitte <- rbind(
 #'     data.frame(
 #'         model    = "REMIND",
@@ -136,10 +142,7 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
 
         all_variables <- .getAllNames(check_variables)
 
-    } else if (is.list(check_variables)) {
-        all_variables <- .getAllNames(check_variables)
-
-    } else {
+    } else if (!is.list(check_variables)) {
         stop("Can't handle check_variables")
     }
 

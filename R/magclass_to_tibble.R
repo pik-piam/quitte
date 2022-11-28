@@ -5,7 +5,7 @@
 #' @md
 #' @param m A [`magpie`][magclass::magclass] object.
 #' @param colnames Column names for the returned `tibble`.  Must match the
-#'   number of columns.
+#'     number of columns.
 #'
 #' @return A [`tibble`][tibble::tibble].
 #'

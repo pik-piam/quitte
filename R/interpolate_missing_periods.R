@@ -5,31 +5,32 @@
 #' smaller/bigger than the existing ones can be filled with the values for the
 #' first/last available period in the case of linear interpolation.
 #'
+#' @md
 #' @param data A data frame or a quitte object.
 #' @param ... A name-value pair of periods to fill. If unnamed, defaults to
-#'        'period'. If empty (but possibly named) uses only periods present in
-#'        \code{data}.
+#'     `'period'`. If empty (but possibly named) uses only periods present in
+#'     `data`.
 #' @param periods A named list of periods to fill.
-#' @param value Name of the colum to fill, defaults to 'value'.
-#' @param expand.values If \code{FALSE} (the default), values are not expanded
-#'        beyond the range of available data. If \code{TRUE} values at the
-#'        closest extreme is used for linear interpolation. Results for spline
-#'        interpolation are possibly nonsensical.
-#' @param method Specifies the interpolation method. Either \code{linear} for
-#'        linear interpolation or \code{spline}, \code{spline_fmm}, or
-#'        \code{spline_natural} for spline interpolation. \code{spline} is an
-#'        alias for \code{spline_fmm}. See \link{spline} for details.
+#' @param value Name of the column to fill, defaults to `'value'`.
+#' @param expand.values If `FALSE` (the default), values are not expanded
+#'     beyond the range of available data.  If `TRUE` values at the closest
+#'     extreme is used for linear interpolation.  Results for spline
+#'     interpolation are possibly nonsensical.
+#' @param method Specifies the interpolation method. Either `'linear'` for
+#'     linear interpolation or `'spline'`, `'spline_fmm'`, or `'spline_natural'`
+#'     for spline interpolation.  `'spline'` is an alias for `'spline_fmm'`.
+#'     See [spline()] for details.
 #' @param combinations Specifies the method with which other columns are
-#'        treated. They are either preserved as-is (\code{nesting}, the
-#'        default), or are expanded to all unique combinations
-#'        (\code{crossing}). See \code{\link[tidyr]{expand}} for
-#'        details.
+#'     treated.  They are either preserved as-is (`'nesting'`, the default), or
+#'     are expanded to all unique combinations (`'crossing'`).
+#'     See [tidyr::expand()] for details.
 #'
-#' @return A data frame or a quitte object, the same as \code{data}.
+#' @return A data frame or a quitte object, the same as `data`.
 #' @author Michaja Pehl
 #'
 #' @importFrom rlang :=
 #' @importFrom stats na.omit spline
+#' @importFrom tidyr complete nesting crossing
 #' @importFrom zoo na.approx
 #'
 #' @examples
@@ -79,8 +80,6 @@
 #' # standard evaluation example
 #' interpolate_missing_periods_(data, periods = list(year = seq(2010, 2035, 5)),
 #'                              value = 'coeff', expand.values = TRUE)
-
-#' @importFrom tidyr complete nesting crossing
 
 #' @export
 interpolate_missing_periods <- function(data, ..., value = 'value',

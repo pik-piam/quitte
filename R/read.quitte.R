@@ -7,19 +7,20 @@
 #' @param sep Column separator, defaults to ";".
 #' @param quote Quote characters, empty by default.
 #' @param na.strings Entries to interpret as NA; defaults to
-#'        \code{c("UNDF", "NA", "N/A", "n_a")}
-#' @param convert.periods If \code{TRUE}, periods are converted to POSIXct. If
-#'        \code{FALSE} (the default), periods are numerical.
-#' @param check.duplicates If \code{TRUE} a duplicates check will be performed
-#'        on the data. For time- and memory-critical applications this can be
-#'        switched off.
-#' @param drop.na Should NA values be dropped from the `quitte`?
+#'     `c("UNDF", "NA", "N/A", "n_a")`
+#' @param convert.periods If `TRUE`, periods are converted to
+#'     [`POSIXct`][base::DateTimeClasses].  If `FALSE` (the default), periods
+#'     are numerical.
+#' @param check.duplicates If `TRUE` a duplicates check will be performed on the
+#'     data.  For time- and memory-critical applications this can be switched
+#'     off.
+#' @param factors Return columns as factors (`TRUE`, the default) or not.
+#' @param drop.na Should `NA` values be dropped from the `quitte`?
 #' @param comment A character which at line start signifies the optional comment
 #'   header with metadata at the head of `file`.  The comment header, if
 #'   present, is returned as a `comment_header` attribute.  If multiple files
 #'   are read, the `comment_header` attribute is a list of comment headers with
 #'   file paths as names.
-#' @param factors Return columns as factors (`TRUE`) or not.
 #'
 #' @return A quitte data frame.
 #'
@@ -55,8 +56,6 @@ read.quitte <- function(file,
 
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment) {
-
-        . <- NULL
 
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
