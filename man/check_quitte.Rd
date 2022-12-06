@@ -22,29 +22,36 @@ sum up to the totals specified within the data frame.
 }
 \details{
 Checking is performed for all variables and regions in
-\code{check_variables} and \code{check_regions}, which can be passed as a
-list of format \code{list("sum" = c("summand1", "summand2", ...))}, a
-character string of format
-\preformatted{
-sum1
+\code{check_variables} and \code{check_regions}, which can be passed as a list of
+format
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list("sum" = c("summand1", "summand2", ...))
+}\if{html}{\out{</div>}}
+
+a character string of format
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{sum1
 summand1a
 summand1b
 
 sum2
 summand2a
-...} or as the path to a text file with this format.
+...
+}\if{html}{\out{</div>}}
+
+or as the path to a text file with this format.
 
 If checking should be performed for variables or regions that are neither sum
 nor summand (e.g., the variable 'GDP' should be summed across regions, but is
 itself not a sum of other variables), include them as sum and their only
-summand in the respective list (i.e., \code{list("GDP" = "GDP")} or as a
-double line in the character string or file.
+summand in the respective list (i.e., \code{list("GDP" = "GDP")} or as a double
+line in the character string or file.
 
-If \code{check_regions} is \code{NULL}, variables are check across all
-regions in \code{quitte}.
+If \code{check_regions} is \code{NULL}, variables are check across all regions in
+\code{quitte}.
 }
 \examples{
-require(dplyr)
+require(dplyr, quietly = TRUE, warn.conflicts = FALSE)
 quitte <- rbind(
     data.frame(
         model    = "REMIND",

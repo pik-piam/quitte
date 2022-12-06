@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3105.0
-Date: 2022-11-29
+Version: 0.3106.0
+Date: 2022-12-06
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -10,7 +10,8 @@ Authors@R: c(
     person("Antoine", "Levesque", , "levesque@pik-potsdam.de", role = "aut"),
     person("Gunnar", "Luderer", , "luderer@pik-potsdam.de", role = "aut"),
     person("Anselm", "Schultes", , "schultes@pik-potsdam.de", role = "aut"),
-    person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut")
+    person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut"),
+    person("Oliver", "Richters", role = "aut")
   )
 Maintainer: Michaja Pehl <michaja.pehl@pik-potsdam.de>
 Description: A collection of functions for easily dealing with
@@ -33,6 +34,7 @@ Imports:
     plyr,
     purrr,
     readr,
+    readxl,
     reshape2,
     rlang,
     stats,
@@ -40,6 +42,7 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
+    writexl,
     zoo
 Suggests:
     covr,

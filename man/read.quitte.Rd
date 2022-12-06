@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.quitte.R
 \name{read.quitte}
 \alias{read.quitte}
-\title{Read IAMC-style .csv files}
+\title{Read IAMC-style .csv or .xlsx files}
 \usage{
 read.quitte(
   file,
@@ -17,7 +17,7 @@ read.quitte(
 )
 }
 \arguments{
-\item{file}{Path of IAMC-style .csv file or vector of paths to read.}
+\item{file}{Path of IAMC-style .csv or xlsx. file or vector of paths to read.}
 
 \item{sep}{Column separator, defaults to ";".}
 
@@ -26,25 +26,29 @@ read.quitte(
 \item{na.strings}{Entries to interpret as NA; defaults to
 \code{c("UNDF", "NA", "N/A", "n_a")}}
 
-\item{convert.periods}{If \code{TRUE}, periods are converted to POSIXct. If
-\code{FALSE} (the default), periods are numerical.}
+\item{convert.periods}{If \code{TRUE}, periods are converted to
+\code{\link[base:DateTimeClasses]{POSIXct}}.  If \code{FALSE} (the default), periods
+are numerical.}
 
-\item{check.duplicates}{If \code{TRUE} a duplicates check will be performed
-on the data. For time- and memory-critical applications this can be
-switched off.}
+\item{check.duplicates}{If \code{TRUE} a duplicates check will be performed on the
+data.  For time- and memory-critical applications this can be switched
+off.}
 
-\item{factors}{Return columns as factors (\code{TRUE}) or not.}
+\item{factors}{Return columns as factors (\code{TRUE}, the default) or not.}
 
-\item{drop.na}{Should NA values be dropped from the \code{quitte}?}
+\item{drop.na}{Should \code{NA} values be dropped from the \code{quitte}?}
 
 \item{comment}{A character which at line start signifies the optional comment
-header with metadata at the head of \code{file}.}
+header with metadata at the head of \code{file}.  The comment header, if
+present, is returned as a \code{comment_header} attribute.  If multiple files
+are read, the \code{comment_header} attribute is a list of comment headers with
+file paths as names.}
 }
 \value{
 A quitte data frame.
 }
 \description{
-Reads IAMC-style .csv files into a quitte data frame.
+Reads IAMC-style .csv or .xlsx files into a quitte data frame.
 }
 \examples{
 \dontrun{

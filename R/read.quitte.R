@@ -1,9 +1,9 @@
-#' Read IAMC-style .csv files
+#' Read IAMC-style .csv or .xlsx files
 #'
-#' Reads IAMC-style .csv files into a quitte data frame.
+#' Reads IAMC-style .csv or .xlsx files into a quitte data frame.
 #'
 #' @md
-#' @param file Path of IAMC-style .csv file or vector of paths to read.
+#' @param file Path of IAMC-style .csv or xlsx. file or vector of paths to read.
 #' @param sep Column separator, defaults to ";".
 #' @param quote Quote characters, empty by default.
 #' @param na.strings Entries to interpret as NA; defaults to
@@ -36,6 +36,7 @@
 #' @importFrom forcats as_factor
 #' @importFrom rlang .data is_empty
 #' @importFrom readr problems read_delim read_lines
+#' @importFrom readxl read_excel
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.table
@@ -57,6 +58,9 @@ read.quitte <- function(file,
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment) {
 
+        if (grepl("\\.xlsx$", f)) {
+            return (as.quitte(read_excel(path = f, sheet = "data")))
+        }
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
 

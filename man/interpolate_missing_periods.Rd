@@ -27,26 +27,25 @@ interpolate_missing_periods_(
 \item{data}{A data frame or a quitte object.}
 
 \item{...}{A name-value pair of periods to fill. If unnamed, defaults to
-'period'. If empty (but possibly named) uses only periods present in
+\code{'period'}. If empty (but possibly named) uses only periods present in
 \code{data}.}
 
-\item{value}{Name of the colum to fill, defaults to 'value'.}
+\item{value}{Name of the column to fill, defaults to \code{'value'}.}
 
 \item{expand.values}{If \code{FALSE} (the default), values are not expanded
-beyond the range of available data. If \code{TRUE} values at the
-closest extreme is used for linear interpolation. Results for spline
+beyond the range of available data.  If \code{TRUE} values at the closest
+extreme is used for linear interpolation.  Results for spline
 interpolation are possibly nonsensical.}
 
-\item{method}{Specifies the interpolation method. Either \code{linear} for
-linear interpolation or \code{spline}, \code{spline_fmm}, or
-\code{spline_natural} for spline interpolation. \code{spline} is an
-alias for \code{spline_fmm}. See \link{spline} for details.}
+\item{method}{Specifies the interpolation method. Either \code{'linear'} for
+linear interpolation or \code{'spline'}, \code{'spline_fmm'}, or \code{'spline_natural'}
+for spline interpolation.  \code{'spline'} is an alias for \code{'spline_fmm'}.
+See \code{\link[=spline]{spline()}} for details.}
 
 \item{combinations}{Specifies the method with which other columns are
-treated. They are either preserved as-is (\code{nesting}, the
-default), or are expanded to all unique combinations
-(\code{crossing}). See \code{\link[tidyr]{expand}} for
-details.}
+treated.  They are either preserved as-is (\code{'nesting'}, the default), or
+are expanded to all unique combinations (\code{'crossing'}).
+See \code{\link[tidyr:expand]{tidyr::expand()}} for details.}
 
 \item{periods}{A named list of periods to fill.}
 }
