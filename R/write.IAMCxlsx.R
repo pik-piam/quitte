@@ -1,7 +1,7 @@
 
 #' Write .xlsx file
 #'
-#' A write `.xlsx` file in line with IAMC standard.
+#' Write a `.xlsx` file in line with IAMC standard.
 #'
 #' @md
 #' @param x A [`quitte`] data frame.

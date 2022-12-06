@@ -36,7 +36,7 @@
 #' @importFrom forcats as_factor
 #' @importFrom rlang .data is_empty
 #' @importFrom readr problems read_delim read_lines
-#' @importFrom readxl read_excel
+#' @importFrom readxl read_excel excel_sheets
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.table
@@ -58,8 +58,8 @@ read.quitte <- function(file,
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment) {
 
-        if (grepl("\\.xlsx$", f)) {
-            return (as.quitte(read_excel(path = f, sheet = "data")))
+        if (grepl("\\.xlsx?$", f)) {
+            return (as.quitte(read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1)))
         }
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods

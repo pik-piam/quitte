@@ -15,7 +15,7 @@ write.IAMCxlsx(x, path, append = FALSE)
 (\code{TRUE}).}
 }
 \description{
-A write \code{.xlsx} file in line with IAMC standard.
+Write a \code{.xlsx} file in line with IAMC standard.
 }
 \examples{
 write.IAMCxlsx(quitte_example_data, tempfile())
