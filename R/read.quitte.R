@@ -60,8 +60,7 @@ read.quitte <- function(file,
 
         if (grepl("\\.xlsx?$", f)) {
             data <- read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1)
-            periods <- names(data)[grep("^[0-9]{4}$", names(data))]
-            data <- as.quitte(pivot_longer(data, all_of(periods), names_to = 'period', values_drop_na = drop.na))
+            data <- as.quitte(pivot_longer(data, matches("^[0-9]{4}$"), names_to = 'period', values_drop_na = drop.na))
             return(data)
         }
         # Check the header for correct names, periods all in one block and no
