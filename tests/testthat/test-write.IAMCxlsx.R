@@ -32,4 +32,10 @@ test_that(
         arrange(!!sym('model'), !!sym('scenario'), !!sym('region'),
                 !!sym('variable'), !!sym('unit'), !!sym('period'))
       )
+    # expect warning if incomplete data is read
+    f2 <- paste0(tempfile(), ".xlsx")
+    quitte_incomplete <- quitte_example_data %>% select(- model)
+    quitte_incomplete <- pivot_wider(quitte_incomplete, names_from = 'period', values_from = 'value')
+    writexl::write_xlsx(list("data" = quitte_incomplete), f2)
+    expect_warning(object = read.quitte(f2), "misses default columns")
   })
