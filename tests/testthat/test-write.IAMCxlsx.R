@@ -20,6 +20,7 @@ test_that(
     # check append function
     quitte_new_model <- quitte_example_data
     quitte_new_model$model <- "REMIND-MAgPIE"
+    quitte_new_model$value[quitte_new_model$region == "AFR" & quitte_new_model$period == 2020] <- NA
     write.IAMCxlsx(quitte_new_model, f, append = TRUE)
     expect_equal(
         object = read.quitte(f) %>%

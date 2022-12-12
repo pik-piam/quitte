@@ -59,7 +59,10 @@ read.quitte <- function(file,
                              drop.na, comment) {
 
         if (grepl("\\.xlsx?$", f)) {
-            return (as.quitte(read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1)))
+            data <- read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1)
+            periods <- names(data)[grep("^[0-9]{4}$", names(data))]
+            data <- as.quitte(pivot_longer(data, all_of(periods), names_to = 'period', values_drop_na = drop.na))
+            return(data)
         }
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
@@ -75,7 +78,6 @@ read.quitte <- function(file,
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
         # FIXME: relax to handle other than 4-digit periods
         period.columns <- grep("^[0-9]{4}$", header)
-
 
         if (!all(header[1:5] == default.columns))
             stop("missing default columns in header of file ", f)

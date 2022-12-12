@@ -48,9 +48,8 @@ write.IAMCxlsx <- function(x, path, append = FALSE) {
         select(setdiff(default_columns, last(default_columns)),
                setdiff(colnames(.), default_columns),
                last(default_columns)) %>%
-        arrange(.data$Period) %>%
-        mutate(!!sym('Value') := ifelse(! is.finite(!!sym('Value')) | !!sym('Value') == "", 0, !!sym('Value'))) %>%
-        pivot_wider(names_from = 'Period', values_from = 'Value')
+               filter(is.finite(.data$Value), '' != .data$Value) %>%
+               pivot_wider(names_from = 'Period', names_sort = TRUE, values_from = 'Value', values_fill = NA)
 
     writexl::write_xlsx(list("data" = x), path)
 }
