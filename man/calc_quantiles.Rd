@@ -29,30 +29,27 @@ calc_quantiles_(
 \item{probs}{named numeric vector of probabilities with values in
 \eqn{[0, 1]}.}
 
-\item{na.rm}{logical; if true, any \code{\link{NA}} and \code{\link{NaN}}s
-are removed from x before the quantiles are computed.}
+\item{na.rm}{logical; if \code{TRUE}, any \link{NA} and \link{NaN}s are removed from \code{data}
+before the quantiles are computed.}
 
-\item{type}{an integer between 1 and 9 select one of the nine quantile.
-algorithms detailed in \code{\link[stats]{quantile}} to be used.}
+\item{type}{an integer between 1 and 9 select one of the nine quantile
+algorithms detailed in \link{quantile} to be used.}
 }
 \value{
-a data frame.
+A data frame.
 }
 \description{
-This is a wrapper function for \code{\link[stats]{quantile}} or easy use with
-data frames.
+This is a wrapper function for \link{quantile} for easy use with data frames.
 }
 \examples{
 require(dplyr)
 require(tidyr)
-data <- tibble(group = rep(c("A", "B"), 10),
-                   value = 1:20) \%>\%
-                   arrange(group) \%>\%
-                   group_by(group)
 
-data \%>\%
- calc_quantiles() \%>\%
- spread(quantile, value)
+tibble(group = rep(c("A", "B"), 10),
+               value = 1:20) \%>\%
+    group_by(group) \%>\%
+    calc_quantiles() \%>\%
+    pivot_wider(names_from = 'quantile')
 
 }
 \author{

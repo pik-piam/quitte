@@ -1,9 +1,9 @@
-#' Read IAMC-style .csv files
+#' Read IAMC-style .csv or .xlsx files
 #'
-#' Reads IAMC-style .csv files into a quitte data frame.
+#' Reads IAMC-style .csv or .xlsx files into a quitte data frame.
 #'
 #' @md
-#' @param file Path of IAMC-style .csv file or vector of paths to read.
+#' @param file Path of IAMC-style .csv or xlsx. file or vector of paths to read.
 #' @param sep Column separator, defaults to ";".
 #' @param quote Quote characters, empty by default.
 #' @param na.strings Entries to interpret as NA; defaults to
@@ -36,6 +36,7 @@
 #' @importFrom forcats as_factor
 #' @importFrom rlang .data is_empty
 #' @importFrom readr problems read_delim read_lines
+#' @importFrom readxl read_excel excel_sheets
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.table
@@ -57,6 +58,17 @@ read.quitte <- function(file,
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment) {
 
+        default.columns  <- c("model", "scenario", "region", "variable", "unit")
+
+        if (grepl("\\.xlsx?$", f)) {
+            data <- read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1)
+            data <- pivot_longer(data, matches("^[0-9]{4}$"), names_to = 'period', values_drop_na = drop.na)
+            missing.default.columns <- default.columns[! default.columns %in% tolower(colnames(data))]
+            if (length(missing.default.columns) > 0) {
+                warning(f, " misses default columns: ", paste(missing.default.columns, collapse = ", "))
+            }
+            return(as.quitte(data))
+        }
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
 
@@ -68,10 +80,8 @@ read.quitte <- function(file,
         comment_header      <- foo$comment_header
         useless.last.column <- foo$useless.last.column
 
-        default.columns  <- c("model", "scenario", "region", "variable", "unit")
         # FIXME: relax to handle other than 4-digit periods
         period.columns <- grep("^[0-9]{4}$", header)
-
 
         if (!all(header[1:5] == default.columns))
             stop("missing default columns in header of file ", f)

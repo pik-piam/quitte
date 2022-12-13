@@ -22,7 +22,7 @@ add_remind_timesteps_columns(data, periods = "period", gaps = 0)
 ggplot_bar_vts(
   data,
   timesteps,
-  mapping = aes_string(x = "period", y = "value", fill = "variable"),
+  mapping = aes(x = !!sym("period"), y = !!sym("value"), fill = !!sym("variable")),
   gaps = 0.1,
   position_fill = FALSE,
   interval_shift = c(-0.5, 0.5),
@@ -32,7 +32,7 @@ ggplot_bar_vts(
 
 ggplot_bar_remind_vts(
   data,
-  mapping = aes_string(x = "period", y = "value", fill = "variable"),
+  mapping = aes(x = !!sym("period"), y = !!sym("value"), fill = !!sym("variable")),
   gaps = 0.1,
   position_fill = FALSE
 )
@@ -129,8 +129,7 @@ timesteps <- data.frame(tau = c(rep(1,2),rep(2,4)),
 
 # plotting with different timesteps than periods and years
 ggplot_bar_vts(data2, timesteps,
-              mapping = aes_string('tau','value',
-                                     group = 'variable', fill = 'variable'),
+              mapping = aes(tau, value, group = variable, fill = variable),
               timesteps_period = 'tau',
               timesteps_interval = 'hour',
               interval_shift = c(-1,0))
