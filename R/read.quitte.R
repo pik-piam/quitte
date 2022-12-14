@@ -32,7 +32,7 @@
 #' read.quitte("some/data/file.csv", sep = ",", quote = '"')
 #' }
 #'
-#' @importFrom dplyr as_tibble bind_rows distinct first last tibble
+#' @importFrom dplyr as_tibble bind_rows distinct first last tibble relocate
 #' @importFrom forcats as_factor
 #' @importFrom rlang .data is_empty
 #' @importFrom readr problems read_delim read_lines
@@ -81,10 +81,11 @@ read.quitte <- function(file,
         useless.last.column <- foo$useless.last.column
 
         # FIXME: relax to handle other than 4-digit periods
-        period.columns <- grep("^[0-9]{4}$", header)
+        period.columns <- grep("^[A-Za-z]?[0-9]{4}$", header)
 
-        if (!all(header[1:5] == default.columns))
-            stop("missing default columns in header of file ", f)
+        if (!all(header[1:5] %in% default.columns))
+            stop("missing default columns in header of file ", f, ": ",
+                 paste(setdiff(default.columns, header[1:5]), collapse = ", "))
 
         if (last(period.columns) != length(header))
             stop("unallowed extra columns in header of file ", f)
@@ -113,11 +114,13 @@ read.quitte <- function(file,
         }
 
         data <- data %>%
+            relocate(default.columns) %>%
             # convert to long format
             pivot_longer(all_of(periods), names_to = 'period',
                          values_drop_na = drop.na)
 
         # convert periods ----
+        data$period <- gsub("^[A-Za-z]?", "", data$period)
         if (convert.periods) {
             ISOyear <- make.ISOyear(seq(2005, 2150, by = 5))
             data$period <- ISOyear(data$period)
