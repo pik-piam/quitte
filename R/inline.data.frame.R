@@ -1,6 +1,6 @@
 #' Convert a vector of stings to a data frame
 #'
-#' \code{inline.data.frame()} converts a vector of strings that contain
+#' `inline.data.frame()` converts a vector of strings that contain
 #' separated items into a data frame.
 #'
 #' @param ...   string, or a vector of strings

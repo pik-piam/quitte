@@ -1,4 +1,3 @@
-
 #' Write .mif file
 #'
 #' A wrapper around [`readr::write_lines] for writing files conforming to the

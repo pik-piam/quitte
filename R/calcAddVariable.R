@@ -2,15 +2,15 @@
 #'
 #' Calculate new variable from existing ones, using a generic formula.
 #'
-#' \strong{Obsolete}. This function will be removed in the near future. Use
-#' \code{\link{calc_addVariable}} instead.
+#' **Obsolete**. This function will be removed in the near future. Use
+#' [calc_addVariable()] instead.
 #'
-#' @seealso \code{\link{calc_addVariable}}
+#' @seealso [calc_addVariable()]
 #'
-#' @param data A data frame with columns \code{"variable"}, \code{"unit"} and
-#'             \code{"value"}.
+#' @param data A data frame with columns `"variable"`, `"unit"` and
+#'             `"value"`.
 #' @param formula An object of class formula, as returned by
-#'                \code{\link[stats]{formula}}.
+#'                [stats::formula()].
 #' @param newUnit Character vector with the unit for the newly calculated
 #'                variable.
 #' @param na.act Indicates how NAs in the wide data frame should be handled.

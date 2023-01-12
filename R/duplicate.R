@@ -3,10 +3,10 @@
 #'
 #' Duplicate rows in a data frame, modifying a specified column.
 #'
-#' @param data A \code{data frame} or \code{quitte} object.
+#' @param data A `data frame` or `quitte` object.
 #' @param ...,column A key-value pair of the column to modify.
 #'
-#' @return A \code{data frame} or \code{quitte} object, same as input.
+#' @return A `data frame` or `quitte` object, same as input.
 #'
 #' @examples
 #' require(dplyr)

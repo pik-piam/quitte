@@ -5,8 +5,8 @@
 #'
 #' @param x A character vector or a factor.
 #'
-#' @return A character vector with the unique elements of \code{x} if it is a
-#'     character vector, or the levels of \code{x} if it is a factor.
+#' @return A character vector with the unique elements of `x` if it is a
+#'     character vector, or the levels of `x` if it is a factor.
 #'
 #' @author Michaja Pehl
 

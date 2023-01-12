@@ -6,9 +6,9 @@
 #' @param df A data frame (or quitte object).
 #' @param ... Name-value pairs assigning level order to factor columns.
 #' @param dots A named list of factor columns and corresponding levels.
-#' @param drop.extra.levels If \code{TRUE} (default) levels not present in the
+#' @param drop.extra.levels If `TRUE` (default) levels not present in the
 #'                          factor are silently dropped.
-#' @return A data frame (or quitte object, same as \code{data}).
+#' @return A data frame (or quitte object, same as `data`).
 #' @author Michaja Pehl
 #' @examples
 #' require(dplyr)

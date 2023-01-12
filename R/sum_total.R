@@ -1,15 +1,15 @@
 #'
 #' Sum over one dimension of a data frame
 #'
-#' \code{sum_total()} is a short-hand function to calculate and insert the
+#' `sum_total()` is a short-hand function to calculate and insert the
 #' (weighted) sum of a extensive (intensive) category in a data frame.
 #'
 #' @param data a data frame
 #' @param group column for which the sum is to be calculated
 #' @param value column of the numbers to be summed
-#' @param name entry in column \code{group} for the sum; defaults to
-#'        \code{"Total"}
-#' @param na.rm \code{logical.} Should missing values (including NaN) be removed
+#' @param name entry in column `group` for the sum; defaults to
+#'        `"Total"`
+#' @param na.rm `logical.` Should missing values (including NaN) be removed
 #'        (default)?
 #' @param weight column of the weights to be applied, if any
 #' @return a data frame

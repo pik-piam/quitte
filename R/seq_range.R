@@ -2,7 +2,7 @@
 #' Sequence from a Range
 #'
 #' Generate regular sequence from a range. Wrapper function for
-#' \code{\link{seq}}.
+#' [seq()].
 #'
 #' @param range Vector with starting and end values of the sequence. Only first
 #'        two elements are considered.
@@ -15,7 +15,7 @@
 #'
 #' @author Michaja Pehl
 #'
-#' @seealso \code{\link{seq}}, \code{\link{range}}
+#' @seealso [seq()], [range()]
 #'
 #' @examples
 #' seq_range(range(1:13), by = 3)
