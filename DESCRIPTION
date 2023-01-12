@@ -27,6 +27,7 @@ Imports:
     forcats,
     ggplot2,
     lazyeval,
+    lifecycle,
     lubridate,
     magclass,
     magrittr,
