@@ -1,6 +1,6 @@
 #' Changes factor columns of a data frame into character columns
 #'
-#' \code{character.data.frame()} turns factor columns of a data frame into
+#' `character.data.frame()` turns factor columns of a data frame into
 #' character columns.
 #'
 #' @param df a data frame
@@ -18,7 +18,7 @@
 #' character.data.frame(df)
 #' character.data.frame_(df, 'num')
 #'
-#' @seealso \code{\link{factor.data.frame}}
+#' @seealso [factor.data.frame()]
 #'
 #' @importFrom tibble as_tibble
 #'

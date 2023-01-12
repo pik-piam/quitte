@@ -1,18 +1,18 @@
 #' Add country code
 #'
-#' Wrapper function for \code{\link[countrycode]{countrycode}} enabling piped
+#' Wrapper function for [countrycode::countrycode()] enabling piped
 #' execution.
 #'
 #' @param data A data frame.
-#' @param ... Key-value pairs for NSE of \code{origin} and \code{destination}
+#' @param ... Key-value pairs for NSE of `origin` and `destination`
 #'        parameters.
 #' @param warn Prints unique elements from sourcevar for which no match was
 #'             found.
-#' @param na.rm If \code{TRUE}, remove ambiguously matched rows.
+#' @param na.rm If `TRUE`, remove ambiguously matched rows.
 #' @param origin Named scalar linking source column to source coding scheme. See
-#'        \code{\link[countrycode]{countrycode}} for details.
+#'        [countrycode::countrycode()] for details.
 #' @param destination Named scalar linking destination column name to
-#'        destination coding scheme. See \code{\link[countrycode]{countrycode}}
+#'        destination coding scheme. See [countrycode::countrycode()]
 #'        for details.
 #'
 #' @return A data frame.

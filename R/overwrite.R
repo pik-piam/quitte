@@ -1,8 +1,8 @@
 #' Replace rows in a data frame with new values
 #'
-#' \code{overwrite()} \code{rbind()}s the data frames \code{lhs} and \code{rhs},
+#' `overwrite()` `rbind()`s the data frames `lhs` and `rhs`,
 #' removing any duplicate lines, which are determined without regard to the
-#' columns in \code{except}.
+#' columns in `except`.
 #'
 #' @param lhs data frame with values that will replace others
 #' @param rhs data frame with values that will be replaced

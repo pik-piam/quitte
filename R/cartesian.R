@@ -1,11 +1,11 @@
 #' Generate cartesian product from to character vectors
 #'
 #' @param x,y objects that can be coerced to character vectors
-#' @param sep a character string that will seperate the elements of \code{x}
-#'    and \code{y} in the output. Defaults to \code{'.'}.
+#' @param sep a character string that will seperate the elements of `x`
+#'    and `y` in the output. Defaults to `'.'`.
 #'
-#' @return A character vector of the concatenated elements of \code{x} and
-#'    \code{y}.
+#' @return A character vector of the concatenated elements of `x` and
+#'    `y`.
 #'
 #' @examples
 #' cartesian(c('a', 'b'), 1:3)

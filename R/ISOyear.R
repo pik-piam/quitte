@@ -1,6 +1,6 @@
 #' speedily converting years to POSIXct values
 #'
-#' \code{make.ISOyear()} creates a closure for speedily converting years to
+#' `make.ISOyear()` creates a closure for speedily converting years to
 #' POSIXct values. Initialise the closure with year values you know you will
 #' need. Additional values will be added automatically.
 #'

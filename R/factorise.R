@@ -4,8 +4,8 @@
 #'
 #' @param x A character vector.
 #'
-#' @return A factor from \code{x}, with levels in the same order as they appear
-#'     in within \code{x}.
+#' @return A factor from `x`, with levels in the same order as they appear
+#'     in within `x`.
 #'
 #' @author Michaja Pehl
 #'

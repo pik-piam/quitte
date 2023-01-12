@@ -1,13 +1,13 @@
 #'
-#' Read item from \code{.gdx} file as quitte data frame
+#' Read item from `.gdx` file as quitte data frame
 #'
-#' \code{read.gdx()} is a wrapper function for \code{\link[gdxrrw]{rgdx}} that
+#' `read.gdx()` is a wrapper function for [gdxrrw::rgdx()] that
 #' returns a quitte data frame.
 #'
-#' @param gdxName path to \code{.gdx} file
+#' @param gdxName path to `.gdx` file
 #' @param requestList.name name of item to read
-#' @param fields fields to read from variables and equations (any of \code{lo},
-#'        \code{l}, \code{m}, and \code{up}); ignored for parameters
+#' @param fields fields to read from variables and equations (any of `lo`,
+#'        `l`, `m`, and `up`); ignored for parameters
 #' @param colNames string vector of column names to override dimension names
 #' @param factors return non-numerical columns as factors (default) or character
 #'        vectors

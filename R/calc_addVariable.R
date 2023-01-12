@@ -2,18 +2,18 @@
 #'
 #' Calculate new variables from existing ones, using generic formulas.
 #'
-#' \code{...} is a list of name-value pairs with the general format
+#' `...` is a list of name-value pairs with the general format
 #' \preformatted{
 #' "lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
 #' }
-#' where \code{lhs} are the names of new variables to be calculated and
-#' \code{rhs} are the variables to calculate from. If \code{lhs} and \code{rhs}
-#' are no proper \emph{identifiers}, they need to be quoted (see
-#' \link[base]{Quotes} for details). When in doubt, just quote.
+#' where `lhs` are the names of new variables to be calculated and
+#' `rhs` are the variables to calculate from. If `lhs` and `rhs`
+#' are no proper *identifiers*, they need to be quoted (see
+#' [Quotes][base::Quotes] for details). When in doubt, just quote.
 #'
-#' If the new variables should have units, set \code{units} appropriately.
+#' If the new variables should have units, set `units` appropriately.
 #'
-#' \code{.dots} is a named list of strings denoting formulas and optionally
+#' `.dots` is a named list of strings denoting formulas and optionally
 #' units. The general format is
 #' \preformatted{
 #' list("`lhs 1`" = "`rhs` / `calculation`",
@@ -26,10 +26,10 @@
 #' }
 #' Units do not require quoting.
 #'
-#' \code{...} and \code{.dots} are processed in order, and variables already
+#' `...` and `.dots` are processed in order, and variables already
 #' calculated in the same call can be used for further calculations. Other
-#' existing columns, including \code{period}, can be referenced, but this is
-#' not supported and the results are considered \emph{undefined}.
+#' existing columns, including `period`, can be referenced, but this is
+#' not supported and the results are considered *undefined*.
 #'
 #' @md
 #' @param data A data frame.

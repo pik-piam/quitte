@@ -1,7 +1,7 @@
 #' Get n Colours
 #'
 #' Get n colours, evenly spaced along the colour wheel.  Just like the ones
-#' \code{\link[ggplot2]{scale_colour_hue}} is using.
+#' [ggplot2::scale_colour_hue()] is using.
 #'
 #' @param n Either the number of colours to generate, or a character vector
 #' which will be used as names for the returned colours.

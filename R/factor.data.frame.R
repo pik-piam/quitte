@@ -1,6 +1,6 @@
 #' (Re-) Factorise factor and character columns in data frame
 #'
-#' \code{factor.data.frame()} turns character columns in a data frame into
+#' `factor.data.frame()` turns character columns in a data frame into
 #' factor columns and refactorises factor columns, silently dropping unused
 #' levels.
 #'
@@ -19,7 +19,7 @@
 #' str(factor.data.frame(df))
 #' str(factor.data.frame_(df, 'num'))
 #'
-#' @seealso \code{\link{character.data.frame}}
+#' @seealso [character.data.frame()]
 #'
 #' @export
 factor.data.frame <- function(df, ...) {

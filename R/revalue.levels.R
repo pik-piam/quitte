@@ -5,7 +5,7 @@
 #' @param df A data frame (or quitte object).
 #' @param ... Name-value pairs assigning a named vector with new names to a column from the dataframe.
 #' @param dots A named list of columns containing the named vector with the old and new names for each column
-#' @return A data frame (or quitte object, same as \code{data}).
+#' @return A data frame (or quitte object, same as `data`).
 #' @author Antoine Levesque
 #' @examples
 #'

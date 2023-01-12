@@ -4,9 +4,9 @@
 #' Returns the range of signs in a numerical vector as a character string.
 #'
 #' @param x A numerical vector.
-#' @param na.rm Should \code{NA}s be ignored?
+#' @param na.rm Should `NA`s be ignored?
 #'
-#' @return A character string of signs found in \code{x}.
+#' @return A character string of signs found in `x`.
 #'
 #' @author Michaja Pehl
 #'

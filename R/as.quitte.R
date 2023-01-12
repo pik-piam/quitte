@@ -1,7 +1,7 @@
 #' Class "quitte" ~~~
 #'
-#' The quitte class is a more standardized data.frame format. \code{is.quitte}
-#' tests if \code{x} is an quitte-object, \code{as.quitte} transforms \code{x}
+#' The quitte class is a more standardized data.frame format. `is.quitte`
+#' tests if `x` is an quitte-object, `as.quitte` transforms `x`
 #' to an quitte-object (if possible).
 #'
 #'
