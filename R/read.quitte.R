@@ -114,7 +114,7 @@ read.quitte <- function(file,
         }
 
         data <- data %>%
-            relocate(default.columns) %>%
+            relocate(all_of(default.columns)) %>%
             # convert to long format
             pivot_longer(all_of(periods), names_to = 'period',
                          values_drop_na = drop.na)
