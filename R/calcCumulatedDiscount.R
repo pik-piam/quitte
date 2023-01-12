@@ -33,8 +33,6 @@ calcCumulatedDiscount = function(data,
   # the baseyear is the first year in the time series
   # option fixYear: From the discounted time series, substract the value in fixYear - defaults to none. In that case the value in the baseyear is zero  anyways by construction.
 
-  ISOYear <- make.ISOyear()
-
   #Just do this for the specified variable, preserve all other columns.
   data = data[data$variable %in% c(nameVar,nameDisrate),]
 
