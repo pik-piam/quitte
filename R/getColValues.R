@@ -5,7 +5,8 @@
 #'
 #' @param df quitte object
 #' @param colVar name of the column of interest
-#' @return a  vector containing the values of the column without duplicates. The class of the returned vector is either numeric or character
+#' @return a  vector containing the values of the column without duplicates. The
+#'   class of the returned vector is either numeric or character
 #' @author Antoine Levesque
 #' @examples
 #' data(mtcars)

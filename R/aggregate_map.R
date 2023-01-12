@@ -2,42 +2,46 @@
 #'
 #' Aggregates or disaggregates the values of a data frame according to a mapping
 #'
-#' By default `"weights"` is set to `NULL`. For aggregations, this means that values will
-#' be summed as they are. For disaggregations, each component of the larger category will
-#' take the same value as the larger category, or `"scaleWeights"` is `TRUE`,
-#' each component will be given an even weight. For aggregations, `"weights"` can also be the
-#' name of a variable contained in `"data"`. `"weights"` may also be a data frame
+#' By default `"weights"` is set to `NULL`. For aggregations, this means that
+#' values will be summed as they are. For disaggregations, each component of the
+#' larger category will take the same value as the larger category, or
+#' `"scaleWeights"` is `TRUE`, each component will be given an even weight. For
+#' aggregations, `"weights"` can also be the name of a variable contained in
+#' `"data"`. `"weights"` may also be a data frame.
 #'
 #'
 #' @param data a data frame.
-#' @param mapping a data frame connecting the resolution in `"data"`
-#'                and the wished resolution
-#' @param by (named) vector giving the correspondence between the column name of `"data"`
-#'           and of the `"mapping"`
-#' @param subset2agg subset of variables for which the (dis)aggregation is applied
-#'        . If `NULL` (the default), the (dis)aggregation is applied to
-#'        all variables.
-#' @param only.new If `FALSE` (the default), add the (dis)aggregated data frame to existing
-#'                 ones. If `TRUE`, return only the (dis)aggregated data frame.
-#' @param na.rm If `TRUE` (the default), remove items calculated as
-#'              `NA`.
-#' @param weights a data frame, a variable name as a character vector, or `NULL`.
-#'        See details
+#' @param mapping a data frame connecting the resolution in `"data"` and the
+#'   wished resolution
+#' @param by (named) vector giving the correspondence between the column name
+#'   of `"data"` and of the `"mapping"`
+#' @param subset2agg subset of variables for which the (dis)aggregation is
+#'   applied. If `NULL` (the default), the (dis)aggregation is applied to all
+#'   variables.
+#' @param only.new If `FALSE` (the default), add the (dis)aggregated data frame
+#'   to existing ones. If `TRUE`, return only the (dis)aggregated data frame.
+#' @param na.rm If `TRUE` (the default), remove items calculated as `NA`.
+#' @param weights a data frame, a variable name as a character vector, or
+#'   `NULL`. See details.
 #' @param forceAggregation binary. If `TRUE`, (dis)aggregation will be applied
-#'        even though the items contained contained in the data and in the data do not fully match.
-#'        The data is reduced to the items covered both by the mapping and the data.
-#' @param autodetect this parameter takes the values auto, aggregate or disaggregate. If auto (the default)
-#'                   the function tries to auto-detect whether this is an aggregation or a disaggregation.
-#'                   If aggregate, it will aggregate, if disaggregate, it will disaggregate.
-#' @param scaleWeights binary. If `TRUE`, weights are scaled so that the sum of the
-#' components equals the value of the larger category.
+#'   even though the items contained contained in the data and in the data do
+#'   not fully match. The data is reduced to the items covered both by the
+#'   mapping and the data.
+#' @param autodetect this parameter takes the values `'auto'`, `'aggregate'` or
+#'   `'disaggregate'`. If `'auto'` (the default) the function tries to
+#'   auto-detect whether this is an aggregation or a disaggregation. If
+#'   `'aggregate'`, it will aggregate, if `'disaggregate'`, it will
+#'   disaggregate.
+#' @param scaleWeights logical. If `TRUE`, weights are scaled so that the sum of
+#'   the components equals the value of the larger category.
 #' @param variable Column name of variables. Defaults to `"variable"`.
 #' @param value Column name of values. Defaults to `"value"`.
 #' @param unit Column name of units. Defaults to `"unit"`.
 #' @param weight_val_col name of the value column in the `"weigths"` data frame,
-#'         if `"weigths"` is a data frame
+#'   if `"weigths"` is a data frame
 #' @param weight_item_col name of the item column in the `"weigths"` data frame,
-#'         if `"weigths"` is a data frame. The item column is the column corresponding to the mapping
+#'   if `"weigths"` is a data frame. The item column is the column corresponding
+#'   to the mapping
 #' @param fun aggregation function to use.  Defaults to `sum`.
 #'
 #' @return A data frame.

@@ -4,7 +4,8 @@
 #'
 #'
 #' @param df quitte object
-#' @return a character vector containing the values of the column without duplicates
+#' @return a character vector containing the values of the column without
+#'   duplicates
 #' @author Antoine Levesque
 #' @examples
 #'

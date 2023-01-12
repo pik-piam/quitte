@@ -1,25 +1,35 @@
-#' Decomposes a change in a variable based on the changes of its factors (Kaya-like)
+#' Decomposes a change in a variable based on the changes of its factors
+#' (Kaya-like)
 #'
-#' Computes decomposition for a change in time or policy of a variable. The decomposition follows the methodology of
-#' the paper: "Some properties of an exact energy decomposition model", Sun and Ang, 2000, Energy
+#' Computes decomposition for a change in time or policy of a variable. The
+#' decomposition follows the methodology of the paper: "Some properties of an
+#' exact energy decomposition model", Sun and Ang, 2000, Energy
 #'
+#' @param df a quitte object (with coluns model, scenario, region, variable,
+#'   unit, period, value)
+#' @param x a character vector detailing the explained variable from the
+#'   decomposition as well as the factors in the decomposition. The explained
+#'   variable should be named "explained" in the character vector.
+#' @param bau the name of the reference scenario, as a character string. It is
+#'   `NULL` as a default
+#' @param pol the name of the policy scenario, as a character string. It is
+#'   `NULL` as a default
+#' @param gap either `"policy"` or `"time"`. If `"policy"`, `bau` and `pol`
+#'   should be detailed. If `"time"`, `bau` and `pol` should stay `NULL`.
 #'
-#'
-#' @param df a quitte object (with coluns model, scenario, region, variable, unit, period, value)
-#' @param x a character vector detailing the explained variable from the decomposition as well as the factors in the decomposition.
-#' The explained variable should be named "explained" in the character vector.
-#' @param bau the name of the reference scenario, as a character string. It is NULL as a default
-#' @param pol the name of the policy scenario, as a character string. It is NULL as a default
-#' @param gap either "policy" or "time". If "policy", bau and pol should be detailed. If "time" bau and pol should stay NULL.
-#'
-#' @return A data frame with the effects of each component of the decomposition. The data frame contains new columns:
-#' the column 'explained' gives the name of the explained variable
-#' the column 'factors' gives the name of the factor considered (from the decomposition chain)
-#' the column 'type' gives the parameter:
-#'           - 'eff' is the result of the decomposition: how much of the change is to be attributed to the factor
-#'           - 'value' is the value of the factor
-#'           - 'lag' is the value of the factor in the reference scenario or in the previous period
-#'           - 'delta' is the difference in the factor's value between the policy and the reference, or between one period and another
+#' @return A data frame with the effects of each component of the decomposition.
+#'   The data frame contains new columns:
+#'   - `explained` gives the name of the explained variable
+#'   - `factors` gives the name of the factor considered (from the decomposition
+#'     chain)
+#'   - `type` gives the parameters:
+#'     - `eff` is the result of the decomposition: how much of the change is to
+#'       be attributed to the factor
+#'     - `value` is the value of the factor
+#'     - `lag` is the value of the factor in the reference scenario or in the
+#'       previous period
+#'     - `delta` is the difference in the factor's value between the policy and
+#'       the reference, or between one period and another
 #'
 #' @examples
 #' # In this example, emissions = ue * fe_ue * emi_fe
