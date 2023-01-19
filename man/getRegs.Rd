@@ -10,7 +10,8 @@ getRegs(df)
 \item{df}{quitte object}
 }
 \value{
-a character vector containing the values of the column without duplicates
+a character vector containing the values of the column without
+duplicates
 }
 \description{
 Retrieves regions from a quitte object

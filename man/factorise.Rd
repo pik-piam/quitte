@@ -11,7 +11,7 @@ factorise(x)
 }
 \value{
 A factor from \code{x}, with levels in the same order as they appear
-    in within \code{x}.
+in within \code{x}.
 }
 \description{
 Generate a factor with levels in prescribed order.

@@ -36,7 +36,7 @@ str(factor.data.frame_(df, 'num'))
 
 }
 \seealso{
-\code{\link{character.data.frame}}
+\code{\link[=character.data.frame]{character.data.frame()}}
 }
 \author{
 Michaja Pehl

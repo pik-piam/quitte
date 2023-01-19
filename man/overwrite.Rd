@@ -16,7 +16,7 @@ which columns to replace; defaults to "value"}
 }
 \value{
 data frame in which rows from rhs have been replaced with rows from
-        lhs
+lhs
 }
 \description{
 \code{overwrite()} \code{rbind()}s the data frames \code{lhs} and \code{rhs},

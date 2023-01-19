@@ -12,7 +12,8 @@ getColValues(df, colVar)
 \item{colVar}{name of the column of interest}
 }
 \value{
-a  vector containing the values of the column without duplicates. The class of the returned vector is either numeric or character
+a  vector containing the values of the column without duplicates. The
+class of the returned vector is either numeric or character
 }
 \description{
 Retrieves values from one column of a quitte object

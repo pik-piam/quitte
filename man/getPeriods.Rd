@@ -10,7 +10,8 @@ getPeriods(df)
 \item{df}{quitte object}
 }
 \value{
-a numeric vector containing the values of the column without duplicates
+a numeric vector containing the values of the column without
+duplicates
 }
 \description{
 Retrieves periods from a quitte object

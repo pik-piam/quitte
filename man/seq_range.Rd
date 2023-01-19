@@ -17,17 +17,17 @@ which will be rounded up if fractional.}
 }
 \value{
 Returns a vector of type "integer" or "double": programmers should
-        not rely on which.
+not rely on which.
 }
 \description{
 Generate regular sequence from a range. Wrapper function for
-\code{\link{seq}}.
+\code{\link[=seq]{seq()}}.
 }
 \examples{
 seq_range(range(1:13), by = 3)
 }
 \seealso{
-\code{\link{seq}}, \code{\link{range}}
+\code{\link[=seq]{seq()}}, \code{\link[=range]{range()}}
 }
 \author{
 Michaja Pehl

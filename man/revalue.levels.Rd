@@ -12,15 +12,18 @@ revalue.levels_(df, dots)
 \arguments{
 \item{df}{A data frame (or quitte object).}
 
-\item{...}{Name-value pairs assigning a named vector with new names to a column from the dataframe.}
+\item{...}{Name-value pairs assigning a named vector with new names to a
+column from the dataframe.}
 
-\item{dots}{A named list of columns containing the named vector with the old and new names for each column}
+\item{dots}{A named list of columns containing the named vector with the old
+and new names for each column}
 }
 \value{
 A data frame (or quitte object, same as \code{data}).
 }
 \description{
-Revalue the names of a level or character column in a dataframe, according to a named vector given as an input
+Revalue the names of a level or character column in a dataframe, according to
+a named vector given as an input
 }
 \examples{
 

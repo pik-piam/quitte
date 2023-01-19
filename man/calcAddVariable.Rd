@@ -11,7 +11,7 @@ calcAddVariable(data, formula, newUnit = "None", na.act = "no")
 \code{"value"}.}
 
 \item{formula}{An object of class formula, as returned by
-\code{\link[stats]{formula}}.}
+\code{\link[stats:formula]{stats::formula()}}.}
 
 \item{newUnit}{Character vector with the unit for the newly calculated
 variable.}
@@ -27,7 +27,7 @@ Calculate new variable from existing ones, using a generic formula.
 }
 \details{
 \strong{Obsolete}. This function will be removed in the near future. Use
-\code{\link{calc_addVariable}} instead.
+\code{\link[=calc_addVariable]{calc_addVariable()}} instead.
 }
 \examples{
 \dontshow{
@@ -47,7 +47,7 @@ calcAddVariable(data, formula("GDPpC" ~ "`GDP|MER` / Population"),
 
 }
 \seealso{
-\code{\link{calc_addVariable}}
+\code{\link[=calc_addVariable]{calc_addVariable()}}
 }
 \author{
 Anselm Schultes, Michaja Pehl
