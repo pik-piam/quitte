@@ -13,7 +13,8 @@ removeColNa(df)
 a data frame
 }
 \description{
-\code{removeColNa()} Removes all columns of a data frame for which all entries are NA, or the default of fct_explict_na
+\code{removeColNa()} Removes all columns of a data frame for which all entries are
+NA, or the default of fct_explict_na
 }
 \examples{
 df <- data.frame(

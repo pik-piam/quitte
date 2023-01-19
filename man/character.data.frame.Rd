@@ -35,7 +35,7 @@ character.data.frame_(df, 'num')
 
 }
 \seealso{
-\code{\link{factor.data.frame}}
+\code{\link[=factor.data.frame]{factor.data.frame()}}
 }
 \author{
 Antoine Levesque

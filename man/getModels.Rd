@@ -10,7 +10,8 @@ getModels(df)
 \item{df}{quitte object}
 }
 \value{
-a character vector containing the values of the column without duplicates
+a character vector containing the values of the column without
+duplicates
 }
 \description{
 Retrieves models from a quitte object

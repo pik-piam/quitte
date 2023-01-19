@@ -69,7 +69,7 @@ Calculate new variables from existing ones, using generic formulas.
 where \code{lhs} are the names of new variables to be calculated and
 \code{rhs} are the variables to calculate from. If \code{lhs} and \code{rhs}
 are no proper \emph{identifiers}, they need to be quoted (see
-\link[base]{Quotes} for details). When in doubt, just quote.
+\link[base:Quotes]{Quotes} for details). When in doubt, just quote.
 
 If the new variables should have units, set \code{units} appropriately.
 

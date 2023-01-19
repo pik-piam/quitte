@@ -14,7 +14,7 @@ and \code{y} in the output. Defaults to \code{'.'}.}
 }
 \value{
 A character vector of the concatenated elements of \code{x} and
-   \code{y}.
+\code{y}.
 }
 \description{
 Generate cartesian product from to character vectors

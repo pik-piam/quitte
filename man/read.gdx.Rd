@@ -33,7 +33,7 @@ container}
 quitte data frame
 }
 \description{
-\code{read.gdx()} is a wrapper function for \code{\link[gdxrrw]{rgdx}} that
+\code{read.gdx()} is a wrapper function for \code{\link[gdxrrw:rgdx]{gdxrrw::rgdx()}} that
 returns a quitte data frame.
 }
 \author{

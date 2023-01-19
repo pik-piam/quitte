@@ -11,7 +11,7 @@ unique_or_levels(x)
 }
 \value{
 A character vector with the unique elements of \code{x} if it is a
-    character vector, or the levels of \code{x} if it is a factor.
+character vector, or the levels of \code{x} if it is a factor.
 }
 \description{
 Abstract the differences between character vectors and factors.

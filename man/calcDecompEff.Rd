@@ -3,37 +3,53 @@
 \name{calcDecompEff}
 \alias{calcDecompEff}
 \alias{calcDecompEff_scen}
-\title{Decomposes a change in a variable based on the changes of its factors (Kaya-like)}
+\title{Decomposes a change in a variable based on the changes of its factors
+(Kaya-like)}
 \usage{
 calcDecompEff(df, x, bau = NULL, pol = NULL, gap = "policy")
 
 calcDecompEff_scen(df, x, bau)
 }
 \arguments{
-\item{df}{a quitte object (with coluns model, scenario, region, variable, unit, period, value)}
+\item{df}{a quitte object (with coluns model, scenario, region, variable,
+unit, period, value)}
 
-\item{x}{a character vector detailing the explained variable from the decomposition as well as the factors in the decomposition.
-The explained variable should be named "explained" in the character vector.}
+\item{x}{a character vector detailing the explained variable from the
+decomposition as well as the factors in the decomposition. The explained
+variable should be named "explained" in the character vector.}
 
-\item{bau}{the name of the reference scenario, as a character string. It is NULL as a default}
+\item{bau}{the name of the reference scenario, as a character string. It is
+\code{NULL} as a default}
 
-\item{pol}{the name of the policy scenario, as a character string. It is NULL as a default}
+\item{pol}{the name of the policy scenario, as a character string. It is
+\code{NULL} as a default}
 
-\item{gap}{either "policy" or "time". If "policy", bau and pol should be detailed. If "time" bau and pol should stay NULL.}
+\item{gap}{either \code{"policy"} or \code{"time"}. If \code{"policy"}, \code{bau} and \code{pol}
+should be detailed. If \code{"time"}, \code{bau} and \code{pol} should stay \code{NULL}.}
 }
 \value{
-A data frame with the effects of each component of the decomposition. The data frame contains new columns:
-the column 'explained' gives the name of the explained variable
-the column 'factors' gives the name of the factor considered (from the decomposition chain)
-the column 'type' gives the parameter:
-          - 'eff' is the result of the decomposition: how much of the change is to be attributed to the factor
-          - 'value' is the value of the factor
-          - 'lag' is the value of the factor in the reference scenario or in the previous period
-          - 'delta' is the difference in the factor's value between the policy and the reference, or between one period and another
+A data frame with the effects of each component of the decomposition.
+The data frame contains new columns:
+\itemize{
+\item \code{explained} gives the name of the explained variable
+\item \code{factors} gives the name of the factor considered (from the decomposition
+chain)
+\item \code{type} gives the parameters:
+\itemize{
+\item \code{eff} is the result of the decomposition: how much of the change is to
+be attributed to the factor
+\item \code{value} is the value of the factor
+\item \code{lag} is the value of the factor in the reference scenario or in the
+previous period
+\item \code{delta} is the difference in the factor's value between the policy and
+the reference, or between one period and another
+}
+}
 }
 \description{
-Computes decomposition for a change in time or policy of a variable. The decomposition follows the methodology of
-the paper: "Some properties of an exact energy decomposition model", Sun and Ang, 2000, Energy
+Computes decomposition for a change in time or policy of a variable. The
+decomposition follows the methodology of the paper: "Some properties of an
+exact energy decomposition model", Sun and Ang, 2000, Energy
 }
 \examples{
 # In this example, emissions = ue * fe_ue * emi_fe

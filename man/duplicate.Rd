@@ -10,12 +10,12 @@ duplicate(data, ...)
 duplicate_(data, column)
 }
 \arguments{
-\item{data}{A \code{data frame} or \code{quitte} object.}
+\item{data}{A \verb{data frame} or \code{quitte} object.}
 
 \item{..., column}{A key-value pair of the column to modify.}
 }
 \value{
-A \code{data frame} or \code{quitte} object, same as input.
+A \verb{data frame} or \code{quitte} object, same as input.
 }
 \description{
 Duplicate rows in a data frame, modifying a specified column.

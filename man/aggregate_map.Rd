@@ -26,35 +26,37 @@ aggregate_map(
 \arguments{
 \item{data}{a data frame.}
 
-\item{mapping}{a data frame connecting the resolution in \code{"data"}
-and the wished resolution}
+\item{mapping}{a data frame connecting the resolution in \code{"data"} and the
+wished resolution}
 
-\item{by}{(named) vector giving the correspondence between the column name of \code{"data"}
-and of the \code{"mapping"}}
+\item{by}{(named) vector giving the correspondence between the column name
+of \code{"data"} and of the \code{"mapping"}}
 
-\item{subset2agg}{subset of variables for which the (dis)aggregation is applied
-. If \code{NULL} (the default), the (dis)aggregation is applied to
-all variables.}
+\item{subset2agg}{subset of variables for which the (dis)aggregation is
+applied. If \code{NULL} (the default), the (dis)aggregation is applied to all
+variables.}
 
-\item{only.new}{If \code{FALSE} (the default), add the (dis)aggregated data frame to existing
-ones. If \code{TRUE}, return only the (dis)aggregated data frame.}
+\item{only.new}{If \code{FALSE} (the default), add the (dis)aggregated data frame
+to existing ones. If \code{TRUE}, return only the (dis)aggregated data frame.}
 
-\item{na.rm}{If \code{TRUE} (the default), remove items calculated as
-\code{NA}.}
+\item{na.rm}{If \code{TRUE} (the default), remove items calculated as \code{NA}.}
 
-\item{weights}{a data frame, a variable name as a character vector, or \code{NULL}.
-See details}
+\item{weights}{a data frame, a variable name as a character vector, or
+\code{NULL}. See details.}
 
 \item{forceAggregation}{binary. If \code{TRUE}, (dis)aggregation will be applied
-even though the items contained contained in the data and in the data do not fully match.
-The data is reduced to the items covered both by the mapping and the data.}
+even though the items contained contained in the data and in the data do
+not fully match. The data is reduced to the items covered both by the
+mapping and the data.}
 
-\item{autodetect}{this parameter takes the values auto, aggregate or disaggregate. If auto (the default)
-the function tries to auto-detect whether this is an aggregation or a disaggregation.
-If aggregate, it will aggregate, if disaggregate, it will disaggregate.}
+\item{autodetect}{this parameter takes the values \code{'auto'}, \code{'aggregate'} or
+\code{'disaggregate'}. If \code{'auto'} (the default) the function tries to
+auto-detect whether this is an aggregation or a disaggregation. If
+\code{'aggregate'}, it will aggregate, if \code{'disaggregate'}, it will
+disaggregate.}
 
-\item{scaleWeights}{binary. If \code{TRUE}, weights are scaled so that the sum of the
-components equals the value of the larger category.}
+\item{scaleWeights}{logical. If \code{TRUE}, weights are scaled so that the sum of
+the components equals the value of the larger category.}
 
 \item{variable}{Column name of variables. Defaults to \code{"variable"}.}
 
@@ -66,7 +68,8 @@ components equals the value of the larger category.}
 if \code{"weigths"} is a data frame}
 
 \item{weight_item_col}{name of the item column in the \code{"weigths"} data frame,
-if \code{"weigths"} is a data frame. The item column is the column corresponding to the mapping}
+if \code{"weigths"} is a data frame. The item column is the column corresponding
+to the mapping}
 
 \item{fun}{aggregation function to use.  Defaults to \code{sum}.}
 }
@@ -77,11 +80,12 @@ A data frame.
 Aggregates or disaggregates the values of a data frame according to a mapping
 }
 \details{
-By default \code{"weights"} is set to \code{NULL}. For aggregations, this means that values will
-be summed as they are. For disaggregations, each component of the larger category will
-take the same value as the larger category, or \code{"scaleWeights"} is \code{TRUE},
-each component will be given an even weight. For aggregations, \code{"weights"} can also be the
-name of a variable contained in \code{"data"}. \code{"weights"} may also be a data frame
+By default \code{"weights"} is set to \code{NULL}. For aggregations, this means that
+values will be summed as they are. For disaggregations, each component of the
+larger category will take the same value as the larger category, or
+\code{"scaleWeights"} is \code{TRUE}, each component will be given an even weight. For
+aggregations, \code{"weights"} can also be the name of a variable contained in
+\code{"data"}. \code{"weights"} may also be a data frame.
 }
 \examples{
 library(tidyr)

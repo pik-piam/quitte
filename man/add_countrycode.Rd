@@ -21,17 +21,17 @@ found.}
 \item{na.rm}{If \code{TRUE}, remove ambiguously matched rows.}
 
 \item{origin}{Named scalar linking source column to source coding scheme. See
-\code{\link[countrycode]{countrycode}} for details.}
+\code{\link[countrycode:countrycode]{countrycode::countrycode()}} for details.}
 
 \item{destination}{Named scalar linking destination column name to
-destination coding scheme. See \code{\link[countrycode]{countrycode}}
+destination coding scheme. See \code{\link[countrycode:countrycode]{countrycode::countrycode()}}
 for details.}
 }
 \value{
 A data frame.
 }
 \description{
-Wrapper function for \code{\link[countrycode]{countrycode}} enabling piped
+Wrapper function for \code{\link[countrycode:countrycode]{countrycode::countrycode()}} enabling piped
 execution.
 }
 \examples{

@@ -17,7 +17,7 @@ character vector.
 }
 \description{
 Get n colours, evenly spaced along the colour wheel.  Just like the ones
-\code{\link[ggplot2]{scale_colour_hue}} is using.
+\code{\link[ggplot2:scale_hue]{ggplot2::scale_colour_hue()}} is using.
 }
 \examples{
 gg_colour_hue(5)
