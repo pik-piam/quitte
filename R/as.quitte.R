@@ -18,7 +18,7 @@
 #' @author Jan Philipp Dietrich
 #' @keywords classes
 #' @importFrom reshape2 melt
-#' @importFrom forcats fct_explicit_na
+#' @importFrom forcats fct_na_value_to_level
 #' @importFrom tibble as_tibble
 #'
 #' @export
@@ -79,15 +79,19 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
 
     if (!all(mandatoryColumns %in% colnames(x))) {
         if (!("model"    %in% colnames(x)))
-            x <- cbind(x, model = fct_explicit_na(factor(NA)))
+            x <- cbind(x, model = fct_na_value_to_level(factor(NA),
+                                                        level = '(Missing)'))
         if (!("scenario" %in% colnames(x)))
-            x <- cbind(x, scenario = fct_explicit_na(factor(NA)))
+            x <- cbind(x, scenario = fct_na_value_to_level(factor(NA),
+                                                           level = '(Missing)'))
         if (!("region"   %in% colnames(x)))
             x <- cbind(x, region = as.factor("GLO"))
         if (!("variable" %in% colnames(x)))
-            x <- cbind(x, variable = fct_explicit_na(factor(NA)))
+            x <- cbind(x, variable = fct_na_value_to_level(factor(NA),
+                                                           level = '(Missing)'))
         if (!("unit"     %in% colnames(x)))
-            x <- cbind(x, unit = fct_explicit_na(factor(NA)))
+            x <- cbind(x, unit = fct_na_value_to_level(factor(NA),
+                                                       level = '(Missing)'))
         if (periodClass == "POSIXct")
             if (!("period"   %in% colnames(x)))
                 x <- cbind(x, period = as.POSIXct(NA))
@@ -109,7 +113,6 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
     if (periodClass == "integer")
         x$period <- as.integer(x$period)
     if (periodClass == "POSIXct") {
-        ISOyear <- make.ISOyear() # nolint
         if (!("POSIXct" %in% attr(x$period, "class")))
             x$period <- ISOyear(x$period)
     }
@@ -187,14 +190,14 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
     colnames(x)[tolower(colnames(x)) == "year"] <- "period"
 
     if (!is.factor(x$region))
-      x$region <- fct_explicit_na(as.factor(x$region))
+      x$region <- fct_na_value_to_level(as.factor(x$region),
+                                        level = '(Missing)')
 
     if (all(x$period == 0)) {
       levels(x$period) <- NA
     } else if (periodClass == "integer") {
       x$period <- as.integer(as.character(x$period))
     } else if (periodClass == "POSIXct") {
-      ISOyear <- make.ISOyear() # nolint
       x$period <- ISOyear(x$period)
     }
 
@@ -205,7 +208,8 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
       x <- data.frame(
         x,
         stats::setNames(
-          as.list(rep(fct_explicit_na(factor(NA)), length(missingColumns))),
+          as.list(rep(fct_na_value_to_level(factor(NA), level = '(Missing)'),
+                      length(missingColumns))),
           missingColumns)
       )
     } else {

@@ -12,18 +12,18 @@
 #'     factor = as.factor(LETTERS[1:5]),
 #'     value = 1:5,
 #'     unit = NA,
-#'     unit2 = forcats::fct_explicit_na(factor(NA)),
+#'     unit2 = forcats::fct_na_value_to_level(factor(NA), level = '(Missing)'),
 #'     stringsAsFactors = FALSE)
 #' str(df)
 #' str(removeColNa(df))
-#' @importFrom forcats fct_explicit_na
+#' @importFrom forcats fct_na_value_to_level
 #'
 #' @export
 #'
 
 removeColNa <- function(df){
 
-  .fct_default = levels(forcats::fct_explicit_na(factor(NA)))
+  .fct_default = levels(fct_na_value_to_level(factor(NA), level = '(Missing)'))
 
   df = df[colSums(!is.na(df)) > 0]
   df = df[colSums(df != .fct_default, na.rm= TRUE) > 0]

@@ -122,7 +122,6 @@ read.quitte <- function(file,
         # convert periods ----
         data$period <- gsub("^[A-Za-z]?", "", data$period)
         if (convert.periods) {
-            ISOyear <- make.ISOyear(seq(2005, 2150, by = 5))
             data$period <- ISOyear(data$period)
         } else {
             data$period <- as.integer(as.character(data$period))
