@@ -26,9 +26,9 @@
 #'     calc_quantiles() %>%
 #'     pivot_wider(names_from = 'quantile')
 #'
-#' @importFrom dplyr across rename summarise
+#' @importFrom purrr map
 #' @importFrom rlang !! sym
-# #' @importFrom tibble tibble_
+#' @importFrom tidyr nest unnest
 #'
 #' @export
 calc_quantiles <- function(.data,
@@ -67,16 +67,18 @@ calc_quantiles_ <- function(.data,
     if (!value %in% colnames(.data))
         stop("no column '", value, "'")
 
-    rename.list <- list(lazyeval::interp(~value))
-    names(rename.list) <- value
+    . <- NULL
 
     .data %>%
-        summarise(
-            across(!!sym(value),
-                   list(quantile = ~factor(names(probs), levels = names(probs)),
-                        value = ~quantile(x = !!sym(value), probs = probs,
-                                          na.rm = na.rm, names = FALSE,
-                                          type = type)),
-                   .names = '{fn}')) %>%
-        rename(!!sym(value) := !!sym('value'))
+        nest() %>%   # collapse groups into list of data frames
+        mutate(value = map(data, function(data) {
+            # process 'value' column of each data frame
+            stats::quantile(data[[value]], probs = probs, na.rm = na.rm,
+                            names = FALSE, type = type) %>%
+                # expand out to data frame again
+                data.frame(quantile = names(probs), value = .)
+            })
+        ) %>%
+        select(-'data') %>%
+        unnest('value')
 }

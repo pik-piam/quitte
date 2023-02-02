@@ -71,7 +71,6 @@
 #' interpolate_missing_periods(quitte, expand.values = TRUE)
 #'
 #' # and works with POSIXct periods
-#' ISOyear <- make.ISOyear(seq(2010, 2035, 5))
 #' (quitte <- quitte %>%
 #'         mutate(period = ISOyear(period)))
 #'

@@ -6,7 +6,7 @@ df <- data.frame(
     factor = as.factor(LETTERS[1:5]),
     value = 1:5,
     unit = NA,
-    unit2 = forcats::fct_explicit_na(factor(NA)),
+    unit2 = forcats::fct_na_value_to_level(factor(NA), level = '(Missing)'),
     stringsAsFactors = FALSE)
 
 df_removed <- removeColNa(df)
@@ -18,7 +18,7 @@ test_that(
         expect_equal(
             object   = setdiff(colnames(df), colnames(df_removed)),
             expected = c("unit","unit2"))
-        
-       
+
+
     }
 )

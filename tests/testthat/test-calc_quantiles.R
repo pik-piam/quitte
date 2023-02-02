@@ -12,7 +12,7 @@ test_that(
     expect_equal(
       object = data %>%
         calc_quantiles() %>%
-        spread(quantile, value) %>%
+        pivot_wider(names_from = 'quantile') %>%
         ungroup(),
       expected = tribble(
         ~group, ~q0, ~q25, ~q50, ~q75, ~q100,
