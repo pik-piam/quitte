@@ -68,14 +68,16 @@ test_that(
                       period   = 2020,
                       value    = c(1, 2, 4)) %>%
         calc_addVariable('Z' = 'X + Y', units = 'U', na.rm = FALSE,
-                         completeMissing = TRUE),
+                         completeMissing = TRUE) %>%
+        arrange(!!!syms(colnames(data))),
       expected = tibble(model    = 'M',
                         scenario = rep(c('A', 'B'), each = 3),
                         region   = 'R',
                         variable = rep(c('X', 'Y', 'Z'), 2),
                         unit     = 'U',
                         period   = 2020,
-                        value    = c(1:4, 0, 4))
+                        value    = c(1:4, 0, 4)) %>%
+        arrange(!!!syms(colnames(data)))
     )
   })
 
@@ -114,3 +116,35 @@ test_that(
         .dots = list('PE per capita' = c('PE / Population', unit = 'TJ/yr'))),
       regexp = 'Duplicate rows in data.frame.*')
   })
+
+test_that(
+  desc = 'name of new variable can be existing variable name',
+  code = {
+    expect_equal(
+      object = data %>%
+        calc_addVariable('`PE`' = '`PE` * 8760 * 3600 * 1e-9',
+                         units = 'TWa') %>%
+        arrange(!!!syms(colnames(data))),
+      expected = data %>%
+        mutate(value = ifelse('PE' == variable,
+                              value * 8760 * 3600 * 1e-9,
+                              value),
+               unit = ifelse('PE' == variable,
+                             'TWa',
+                             unit)) %>%
+        arrange(!!!syms(colnames(data)))
+    )}
+)
+
+test_that(
+  desc = 'missing unit columns work',
+  code = {
+    expect_equal(
+      object = data %>%
+        select(-unit) %>%
+        calc_addVariable("GDPpC" = "`GDP|MER` / Population * 1e3"),
+      expected = data %>%
+        calc_addVariable("GDPpC" = "`GDP|MER` / Population * 1e3") %>%
+        select(-unit)
+    )}
+)

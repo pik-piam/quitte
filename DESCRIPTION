@@ -26,6 +26,7 @@ Imports:
     dplyr (>= 0.7.0),
     forcats (>= 1.0.0),
     ggplot2,
+    glue,
     lazyeval,
     lifecycle,
     lubridate,
@@ -44,7 +45,7 @@ Imports:
     tidyr,
     tidyselect,
     writexl,
-    zoo
+    zoo,
 Suggests:
     covr,
     gdxrrw,
@@ -52,7 +53,7 @@ Suggests:
     mip,
     rmarkdown,
     testthat,
-    tidyverse
+    tidyverse,
 VignetteBuilder:
     knitr
 Encoding: UTF-8
