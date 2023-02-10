@@ -86,10 +86,10 @@ Then load all the files:
 ```{r load data fake, eval = FALSE}
 data <- read.quitte(file.path(base.path, data.files))
 ```
-
-This is what you will do normally. Since the example data is included with the 
-`quitte` package as a data object in the `quitte` package in case you just want
-to try something out or give an example for something.  So we load it like this:
+, we can also load it like this:
+This is what you will do normally.  Since the example data is included with the 
+`quitte` package as a data object in case you just want to try something or give
+an example for something, we can also load it like this:
 ```{r quitte example data}
 (data <- quitte_example_data)
 ```
@@ -405,8 +405,8 @@ ggplot(mapping = aes(x = x, y = value)) +
     coord_cartesian(ylim = c(0, 1))
 ```
 
-In this case, values below 0 or might be meaningless. So use spline extensions
-with care.
+In this case, values below 0 might be meaningless. So use spline extensions with
+care.
 
 
 # Plotting with `mip`
@@ -431,8 +431,9 @@ data %>%
 ```
 
 > **Note:** You don't have to call the `mip`-functions via the double colon
-> (`::`) operator.  This is only needed in this vignette, since `quitte` can't
-> import the `mip` package.)
+> (`::`) operator, but would load the package instead with `library(mip)`.  This
+> is only needed in this vignette, since `quitte` can't import the `mip`
+> package.)
 
 
 # Plotting 'correct' Bars
