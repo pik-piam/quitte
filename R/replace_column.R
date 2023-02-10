@@ -111,7 +111,14 @@ replace_column_ <- function(data, mask, old_column, match_column, new_column,
     if (is.quitte(data))
         value <- as.quitte(value)
 
-    ambiguous <- mask[which(duplicated(pull(mask, match_column))),match_column]
+    . <- NULL
+
+    ambiguous <- mask %>%
+        pull(match_column) %>%
+        duplicated() %>%
+        which() %>%
+        `[`(mask, .,) %>%
+        pull(match_column)
 
     if (!ignore.ambiguous.match & length(ambiguous))
     {
