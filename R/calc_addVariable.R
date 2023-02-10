@@ -3,9 +3,9 @@
 #' Calculate new variables from existing ones, using generic formulas.
 #'
 #' `...` is a list of name-value pairs with the general format
-#' \preformatted{
+#' ```
 #' "lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
-#' }
+#' ```
 #' where `lhs` are the names of new variables to be calculated and
 #' `rhs` are the variables to calculate from. If `lhs` and `rhs`
 #' are no proper *identifiers*, they need to be quoted (see
@@ -15,15 +15,15 @@
 #'
 #' `.dots` is a named list of strings denoting formulas and optionally
 #' units. The general format is
-#' \preformatted{
+#' ```
 #' list("`lhs 1`" = "`rhs` / `calculation`",
 #'      "`lhs 2`" = "sin(`rhs 2`)")
-#' }
+#' ```
 #'
 #' Units are optionally included with the formulas in a vector like
-#' \preformatted{
+#' ```
 #' list("`lhs w/ unit`" = c("`rhs 1` + `rhs 2`", "rhs unit")
-#' }
+#' ```
 #' Units do not require quoting.
 #'
 #' `...` and `.dots` are processed in order, and variables already
@@ -31,7 +31,6 @@
 #' existing columns, including `period`, can be referenced, but this is
 #' not supported and the results are considered *undefined*.
 #'
-#' @md
 #' @param data A data frame.
 #' @param ... Name-value pairs of calculation formulas. See details.
 #' @param units Character vector of units corresponding to new variables.  Must
@@ -41,11 +40,13 @@
 #' @param completeMissing If `TRUE`, implicitly missing data, i.e. missing
 #'   combinations of input data, are filled up with 0 before the calculation.
 #'   Alternatively, you can provide a character vector with the names of the
-#'   columns to be expanded.  Can interfere with `na.rm`.
+#'   columns to be expanded.  Can interfere with `na.rm`.  Defaults to `FALSE`.
 #' @param only.new If `FALSE` (the default), add new variables to existing
 #'   ones.  If `TRUE`, return only new variables.
 #' @param variable Column name of variables.  Defaults to `"variable"`.
-#' @param unit Column name of units.  Defaults to `"unit"`.
+#' @param unit Column name of units.  Defaults to `"unit"`.  Ignored if no
+#'   column with the same name is in `data` (e.g. data frames without unit
+#'   column).
 #' @param value Column name of values.  Defaults to `"value"`.
 #' @param .dots Used to work around non-standard evaluation.  See details.
 #'
@@ -73,15 +74,19 @@
 #'
 #' @author Michaja Pehl
 #'
-#' @importFrom dplyr filter distinct mutate_ inner_join
-#' @importFrom rlang sym syms
-#' @importFrom tidyr complete pivot_wider pivot_longer
-#' @importFrom lazyeval f_eval
+#' @importFrom dplyr anti_join bind_rows filter mutate select
+#' @importFrom glue glue
+#' @importFrom lazyeval f_eval interp
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang := is_false is_true sym syms
+#' @importFrom stats formula setNames
+#' @importFrom tidyr complete pivot_wider replace_na
+#' @importFrom tidyselect all_of any_of
 #'
 #' @export
 calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
                              completeMissing = FALSE, only.new = FALSE,
-                             variable = variable, unit = NA, value = value) {
+                             variable = variable, unit = unit, value = value) {
 
   .dots    <- list(...)
 
@@ -93,15 +98,14 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
       for (i in 1:length(.dots))
         .dots[i][[1]] <- c(.dots[i][[1]], units)
     } else
-      stop("units must be of the same length as ... or of length one.")
+      stop('`units` must be of the same length as `...` or of length one.')
   }
 
   variable <- deparse(substitute(variable))
-  unit     <- ifelse('NA' == deparse(substitute(unit)), NA,
-                     deparse(substitute(unit)))
+  unit     <- deparse(substitute(unit))
   value    <- deparse(substitute(value))
 
-  calc_addVariable_(data, .dots, na.rm,completeMissing, only.new, variable,
+  calc_addVariable_(data, .dots, na.rm, completeMissing, only.new, variable,
                     unit, value)
 }
 
@@ -109,146 +113,97 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
 #' @rdname calc_addVariable
 calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
                               completeMissing = FALSE, only.new = FALSE,
-                              variable = "variable", unit = NA,
-                              value = "value") {
-  # ---- guardians ----
-  if (!is.data.frame(data))
-    stop("Only works with data frames")
-
-  if (!is.list(.dots))
-    stop("'.dots' must be a list of formula strings")
-
-  .colnames <- colnames(data)
-
-  if (!variable %in% .colnames)
-    stop("No column '", variable, "' found'")
-
-  if (!value %in% .colnames)
-    stop("No column '", value, "' found'")
-
-  if (is.na(unit)) {
-    if ("unit" %in% .colnames)
-      unit <- "unit"
-  } else {
-    if (!unit %in% .colnames)
-      stop("No column '", unit, "' found.")
-  }
-
-  # ignore magrittr dot
+                              variable = 'variable', unit = 'unit',
+                              value = 'value') {
   . <- NULL
 
-  # ---- parse .dots ----
-  .units <- lapply(.dots, function(l) { l[2] }) %>%
-    unlist()
+  # guardians ----
+  if (!is.data.frame(data))
+    stop('Only works with data frames')
 
-  .dots <- lapply(.dots,
-                  function(l) {
-                    paste0("~", l[[1]]) %>%
-                          gsub('\\n *', ' ', .) %>%
-                      stats::formula() %>%
-                      lazyeval::interp()
-                  })
-  names(.dots) <- gsub("`", "", names(.dots))
+  if (!is.list(.dots))
+    stop('`.dots` must be a list of formula strings')
 
-  .dots.names <- lapply(.dots, all.vars) %>%
-    unlist() %>%
-    unique() %>%
-    setdiff(names(.dots))
-
-  # --- filter for variables used on rhs ----
-  data_ <- data %>%
-    filter(!!sym(variable) %in% .dots.names)
-
-
-  # ---- drop unit column, if necessary ----
-  if (!is.na(unit)) {
-    variables.units <- data_ %>%
-      distinct(!!sym(variable), !!sym(unit)) %>%
-      filter(!!sym(variable) %in% .dots.names)
-
-    data_ <- data_ %>%
-      select(-!!sym(unit))
-  }
-
-  # ---- fill missing data ----
-  if (is.logical(completeMissing)) {
-    if (completeMissing) {
-      completeMissing_test <- TRUE
-      .expand_cols <- setdiff(colnames(removeColNa(data_)), value)
-    } else {
-      completeMissing_test <- FALSE
+  .colnames <- colnames(data)
+  for (column in c(variable, value)) {
+    if (!column %in% .colnames) {
+      stop(glue('No column \'{column}\' found'))
     }
-  } else {
-    completeMissing_test <- TRUE
-    .expand_cols <- completeMissing
   }
 
-  if (completeMissing_test) {
-    .fill_list <- list(0)
-    names(.fill_list) <- value
-
-    data_ <- data_ %>%
-      droplevels() %>%
-      complete(!!!syms(.expand_cols), fill = .fill_list)
-  }
-
-  # ---- check for duplicated rows ----
-  duplicates <- data_ %>%
-    group_by(!!!syms(setdiff(colnames(data_), value))) %>%
+  duplicates <- data %>%
+    group_by(!!!syms(setdiff(colnames(.), value))) %>%
     filter(1 < n()) %>%
     ungroup()
+
   if (nrow(duplicates)) {
     stop(paste(c('Duplicate rows in data.frame', format(duplicates)),
                collapse = '\n'))
   }
 
-  # ---- calculation ----
-  data_ <- data_ %>%
-    pivot_wider(names_from = sym(variable), values_from = sym(value))
+  # prepare `.dots` ----
+  for (i in seq_along(.dots)) {
+    .dots[[i]] <- list(
+      name = gsub('`', '', names(.dots[i])),
 
-  for (i in 1:length(.dots))
-  {
-    data_ <- data_ %>%
-      mutate(!!sym(names(.dots[i])) := f_eval(f = .dots[[i]], data = .))
+      formula = paste0("~", .dots[[i]][1]) %>%
+        gsub('\\n *', ' ', .) %>%
+        formula() %>%
+        interp(),
+
+      unit = .dots[[i]][2]
+    )
+
+    .dots[[i]]$variables <- .dots[[i]]$formula %>%
+      all.vars() %>%
+      unique()
   }
 
-  data_ <- data_ %>%
-    pivot_longer(unique(c(.dots.names, names(.dots))),
-                 names_to = variable, values_to = value)
+  # fill missing data ----
+  if (is_true(completeMissing)) {
+    .expand_cols <- data %>%
+      removeColNa() %>%
+      colnames() %>%
+      setdiff(value)
+  } else if (!is_false(completeMissing)) {
+    .expand_cols <- completeMissing
+    completeMissing <- TRUE
+  }
 
-  # ---- filter new variables ----
+  if (completeMissing) {
+    data %<>%
+      droplevels() %>%
+      complete(!!!syms(.expand_cols),
+               fill = setNames(list(0), value))
+  }
+
+  # calculate new variables ----
+  for (i in seq_along(.dots)) {
+    data %<>%
+      filter(.dots[[i]]$name != !!sym(variable)) %>%
+      bind_rows(
+        data %>%
+          filter(!!sym(variable) %in% .dots[[i]]$variables) %>%
+          select(!any_of(replace_na(unit, ''))) %>%
+          pivot_wider(names_from = variable, values_from = value) %>%
+          mutate(!!sym(value) := f_eval(f = .dots[[i]]$formula, data = .),
+                 '{variable}' := .dots[[i]]$name,
+                 '{unit}' := .dots[[i]]$unit) %>%
+          select(all_of(.colnames))
+      )
+  }
+
+  # clean up ----
+  new_variables <- sapply(.dots, getElement, name = 'name')
   if (only.new) {
-    data_ <- data_ %>%
-      filter(!!sym(variable) %in% names(.dots))
+    data %<>%
+      filter(!!sym(variable) %in% new_variables)
   }
 
-  # ---- filter NAs ----
   if (na.rm) {
-    data_ <- data_ %>%
-      filter(!is.na(!!sym(value)))
+    data %<>%
+      filter(!(is.na(!!sym(value)) & !!sym(variable) %in% new_variables))
   }
 
-  # ---- restore unit column, if necessary ----
-  if (!is.na(unit)) {
-    .units <- data.frame(variable = gsub("`", "", names(.units)),
-                         unit = as.character(.units))
-    colnames(.units) <- c(variable, unit)
-
-    data_ <- inner_join(
-      data_,
-      rbind(variables.units, .units),
-      by = variable
-    )
-  }
-
-  # ---- add unaffected variables ----
-  if (!only.new) {
-    data_ <- rbind(
-      data %>%
-        filter(!(!!sym(variable) %in% .dots.names)),
-      data_
-    )
-  }
-
-  return(data_ %>% select(!!!syms(.colnames)))
+  return(data)
 }
