@@ -80,10 +80,10 @@
 #' @importFrom dplyr anti_join bind_rows filter mutate select
 #' @importFrom glue glue
 #' @importFrom lazyeval f_eval interp
-#' @importFrom magrittr %<>% %>%
-#' @importFrom rlang := is_false is_true sym syms
+#' @importFrom magrittr %>%
+#' @importFrom rlang := is_false sym syms
 #' @importFrom stats formula setNames
-#' @importFrom tidyr complete pivot_wider replace_na
+#' @importFrom tidyr pivot_wider replace_na
 #' @importFrom tidyselect all_of any_of
 #'
 #' @export
@@ -134,16 +134,6 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
     }
   }
 
-  duplicates <- data %>%
-    group_by(!!!syms(setdiff(colnames(.), value))) %>%
-    filter(1 < n()) %>%
-    ungroup()
-
-  if (nrow(duplicates)) {
-    stop(paste(c('Duplicate rows in data.frame', format(duplicates)),
-               collapse = '\n'))
-  }
-
   # prepare `.dots` ----
   for (i in seq_along(.dots)) {
     .dots[[i]] <- list(
@@ -171,6 +161,17 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
     filter(!!sym(variable) %in% rhs_variables) %>%
     droplevels()
 
+  # check for duplicates ----
+  duplicates <- data_work %>%
+    group_by(!!!syms(setdiff(colnames(.), value))) %>%
+    filter(1 < n()) %>%
+    ungroup()
+
+  if (nrow(duplicates)) {
+    stop(paste(c('Duplicate rows in data.frame', format(duplicates)),
+               collapse = '\n'))
+  }
+
   # calculate new variables ----
   for (i in seq_along(.dots)) {
     data_work <- bind_rows(
@@ -181,7 +182,7 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
         filter(!!sym(variable) %in% .dots[[i]]$variables) %>%
         select(!any_of(replace_na(unit, ''))) %>%
         pivot_wider(names_from = variable, values_from = value,
-                    values_fill = ifelse(completeMissing, 0, NA)) %>%
+                    values_fill = ifelse(!is_false(completeMissing), 0, NA)) %>%
         mutate(!!sym(value) := f_eval(f = .dots[[i]]$formula, data = .),
                '{variable}' := .dots[[i]]$name,
                '{unit}' := .dots[[i]]$unit) %>%
