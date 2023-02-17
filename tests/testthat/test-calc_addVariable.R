@@ -59,25 +59,18 @@ test_that(
         filter('REMIND' != model)
     )
 
+    x <- tibble(scenario = c('A', 'A', 'B'),
+                variable = c('X', 'Y', 'X'),
+                unit     = 'U',
+                period   = 2020,
+                value    = c(1, 2, 4))
     expect_equal(
-      object = tibble(model    = 'M',
-                      scenario = c('A', 'A', 'B'),
-                      region   = 'R',
-                      variable = c('X', 'Y', 'X'),
-                      unit     = 'U',
-                      period   = 2020,
-                      value    = c(1, 2, 4)) %>%
-        calc_addVariable('Z' = 'X + Y', units = 'U', na.rm = FALSE,
-                         completeMissing = TRUE) %>%
-        arrange(!!!syms(colnames(data))),
-      expected = tibble(model    = 'M',
-                        scenario = rep(c('A', 'B'), each = 3),
-                        region   = 'R',
-                        variable = rep(c('X', 'Y', 'Z'), 2),
-                        unit     = 'U',
-                        period   = 2020,
-                        value    = c(1:4, 0, 4)) %>%
-        arrange(!!!syms(colnames(data)))
+      object = x %>%
+        calc_addVariable('Z' = 'X + Y', units = 'U', completeMissing = TRUE),
+      expected = bind_rows(
+        x,
+        tibble(scenario = c('A', 'B'), variable = 'Z', unit = 'U', period = 2020,
+               value = c(3, 4)))
     )
   })
 
