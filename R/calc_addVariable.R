@@ -36,11 +36,14 @@
 #' @param units Character vector of units corresponding to new variables.  Must
 #'   be of length equal to `...` or of length one (in which case all new
 #'   variables receive the same unit).
-#' @param na.rm If `TRUE` (the default), remove items calculated as `NA`.
+#' @param na.rm If `TRUE` (the default), remove items calculated as `NA`.  This
+#'   is generally the case for all calculations involving `NA` values, and all
+#'   calculations involving missing variables.  See `completeMissing` parameter.
 #' @param completeMissing If `TRUE`, implicitly missing data, i.e. missing
-#'   combinations of input data, are filled up with 0 before the calculation.
-#'   Alternatively, you can provide a character vector with the names of the
-#'   columns to be expanded.  Can interfere with `na.rm`.  Defaults to `FALSE`.
+#'   combinations of input data, are filled up with 0 before the calculation,
+#'   and they are therefore not computed as `NA` (and potentially removed from
+#'   the output).  Make sure `0` is a sensible value for your calculations, else
+#'   complete missing values manually.  Defaults to `FALSE`.
 #' @param only.new If `FALSE` (the default), add new variables to existing
 #'   ones.  If `TRUE`, return only new variables.
 #' @param variable Column name of variables.  Defaults to `"variable"`.
@@ -159,50 +162,58 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
       unique()
   }
 
-  # fill missing data ----
-  if (is_true(completeMissing)) {
-    .expand_cols <- data %>%
-      removeColNa() %>%
-      colnames() %>%
-      setdiff(value)
-  } else if (!is_false(completeMissing)) {
-    .expand_cols <- completeMissing
-    completeMissing <- TRUE
-  }
+  # filter for required data ----
+  rhs_variables <- .dots %>%
+    lapply(getElement, name = 'variables') %>%
+    unlist(use.names = FALSE)
 
-  if (completeMissing) {
-    data %<>%
-      droplevels() %>%
-      complete(!!!syms(.expand_cols),
-               fill = setNames(list(0), value))
-  }
+  data_work <- data %>%
+    filter(!!sym(variable) %in% rhs_variables) %>%
+    droplevels()
 
   # calculate new variables ----
   for (i in seq_along(.dots)) {
-    data %<>%
-      filter(.dots[[i]]$name != !!sym(variable)) %>%
-      bind_rows(
-        data %>%
-          filter(!!sym(variable) %in% .dots[[i]]$variables) %>%
-          select(!any_of(replace_na(unit, ''))) %>%
-          pivot_wider(names_from = variable, values_from = value) %>%
-          mutate(!!sym(value) := f_eval(f = .dots[[i]]$formula, data = .),
-                 '{variable}' := .dots[[i]]$name,
-                 '{unit}' := .dots[[i]]$unit) %>%
-          select(all_of(.colnames))
-      )
+    data_work <- bind_rows(
+      data_work %>%
+        filter(.dots[[i]]$name != !!sym(variable)),
+
+      data_work %>%
+        filter(!!sym(variable) %in% .dots[[i]]$variables) %>%
+        select(!any_of(replace_na(unit, ''))) %>%
+        pivot_wider(names_from = variable, values_from = value,
+                    values_fill = ifelse(completeMissing, 0, NA)) %>%
+        mutate(!!sym(value) := f_eval(f = .dots[[i]]$formula, data = .),
+               '{variable}' := .dots[[i]]$name,
+               '{unit}' := .dots[[i]]$unit) %>%
+        select(all_of(.colnames))
+    )
   }
 
   # clean up ----
   new_variables <- sapply(.dots, getElement, name = 'name')
-  if (only.new) {
-    data %<>%
-      filter(!!sym(variable) %in% new_variables)
-  }
+
+  data_work <- data_work %>%
+    filter(!!sym(variable) %in% new_variables)
 
   if (na.rm) {
-    data %<>%
-      filter(!(is.na(!!sym(value)) & !!sym(variable) %in% new_variables))
+    data_work <- data_work %>%
+      filter(!is.na(!!sym(value)))
+  }
+
+  if (only.new) {
+    data <- data_work
+  } else {
+    data <- bind_rows(
+      anti_join(
+        data,
+
+        data_work,
+
+        setdiff(.colnames, c(unit, value))
+      ),
+
+      data_work
+    )
   }
 
   return(data)
