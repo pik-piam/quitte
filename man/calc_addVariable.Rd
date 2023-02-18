@@ -13,7 +13,7 @@ calc_addVariable(
   completeMissing = FALSE,
   only.new = FALSE,
   variable = variable,
-  unit = NA,
+  unit = unit,
   value = value
 )
 
@@ -24,7 +24,7 @@ calc_addVariable_(
   completeMissing = FALSE,
   only.new = FALSE,
   variable = "variable",
-  unit = NA,
+  unit = "unit",
   value = "value"
 )
 }
@@ -37,19 +37,24 @@ calc_addVariable_(
 be of length equal to \code{...} or of length one (in which case all new
 variables receive the same unit).}
 
-\item{na.rm}{If \code{TRUE} (the default), remove items calculated as \code{NA}.}
+\item{na.rm}{If \code{TRUE} (the default), remove items calculated as \code{NA}.  This
+is generally the case for all calculations involving \code{NA} values, and all
+calculations involving missing variables.  See \code{completeMissing} parameter.}
 
 \item{completeMissing}{If \code{TRUE}, implicitly missing data, i.e. missing
-combinations of input data, are filled up with 0 before the calculation.
-Alternatively, you can provide a character vector with the names of the
-columns to be expanded.  Can interfere with \code{na.rm}.}
+combinations of input data, are filled up with 0 before the calculation,
+and they are therefore not computed as \code{NA} (and potentially removed from
+the output).  Make sure \code{0} is a sensible value for your calculations, else
+complete missing values manually.  Defaults to \code{FALSE}.}
 
 \item{only.new}{If \code{FALSE} (the default), add new variables to existing
 ones.  If \code{TRUE}, return only new variables.}
 
 \item{variable}{Column name of variables.  Defaults to \code{"variable"}.}
 
-\item{unit}{Column name of units.  Defaults to \code{"unit"}.}
+\item{unit}{Column name of units.  Defaults to \code{"unit"}.  Ignored if no
+column with the same name is in \code{data} (e.g. data frames without unit
+column).}
 
 \item{value}{Column name of values.  Defaults to \code{"value"}.}
 
@@ -63,9 +68,10 @@ Calculate new variables from existing ones, using generic formulas.
 }
 \details{
 \code{...} is a list of name-value pairs with the general format
-\preformatted{
-"lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
-}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{"lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
+}\if{html}{\out{</div>}}
+
 where \code{lhs} are the names of new variables to be calculated and
 \code{rhs} are the variables to calculate from. If \code{lhs} and \code{rhs}
 are no proper \emph{identifiers}, they need to be quoted (see
@@ -75,15 +81,16 @@ If the new variables should have units, set \code{units} appropriately.
 
 \code{.dots} is a named list of strings denoting formulas and optionally
 units. The general format is
-\preformatted{
-list("`lhs 1`" = "`rhs` / `calculation`",
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list("`lhs 1`" = "`rhs` / `calculation`",
      "`lhs 2`" = "sin(`rhs 2`)")
-}
+}\if{html}{\out{</div>}}
 
 Units are optionally included with the formulas in a vector like
-\preformatted{
-list("`lhs w/ unit`" = c("`rhs 1` + `rhs 2`", "rhs unit")
-}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list("`lhs w/ unit`" = c("`rhs 1` + `rhs 2`", "rhs unit")
+}\if{html}{\out{</div>}}
+
 Units do not require quoting.
 
 \code{...} and \code{.dots} are processed in order, and variables already
