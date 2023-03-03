@@ -174,6 +174,15 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
 
   # calculate new variables ----
   for (i in seq_along(.dots)) {
+    missing_rhs_variables <- setdiff(.dots[[i]]$variables,
+                                     data_work[[variable]])
+    if (0 < length(missing_rhs_variables)) {
+      stop(length(missing_rhs_variables), ' variable',
+           ifelse(1 < length(missing_rhs_variables), 's are', ' is'),
+           ' missing for the calculation:\n',
+           paste(paste0('`', missing_rhs_variables, '`'), collapse = '\n'))
+    }
+
     data_work <- bind_rows(
       data_work %>%
         filter(.dots[[i]]$name != !!sym(variable)),
