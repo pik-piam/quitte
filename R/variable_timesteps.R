@@ -100,7 +100,7 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
     # ---- parse `periods` parameter ----
     periods <- substitute(periods)
     # is it a variable to be evaluated in the parent frame?
-    if (exists(deparse(periods), parent.frame())) {
+    if (exists(deparse(periods), parent.frame(), mode = 'character')) {
         periods <- eval(periods, parent.frame())
     # is it a promise to be used literally?
     } else if (is.symbol(periods)) {
@@ -181,7 +181,7 @@ add_remind_timesteps_columns <- function(data, periods = 'period', gaps = 0) {
     # ---- parse `periods` parameter ----
     periods <- substitute(periods)
     # is it a variable to be evaluated in the parent frame?
-    if (exists(deparse(periods), parent.frame())) {
+    if (exists(deparse(periods), parent.frame(), mode = 'character')) {
         periods <- eval(periods, parent.frame())
         # is it a promise to be used literally?
     } else if (is.symbol(periods)) {
