@@ -141,3 +141,12 @@ test_that(
         select(-unit)
     )}
 )
+
+test_that(
+  desc = 'completly missing variables yield an error',
+  code = {
+    expect_error(
+      object = tibble(variable = 'A', value = 1) %>%
+        calc_addVariable('C' = 'A + B'),
+      regexp = '1 variable is missing for the calculation:\n`B`')
+  })
