@@ -104,8 +104,8 @@ read.quitte <- function(file,
         data <- suppressWarnings(
             read_delim(file = f, quote = quote, col_names = c(header),
                        col_types = colClasses, delim = sep, na = na.strings,
-                       skip = length(comment_header) + 1,
-                       comment = comment)
+                       skip = length(comment_header) + 1, comment = comment,
+                       trim_ws = TRUE)
         )
 
         # catch any parsing problems
