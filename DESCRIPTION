@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3114.0
-Date: 2023-03-13
+Version: 0.3115.0
+Date: 2023-04-18
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -23,7 +23,7 @@ Depends:
     R (>= 3.0)
 Imports:
     countrycode,
-    dplyr (>= 0.7.0),
+    dplyr (>= 1.1.1),
     forcats (>= 1.0.0),
     ggplot2,
     glue,

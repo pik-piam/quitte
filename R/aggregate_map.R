@@ -291,7 +291,7 @@ aggregate_map <- function(data,
   #---- Multiply the values by the weights, even if the weights = 1 ----
   .colGroups_weight = intersect(c(.colnames,.mapnames), colnames(.weights_df))
 
-  .data = .data %>% left_join(mapping, by = by, multiple = 'all') %>%
+  .data = .data %>% left_join(mapping, by = by, relationship = "many-to-many") %>%
     left_join(.weights_df, by = .colGroups_weight )   %>%  #.nameDetailedColumn
     mutate(!!sym(value) := !!sym(value) * !!sym(weight_val_col))
 

@@ -29,8 +29,8 @@ as.quitte <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) 
 #' @export
 as.quitte.character <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
     if (all(file.exists(x) & grepl("\\.(mif|csv|xlsx?)$", x)))
-        return(as.quitte(read.quitte(x), periodClass =
-                                  periodClass, addNA = addNA, na.rm = na.rm))
+        return(as.quitte(read.quitte(x, sep = NULL),
+                         periodClass = periodClass, addNA = addNA, na.rm = na.rm))
     stop(
         "Provided character cannot be converted to quitte as it does not seem to be a valid file path!"
     )
