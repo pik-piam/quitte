@@ -58,3 +58,19 @@ test_that(
     expect_false(any(is.na(levels(as.quitte(a)[['scenario']]))))
   }
 )
+
+test_that(
+  'as.quitte can read csv files with , and ; as separator',
+  {
+    commafile <- tempfile(pattern = "comma", fileext = ".csv")
+    writeLines(c("Model,Scenario,Region,Variable,Unit,2005,2010",
+                 "REMIND,Base,World,FE,EJ/yr,12,14"),
+               con = commafile, sep = "\n")
+    semicolonfile <- tempfile(pattern = "semicolon", fileext = ".mif")
+    writeLines(c("model;scenario;region;variable;unit;2005;2010",
+                 "REMIND;Base;World;FE;EJ/yr;12;14"),
+               con = semicolonfile, sep = "\n")
+    expect_identical(as.quitte(commafile),
+                     as.quitte(semicolonfile))
+  }
+)

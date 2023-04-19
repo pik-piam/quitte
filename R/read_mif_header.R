@@ -34,6 +34,10 @@ read_mif_header <- function(file, sep, comment) {
         grep(paste0('^', comment), ., value = TRUE, invert = TRUE) %>%
         first()
 
+    if (is.null(sep)) {
+      sep <- if (grepl(";", header)) ";" else ","
+    }
+
     # Check if the last column of df is of class logical, i.e. if it was a
     # proper .mif file with the pointless trailing semi-colon.
     useless.last.column <- grepl(paste0(sep, '$'), header)
@@ -46,5 +50,6 @@ read_mif_header <- function(file, sep, comment) {
 
     return(list(header              = header,
                 comment_header      = comment_header,
+                sep                 = sep,
                 useless.last.column = useless.last.column))
 }

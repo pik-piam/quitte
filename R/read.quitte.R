@@ -4,7 +4,7 @@
 #'
 #' @md
 #' @param file Path of IAMC-style .csv or xlsx. file or vector of paths to read.
-#' @param sep Column separator, defaults to ";".
+#' @param sep Column separator, defaults to ";" in read_mif_header().
 #' @param quote Quote characters, empty by default.
 #' @param na.strings Entries to interpret as NA; defaults to
 #'     `c("UNDF", "NA", "N/A", "n_a")`
@@ -43,7 +43,7 @@
 #'
 #' @export
 read.quitte <- function(file,
-                        sep = ";",
+                        sep = NULL,
                         quote = "",
                         na.strings = c("UNDF", "NA", "N/A", "n_a"),
                         convert.periods = FALSE,
@@ -79,6 +79,7 @@ read.quitte <- function(file,
         header              <- foo$header
         comment_header      <- foo$comment_header
         useless.last.column <- foo$useless.last.column
+        if (is.null(sep)) sep <- foo$sep
 
         # FIXME: relax to handle other than 4-digit periods
         period.columns <- grep("^[A-Za-z]?[0-9]{4}$", header)

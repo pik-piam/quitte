@@ -6,7 +6,7 @@
 \usage{
 read.quitte(
   file,
-  sep = ";",
+  sep = NULL,
   quote = "",
   na.strings = c("UNDF", "NA", "N/A", "n_a"),
   convert.periods = FALSE,
@@ -19,7 +19,7 @@ read.quitte(
 \arguments{
 \item{file}{Path of IAMC-style .csv or xlsx. file or vector of paths to read.}
 
-\item{sep}{Column separator, defaults to ";".}
+\item{sep}{Column separator, defaults to ";" in read_mif_header().}
 
 \item{quote}{Quote characters, empty by default.}
 

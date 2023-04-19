@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+title: 'quitte: Bits and pieces of code to use with quitte-style data frames'
+version: 0.3115.0
+date-released: '2023-04-18'
+abstract: A collection of functions for easily dealing with quitte-style data frames,
+  doing multi-model comparisons and plots.
+authors:
+- family-names: Pehl
+  given-names: Michaja
+  email: pehl@pik-potsdam.de
+- family-names: Bauer
+  given-names: Nico
+  email: nicolasb@pik-potsdam.de
+- family-names: Hilaire
+  given-names: Jérôme
+  email: jeromehilaire@pik-potsdam.de
+- family-names: Levesque
+  given-names: Antoine
+  email: levesque@pik-potsdam.de
+- family-names: Luderer
+  given-names: Gunnar
+  email: luderer@pik-potsdam.de
+- family-names: Schultes
+  given-names: Anselm
+  email: schultes@pik-potsdam.de
+- family-names: Dietrich
+  given-names: Jan Philipp
+  email: dietrich@pik-potsdam.de
+- family-names: Richters
+  given-names: Oliver
+license: GPL-2
+repository-code: https://github.com/pik-piam/quitte
+
