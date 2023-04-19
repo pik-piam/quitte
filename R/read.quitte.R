@@ -32,8 +32,10 @@
 #' read.quitte("some/data/file.csv", sep = ",", quote = '"')
 #' }
 #'
-#' @importFrom dplyr as_tibble bind_rows distinct first last tibble relocate
+#' @importFrom dplyr as_tibble bind_rows distinct first last mutate tibble
+#'   relocate select
 #' @importFrom forcats as_factor
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data is_empty
 #' @importFrom readr problems read_delim read_lines
 #' @importFrom readxl read_excel excel_sheets
