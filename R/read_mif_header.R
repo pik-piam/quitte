@@ -12,6 +12,7 @@
 #' @author Michaja Pehl
 #'
 #' @importFrom dplyr first
+#' @importFrom magrittr %>%
 #' @importFrom readr read_lines
 
 read_mif_header <- function(file, sep, comment) {
@@ -20,7 +21,8 @@ read_mif_header <- function(file, sep, comment) {
     # Read as much of the file as is necessary to collect the comment header
     # and the column header
     n_max <- 1
-    while (all(grepl('^#', header <- read_lines(file = file, n_max = n_max)))) {
+    while (all(grepl(paste0('^', comment),
+                     header <- read_lines(file = file, n_max = n_max)))) {
         n_max = n_max * 2
     }
 
@@ -48,8 +50,6 @@ read_mif_header <- function(file, sep, comment) {
         unlist() %>%
         tolower()
 
-    return(list(header              = header,
-                comment_header      = comment_header,
-                sep                 = sep,
-                useless.last.column = useless.last.column))
+    return(mget(c('header', 'comment_header', 'sep', 'useless.last.column'),
+                envir = environment()))
 }
