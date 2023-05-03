@@ -31,8 +31,11 @@ chooseFilter <- function(data, types = c("model", "scenario", "region", "variabl
       }
       choicelist <- setdiff(items, keep[[t]])
       if (length(choicelist) > 1 || (length(intersect(keep[[t]], items)) > 0 && length(choicelist) == 1)) {
-        userinfo <- paste0("Choose ", t, "s", if (length(keep[[t]] > 0)) paste0(" additional to ", paste0(keep[[t]], collapse = ", ")), ".")
+        userinfo <- paste0("Choose ", t, "s",
+                           if (length(keep[[t]] > 0)) paste0(" additional to ", paste0(keep[[t]], collapse = ", ")),
+                           ". Press Enter for all ", t, "s.")
         userchoice <- chooseFromList(sort(choicelist), userinfo = userinfo, type = paste0(t, "s"))
+        if (length(userchoice) == 0) userchoice <- choicelist
       } else {
         userchoice <- choicelist
       }
