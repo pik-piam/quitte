@@ -7,6 +7,12 @@ test_that(
                    variable = 'a',
                    value    = sqrt(1:5))
 
+    expect_error(
+      object = data %>%
+        group_by(variable) %>%
+        interpolate_missing_periods(),
+      regexp = 'does not work on grouped data frames')
+
     expect_equal(
         object = interpolate_missing_periods_(
             data = data, periods = list(period = 2002:2005)) %>%
