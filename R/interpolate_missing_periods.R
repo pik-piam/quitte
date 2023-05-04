@@ -28,11 +28,14 @@
 #' @return A data frame or a quitte object, the same as `data`.
 #' @author Michaja Pehl
 #'
+#' @importFrom dplyr arrange bind_rows filter first group_by
+#'     is_grouped_df last mutate select ungroup
+#' @importFrom magrittr %>%
 #' @importFrom lazyeval lazy_dots lazy_eval
 #' @importFrom lubridate is.POSIXct
-#' @importFrom rlang :=
+#' @importFrom rlang := !! !!! sym syms
 #' @importFrom stats na.omit setNames spline
-#' @importFrom tidyr complete nesting crossing
+#' @importFrom tidyr complete crossing nesting
 #' @importFrom zoo na.approx
 #'
 #' @examples
@@ -137,6 +140,9 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
     if (!method %in% c('linear', 'spline', 'spline_fmm', 'spline_natural'))
         stop('method must be one of linear, spline, spline_fmm, or',
              ' spline_natural')
+
+    if (is_grouped_df(data))
+        stop('does not work on grouped data frames')
 
     # ---- convert POSIXct periods to integer ----
     if (return_POSIXct <- inherits(getElement(data, period), 'POSIXct')) {
@@ -258,3 +264,4 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
 
     return(data)
 }
+
