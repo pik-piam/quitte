@@ -63,7 +63,7 @@ read.quitte <- function(file,
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
 
         if (grepl("\\.xlsx?$", f)) {
-            data <- read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1)
+            data <- read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1, guess_max = 21474836)
             data <- pivot_longer(data, matches("^[0-9]{4}$"), names_to = 'period', values_drop_na = drop.na)
             missing.default.columns <- default.columns[! default.columns %in% tolower(colnames(data))]
             if (length(missing.default.columns) > 0) {
