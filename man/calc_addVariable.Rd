@@ -12,6 +12,7 @@ calc_addVariable(
   na.rm = TRUE,
   completeMissing = FALSE,
   only.new = FALSE,
+  overwrite = TRUE,
   variable = variable,
   unit = unit,
   value = value
@@ -23,6 +24,7 @@ calc_addVariable_(
   na.rm = TRUE,
   completeMissing = FALSE,
   only.new = FALSE,
+  overwrite = TRUE,
   variable = "variable",
   unit = "unit",
   value = "value"
@@ -49,6 +51,9 @@ complete missing values manually.  Defaults to \code{FALSE}.}
 
 \item{only.new}{If \code{FALSE} (the default), add new variables to existing
 ones.  If \code{TRUE}, return only new variables.}
+
+\item{overwrite}{If \code{TRUE} (the default), values are overwritten if they
+already exist. If \code{FALSE} existing values are not overwritten.}
 
 \item{variable}{Column name of variables.  Defaults to \code{"variable"}.}
 
