@@ -12,10 +12,10 @@ calc_addVariable(
   na.rm = TRUE,
   completeMissing = FALSE,
   only.new = FALSE,
-  overwrite = TRUE,
   variable = variable,
   unit = unit,
-  value = value
+  value = value,
+  overwrite = TRUE
 )
 
 calc_addVariable_(
@@ -24,10 +24,10 @@ calc_addVariable_(
   na.rm = TRUE,
   completeMissing = FALSE,
   only.new = FALSE,
-  overwrite = TRUE,
   variable = "variable",
   unit = "unit",
-  value = "value"
+  value = "value",
+  overwrite = TRUE
 )
 }
 \arguments{
@@ -52,9 +52,6 @@ complete missing values manually.  Defaults to \code{FALSE}.}
 \item{only.new}{If \code{FALSE} (the default), add new variables to existing
 ones.  If \code{TRUE}, return only new variables.}
 
-\item{overwrite}{If \code{TRUE} (the default), values are overwritten if they
-already exist. If \code{FALSE} existing values are not overwritten.}
-
 \item{variable}{Column name of variables.  Defaults to \code{"variable"}.}
 
 \item{unit}{Column name of units.  Defaults to \code{"unit"}.  Ignored if no
@@ -62,6 +59,10 @@ column with the same name is in \code{data} (e.g. data frames without unit
 column).}
 
 \item{value}{Column name of values.  Defaults to \code{"value"}.}
+
+\item{overwrite}{If \code{TRUE} (the default), values are overwritten if they
+already exist. If \code{FALSE} values are discarded and not overwritten if they
+already exist}
 
 \item{.dots}{Used to work around non-standard evaluation.  See details.}
 }
