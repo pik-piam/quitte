@@ -14,7 +14,8 @@ calc_addVariable(
   only.new = FALSE,
   variable = variable,
   unit = unit,
-  value = value
+  value = value,
+  overwrite = TRUE
 )
 
 calc_addVariable_(
@@ -25,7 +26,8 @@ calc_addVariable_(
   only.new = FALSE,
   variable = "variable",
   unit = "unit",
-  value = "value"
+  value = "value",
+  overwrite = TRUE
 )
 }
 \arguments{
@@ -57,6 +59,10 @@ column with the same name is in \code{data} (e.g. data frames without unit
 column).}
 
 \item{value}{Column name of values.  Defaults to \code{"value"}.}
+
+\item{overwrite}{If \code{TRUE} (the default), values are overwritten if they
+already exist. If \code{FALSE} values are discarded and not overwritten if they
+already exist}
 
 \item{.dots}{Used to work around non-standard evaluation.  See details.}
 }

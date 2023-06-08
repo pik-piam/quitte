@@ -51,6 +51,9 @@
 #'   column with the same name is in `data` (e.g. data frames without unit
 #'   column).
 #' @param value Column name of values.  Defaults to `"value"`.
+#' @param overwrite If `TRUE` (the default), values are overwritten if they
+#'   already exist. If `FALSE` values are discarded and not overwritten if they
+#'   already exist
 #' @param .dots Used to work around non-standard evaluation.  See details.
 #'
 #' @return A data frame.
@@ -89,7 +92,8 @@
 #' @export
 calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
                              completeMissing = FALSE, only.new = FALSE,
-                             variable = variable, unit = unit, value = value) {
+                             variable = variable,  unit = unit,
+                             value = value, overwrite = TRUE) {
 
   .dots    <- list(...)
 
@@ -109,7 +113,7 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
   value    <- deparse(substitute(value))
 
   calc_addVariable_(data, .dots, na.rm, completeMissing, only.new, variable,
-                    unit, value)
+                    unit, value, overwrite)
 }
 
 #' @export
@@ -117,7 +121,7 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
 calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
                               completeMissing = FALSE, only.new = FALSE,
                               variable = 'variable', unit = 'unit',
-                              value = 'value') {
+                              value = 'value', overwrite = TRUE) {
   . <- NULL
 
   # guardians ----
@@ -213,17 +217,32 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
   if (only.new) {
     data <- data_work
   } else {
-    data <- bind_rows(
-      anti_join(
-        data,
 
-        data_work,
+    if (overwrite) {
+      data <- bind_rows(
+        anti_join(
+          data,
 
-        setdiff(.colnames, c(unit, value))
-      ),
+          data_work,
 
-      data_work
-    )
+          setdiff(.colnames, c(unit, value))
+        ),
+
+        data_work
+      )
+    } else {
+      data <- bind_rows(
+        anti_join(
+          data_work,
+
+          data,
+
+          setdiff(.colnames, c(unit, value))
+        ),
+
+        data
+      )
+    }
   }
 
   return(data)
