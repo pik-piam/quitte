@@ -435,16 +435,16 @@ test_that(
     expect_equal(
       object = add_remind_timesteps_columns(
         data = data.frame(facet = 'specific energy use',
-                          t     = as.integer(2005),
+                          t     = 2005L,
                           pf    = factor('feso_otherInd'),
                           value = 0.0293,
                           stringsAsFactors = FALSE),
         periods = 't'),
       expected = add_remind_timesteps_columns(
-        data = data.frame(facet = 'specific energy use',
-                          period     = as.integer(2005),
-                          pf    = factor('feso_otherInd'),
-                          value = 0.0293,
+        data = data.frame(facet  = 'specific energy use',
+                          period = 2005L,
+                          pf     = factor('feso_otherInd'),
+                          value  = 0.0293,
                           stringsAsFactors = FALSE),
         periods = 'period') %>%
         rename(t = period))

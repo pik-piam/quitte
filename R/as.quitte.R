@@ -96,7 +96,7 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
             x <- cbind(x, period = as.POSIXct(NA))
 
         if (periodClass == "integer" && !"period" %in% colnames(x))
-            x <- cbind(x, period = as.integer(NA))
+            x <- cbind(x, period = NA_integer_)
 
         if (!"value" %in% colnames(x))
             stop("Data frame cannot be converted. A column \"value\" has to be provided!")
