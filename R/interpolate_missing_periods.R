@@ -122,13 +122,13 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         stop("Works only on data frames")
 
     if (!period %in% colnames(data))
-        stop(paste0('period column \'', period, '\' not found'))
+        stop('period column \'', period, '\' not found')
 
     if (!is.numeric(data[[period]]) && !lubridate::is.POSIXct(data[[period]]))
         stop('period column class must be of either \'numeric\' or \'POSIXct\'')
 
     if (!value %in% colnames(data))
-        stop(paste0('value column \'', value, '\' not found'))
+        stop('value column \'', value, '\' not found')
 
     return_quitte <- is.quitte(data)
 

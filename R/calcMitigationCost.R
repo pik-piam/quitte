@@ -28,7 +28,8 @@ calcMitigationCost = function(data,scenBau,scenPol,
                               nameDisrate='Interest Rate t/(t-1)|Real',
                               discount=0.05){
 
-  if(! nameVar %in% unique(data$variable)) stop(paste('Variable ',nameVar,' not found in data.'))
+  if (!nameVar %in% unique(data$variable))
+    stop('Variable ', nameVar, ' not found in data.')
 
   #takes quitte data, scenario names, start- and end-year
   #select data
@@ -39,7 +40,7 @@ calcMitigationCost = function(data,scenBau,scenPol,
   #replace POL interest rate with BAU interest rate:
   if (!is.numeric(discount)) {
     if (!nameDisrate %in% unique(data$variable)) {
-      stop(paste('Variable ',nameDisrate,' not found in data. Stoping.'))
+      stop('Variable ', nameDisrate ,' not found in data. Stoping.')
     }
 
     data[data$variable == nameDisrate & data$scenario == scenPol,'value'] <-
