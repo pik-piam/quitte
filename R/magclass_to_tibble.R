@@ -20,7 +20,7 @@
 
 #' @export
 magclass_to_tibble <- function(m, colnames = NULL) {
-    if (!'magpie' %in% class(m)) {
+    if (!inherits(m, 'magpie')) {
         stop('m is not a magclass')
     }
 

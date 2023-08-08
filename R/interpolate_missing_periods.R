@@ -137,7 +137,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
              ' spline_natural')
 
     # ---- convert POSIXct periods to integer ----
-    if (return_POSIXct <- 'POSIXct' %in% class(getElement(data, period))) {
+    if (return_POSIXct <- inherits(getElement(data, period), 'POSIXct')) {
         data <- data %>%
             mutate(!!sym(period) := as.integer(!!sym(period)))
         periods[[1]] <- as.integer(periods[[1]])
