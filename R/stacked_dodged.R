@@ -117,7 +117,7 @@ add_stacked_dodged_xpos <- function(data, ..., gap = 1) {
         stop(ifelse(is.null(names(xpos)), 'Default c', 'C'),
              'olumn name "', xpos.column, '" already in use.')
 
-    if (any(is.na(xpos[[1]][1:2])))
+    if (anyNA(xpos[[1]][1:2]))
         stop('requires two columns to be combined')
 
     if (0 != length(missing.columns <- setdiff(xpos[[1]][1:2], colnames(data))))
@@ -180,7 +180,7 @@ calc_stacked_dodged_xlabels <- function(data, ..., gap = 1) {
     if (is.list(xpos[[1]]))
         xpos <- xpos[[1]]
 
-    if (any(is.na(xpos[[1]][1:2])))
+    if (anyNA(xpos[[1]][1:2]))
         stop('requires two columns to be combined')
 
     n.groups <- length(unique_or_levels(data[[xpos[[1]][1]]]))
