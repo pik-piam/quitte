@@ -49,5 +49,5 @@ write.IAMCxlsx <- function(x, path, append = FALSE) {
                filter(is.finite(.data$Value), '' != .data$Value) %>%
                pivot_wider(names_from = 'Period', names_sort = TRUE, values_from = 'Value', values_fill = NA)
 
-    writexl::write_xlsx(list("data" = x), path)
+    write_xlsx(list("data" = x), path)
 }

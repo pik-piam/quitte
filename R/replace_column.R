@@ -72,13 +72,16 @@
 #' str(.Last.value)
 #'
 #' @author Michaja Pehl
+#'
+#' @importFrom lazyeval lazy_dots
+#' @importFrom stats setNames
 
 #' @export
 replace_column <- function(data, mask, ..., drop.extra = FALSE,
                            ignore.ambiguous.match = FALSE)
 {
 
-    .dots <- lazyeval::lazy_dots(...)
+    .dots <- lazy_dots(...)
 
     old_column   <- names(.dots[1])
     match_column <- as.character(.dots[[1]]$expr)
@@ -97,7 +100,7 @@ replace_column_ <- function(data, mask, old_column, match_column, new_column,
                             drop.extra = FALSE, ignore.ambiguous.match = FALSE)
 {
     value <- suppressWarnings(
-        left_join(data, mask, stats::setNames(match_column, old_column))
+        left_join(data, mask, setNames(match_column, old_column))
     ) %>%
         select(!!!syms(c(setdiff(colnames(data), old_column), new_column))) %>%
         rename(!!sym(old_column) := !!sym(new_column)) %>%

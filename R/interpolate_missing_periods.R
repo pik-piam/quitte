@@ -28,8 +28,10 @@
 #' @return A data frame or a quitte object, the same as `data`.
 #' @author Michaja Pehl
 #'
+#' @importFrom lazyeval lazy_dots lazy_eval
+#' @importFrom lubridate is.POSIXct
 #' @importFrom rlang :=
-#' @importFrom stats na.omit spline
+#' @importFrom stats na.omit setNames spline
 #' @importFrom tidyr complete nesting crossing
 #' @importFrom zoo na.approx
 #'
@@ -87,15 +89,15 @@ interpolate_missing_periods <- function(data, ..., value = 'value',
                                         combinations = 'nesting') {
 
     # ---- normalise periods to a named list of numerics/POSIXct ----
-    periods <- lazyeval::lazy_dots(...)[1]
+    periods <- lazy_dots(...)[1]
 
     if (is.null(periods[[1]])) {
         periods <- stats::setNames(
-            list(unique(lazyeval::lazy_eval('period', data))),
+            list(unique(lazy_eval('period', data))),
             'period')
     } else {
-        periods <- stats::setNames(
-            list(lazyeval::lazy_eval(periods[[1]], data)),
+        periods <- setNames(
+            list(lazy_eval(periods[[1]], data)),
             ifelse('' == names(periods),
                    ifelse(as.character(periods[[1]]$expr) %in% colnames(data),
                           as.character(periods[[1]]$expr),
@@ -124,7 +126,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
     if (!period %in% colnames(data))
         stop('period column \'', period, '\' not found')
 
-    if (!is.numeric(data[[period]]) && !lubridate::is.POSIXct(data[[period]]))
+    if (!is.numeric(data[[period]]) && !is.POSIXct(data[[period]]))
         stop('period column class must be of either \'numeric\' or \'POSIXct\'')
 
     if (!value %in% colnames(data))

@@ -28,6 +28,7 @@
 #'
 #' @importFrom purrr map
 #' @importFrom rlang !! sym
+#' @importFrom stats quantile
 #' @importFrom tidyr nest unnest
 #'
 #' @export
@@ -73,8 +74,8 @@ calc_quantiles_ <- function(.data,
         nest() %>%   # collapse groups into list of data frames
         mutate(value = map(data, function(data) {
             # process 'value' column of each data frame
-            stats::quantile(data[[value]], probs = probs, na.rm = na.rm,
-                            names = FALSE, type = type) %>%
+            quantile(data[[value]], probs = probs, na.rm = na.rm,
+                     names = FALSE, type = type) %>%
                 # expand out to data frame again
                 data.frame(quantile = names(probs), value = .)
             })

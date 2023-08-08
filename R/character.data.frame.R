@@ -20,11 +20,12 @@
 #'
 #' @seealso [factor.data.frame()]
 #'
+#' @importFrom lazyeval lazy_dots
 #' @importFrom tibble as_tibble
 #'
 #' @export
 character.data.frame <- function(df, ...) {
-    .dots <- sapply(lazyeval::lazy_dots(...),
+    .dots <- sapply(lazy_dots(...),
                     function(x) {
                         x %>%
                             getElement('expr') %>%

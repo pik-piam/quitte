@@ -21,6 +21,8 @@
 #'     erg <- calcCumulatedDiscount(data, disRate=0.03)
 #'   }
 #'
+#' @importFrom reshape2 dcast
+#'
 #' @export
 calcCumulatedDiscount = function(data,
                                  nameVar='Consumption',
@@ -42,7 +44,7 @@ calcCumulatedDiscount = function(data,
   }
   data=data[,!(names(data) == 'unit')]
   #convert to wide format
-  data = reshape2::dcast(data,... ~ variable)
+  data = dcast(data,... ~ variable)
   #rename variable
   names(data)[names(data) == nameVar] = 'varToAggregate'
 

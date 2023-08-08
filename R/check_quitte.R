@@ -75,6 +75,9 @@
 #'
 #' check_quitte(quitte, check_variables, check_regions)
 #'
+#' @importFrom lazyeval lazy_dots
+#' @importFrom stats na.omit
+#'
 #' @export check_quitte
 check_quitte <- function(quitte, check_variables, check_regions = NULL) {
 
@@ -85,7 +88,7 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
 
             l %>%
                 unlist() %>%
-                stats::na.omit() %>%
+                na.omit() %>%
                 as.character()
         ) %>%
             unique()
@@ -104,7 +107,7 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
         return(l)
     }
 
-    .summarise.expression <- list(lazyeval::interp(~sum(value)))
+    .summarise.expression <- list(interp(~sum(value)))
     names(.summarise.expression) <- "sum.value"
 
     # if NULL, use all regions in quitte

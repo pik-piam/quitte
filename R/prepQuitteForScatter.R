@@ -28,14 +28,16 @@
 #'   \dontrun{
 #'     quitteOut <- prepQuitteForScatter(quitteIn, c('Emissions|CO2', 'Price|Carbon'))
 #'   }
-#' @export
 #'
+#' @importFrom reshape2 dcast
+#'
+#' @export
 prepQuitteForScatter <- function(quitteIn , varNames) {
   # get rid of all units and replace them with "none"
   quitteIn$unit <- 'None'
 
   # select the variables in varNames (this should be two) and put them in wide format
-  quitteOut <- reshape2::dcast(quitteIn[quitteIn$variable %in% varNames, ], ... ~ variable)
+  quitteOut <- dcast(quitteIn[quitteIn$variable %in% varNames, ], ... ~ variable)
 
   # rename the variables with "x" and "y" for further use in more general plotting functions
   names(quitteOut)[which(names(quitteOut) == varNames[1])] <- "x"

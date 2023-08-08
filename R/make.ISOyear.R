@@ -17,9 +17,11 @@
 #'
 #' @keywords internal
 #'
+#' @importFrom lifecycle deprecate_warn
+#'
 #' @export
 make.ISOyear <- function(years) {
-    lifecycle::deprecate_warn(
+    deprecate_warn(
         when = '0.3108.0', what = 'make.ISOyear()',
         details = 'The function ISOyear() can be used directly.')
     return(ISOyear)

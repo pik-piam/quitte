@@ -15,11 +15,12 @@
 #'           Europe = c('Portugal', 'Ukraine', 'Denmark'))
 #' list_to_data_frame(l, region, country)
 #'
+#' @importFrom lazyeval lazy_dots
 #' @importFrom tibble tibble_
 
 #' @export
 list_to_data_frame <- function(l, ...) {
-    dots <- lazyeval::lazy_dots(...)
+    dots <- lazy_dots(...)
 
     if (length(dots) < 1) {
         category = 'category'
