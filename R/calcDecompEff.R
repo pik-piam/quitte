@@ -262,8 +262,8 @@ calcDecompEff_scen <- function(df, x, bau){
 
   scens = setdiff(getScenarios(df), bau)
 
-  tmp = do.call(rbind,
-                lapply(scens, function(scen){
-                  tmp_kaya = calcDecompEff(df,x,bau = bau,pol = scen)
-                }))
+  do.call(rbind,
+          lapply(scens, function(scen){
+            calcDecompEff(df,x,bau = bau,pol = scen)
+          }))
 }

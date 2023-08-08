@@ -139,10 +139,8 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
                 paste(collapse = "\n")
 
         check_variables <- .str2lst(check_variables)
-
-        all_variables <- .getAllNames(check_variables)
-
-    } else if (!is.list(check_variables)) {
+    }
+    else if (!is.list(check_variables)) {
         stop("Can't handle check_variables")
     }
 
