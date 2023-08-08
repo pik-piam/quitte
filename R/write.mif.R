@@ -70,7 +70,7 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
         # write column header
         paste(c(colnames(x), ''), collapse = ';') %>%
             write_lines(file = path,
-                        append = ifelse(is.null(comment_header), FALSE, TRUE))
+                        append = !is.null(comment_header))
     }
 
     # write data
