@@ -437,13 +437,15 @@ test_that(
         data = data.frame(facet = 'specific energy use',
                           t     = as.integer(2005),
                           pf    = factor('feso_otherInd'),
-                          value = 0.0293),
+                          value = 0.0293,
+                          stringsAsFactors = FALSE),
         periods = 't'),
       expected = add_remind_timesteps_columns(
         data = data.frame(facet = 'specific energy use',
                           period     = as.integer(2005),
                           pf    = factor('feso_otherInd'),
-                          value = 0.0293),
+                          value = 0.0293,
+                          stringsAsFactors = FALSE),
         periods = 'period') %>%
         rename(t = period))
   }
