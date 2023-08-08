@@ -29,11 +29,9 @@ write.IAMCxlsx <- function(x, path, append = FALSE) {
     . <- NULL
 
     # guardians
-    no_quitte <- any(
-        !is.data.frame(x),
-        !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
-               'value') %in% tolower(names(x))))
-    if (no_quitte) {
+    if (   !is.data.frame(x)
+        || !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
+                  'value') %in% tolower(names(x)))) {
         stop('x must be a quitte data frame')
     }
 

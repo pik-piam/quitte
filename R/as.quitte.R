@@ -72,7 +72,7 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
     colnames(x)[colnames(x) == paste0("data", 3)] <- "variable"
 
     if (   !"value" %in% colnames(x)
-        && any(!is.na(suppressWarnings(as.integer(colnames(x)))))) {
+        && !all(is.na(suppressWarnings(as.integer(colnames(x)))))) {
       x <- suppressMessages(melt(x))
       colnames(x)[which(colnames(x) == "value") - 1] <- "period"
     }

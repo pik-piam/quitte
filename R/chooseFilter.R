@@ -25,7 +25,7 @@ chooseFilter <- function(data, types = c("model", "scenario", "region", "variabl
     userchoice <- NULL
     if (t %in% types) {
       items <- unique_or_levels(data[[t]])
-      if (any(! keep[[t]] %in% items)) {
+      if (!all(keep[[t]] %in% items)) {
         warning("Data does not contain ", t, " ",
                 paste(setdiff(keep[[t]], items), collapse = ", "), " although part of 'keep' vector")
       }
