@@ -124,7 +124,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
     if (!period %in% colnames(data))
         stop(paste0('period column \'', period, '\' not found'))
 
-    if (!is.numeric(data[[period]]) & !lubridate::is.POSIXct(data[[period]]))
+    if (!is.numeric(data[[period]]) && !lubridate::is.POSIXct(data[[period]]))
         stop('period column class must be of either \'numeric\' or \'POSIXct\'')
 
     if (!value %in% colnames(data))
@@ -250,7 +250,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         data <- as.quitte(data)
 
     # issue warning if splines are extended beyond original data range
-    if ('linear' != method & expand.values)
+    if ('linear' != method && expand.values)
         warning('Expanded values of spline interpolation beyond original data',
                 ' range. Results may be nonsensical.')
 

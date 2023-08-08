@@ -83,11 +83,17 @@
 calcDecompEff <- function(df, x, bau=NULL, pol=NULL, gap = "policy"){
 
   #--- Initial Checks
-  if (gap == "policy" & (is.null(bau) | is.null(pol))) stop("please provide bau and pol, if you want the differences in the policies")
-  if (gap == "time" & !(is.null(bau) & is.null(pol))) warning("differentiating by time. Change gap to 'policy' if you want the differences in the policies")
-  if (length(x[names(x) == "explained"]) != 1) stop("the explained variable has to be named 'explained in the x vector'")
+  if (gap == "policy" && (is.null(bau) || is.null(pol)))
+      stop("please provide bau and pol, if you want the differences in the policies")
 
-  if (!(gap %in% c("time", "policy") )) stop("gap is either time or policy")
+  if (gap == "time" && !(is.null(bau) && is.null(pol)))
+      warning("differentiating by time. Change gap to 'policy' if you want the differences in the policies")
+
+  if (length(x[names(x) == "explained"]) != 1)
+      stop("the explained variable has to be named 'explained in the x vector'")
+
+  if (!(gap %in% c("time", "policy") ))
+      stop("gap is either time or policy")
 
   #--- Internal Functions
 

@@ -74,7 +74,7 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
     if (!(value %in% colnames(data)))
         stop("No column '", value, "' in data frame")
 
-    if (!is.na(weight) & !(weight %in% colnames(data)))
+    if (!is.na(weight) && !weight %in% colnames(data))
         stop('No column \'', weight, '\' in data frame')
 
     .colnames <- colnames(data)

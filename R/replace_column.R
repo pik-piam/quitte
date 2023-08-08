@@ -120,7 +120,7 @@ replace_column_ <- function(data, mask, old_column, match_column, new_column,
         `[`(mask, .,) %>%
         pull(match_column)
 
-    if (!ignore.ambiguous.match & length(ambiguous))
+    if (!ignore.ambiguous.match && length(ambiguous))
     {
         warning('No unambiguous match for ',
                 paste(paste0('\'', ambiguous, '\''), collapse = ', '),

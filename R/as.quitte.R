@@ -71,7 +71,8 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
     colnames(x)[colnames(x) == paste0("data", 2)] <- "model"
     colnames(x)[colnames(x) == paste0("data", 3)] <- "variable"
 
-    if (!("value" %in% colnames(x)) & any(!is.na(suppressWarnings(as.integer(colnames(x)))))) {
+    if (   !"value" %in% colnames(x)
+        && any(!is.na(suppressWarnings(as.integer(colnames(x)))))) {
       x <- suppressMessages(melt(x))
       colnames(x)[which(colnames(x) == "value") - 1] <- "period"
     }
@@ -145,8 +146,8 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
     if (magclass::getSets(x, fulldim = FALSE)[3] == "d3") {
       magclass::getSets(x, fulldim = FALSE)[3] <- "variable"
     }
-    if (!("unit" %in% magclass::getSets(x))        &
- ("variable" %in% magclass::getSets(x))) {
+    if (   !"unit" %in% magclass::getSets(x)
+        && "variable" %in% magclass::getSets(x)) {
       if (all(grepl(" \\(.*\\)$",
                     magclass::getNames(x, fulldim = TRUE)$variable))) {
         magclass::getNames(x) <- sub(" \\(([^\\()]*)\\)($|\\.)", ".\\1\\2",
