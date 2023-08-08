@@ -381,8 +381,7 @@ test_that(
                            xpos = c(1, 4, 6.5),
                            width = c(1.9, 3.9, 0.9))
 
-    expect_equal(object,
-                 expected)
+    expect_equal(object, expected, tolerance = testthat_tolerance())
   }
 )
 ## add_remind_timesteps_columns() calculations ----
