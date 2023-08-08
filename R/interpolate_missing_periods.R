@@ -181,7 +181,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         # set a to NA for all NA on the fringes of b
         if (!all(is.na(b))) {
             is.na(a) <- setdiff(
-                1:length(a),
+                seq_along(a),
                 seq_range(range(which(!is.na(b) | expand.values))))
         } else {
             is.na(a) <- is.na(b)

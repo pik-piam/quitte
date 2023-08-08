@@ -44,7 +44,7 @@ magclass_to_tibble <- function(m, colnames = NULL) {
         col_names <- c(
             col_names[1:2],
             paste(col_names[c(-1, -2, -length(col_names))],
-                  1:length(rename_columns),
+                  seq_along(rename_columns),
                   sep = '.'),
             col_names[length(col_names)])
     }

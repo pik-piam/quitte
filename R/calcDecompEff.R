@@ -182,7 +182,7 @@ calcDecompEff <- function(df, x, bau=NULL, pol=NULL, gap = "policy"){
 
   #replace variable names and scenario names by placeholders
   kaya$variable = factor(kaya$variable)
-  namesVar_in = letters[1:length(explanatory)]
+  namesVar_in = letters[seq_along(explanatory)]
   names(namesVar_in) = explanatory
 
   kaya = levels2letters(kaya,namesVar_in,explanatory)
