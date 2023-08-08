@@ -97,10 +97,7 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
             getElement(1)
 
         l <- sub("^[^\n]*\n", "", s) %>%
-            strsplit("\n") %>%
-            lapply(function(l) {
-                    return(l)
-                })
+            strsplit("\n")
 
         names(l) <- sub("^([^\n]*)\n.*$", "\\1", s)
 
