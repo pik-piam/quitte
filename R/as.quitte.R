@@ -92,14 +92,14 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
         if (!("unit"     %in% colnames(x)))
             x <- cbind(x, unit = fct_na_value_to_level(factor(NA),
                                                        level = '(Missing)'))
-        if (periodClass == "POSIXct")
-            if (!("period"   %in% colnames(x)))
-                x <- cbind(x, period = as.POSIXct(NA))
-        if (periodClass == "integer")
-            if (!("period" %in% colnames(x)))
-                  x <- cbind(x, period = as.integer(NA))
-        if (!("value"    %in% colnames(x)))
-              stop("Data frame cannot be converted. A column \"value\" has to be provided!")
+        if (periodClass == "POSIXct" && !"period" %in% colnames(x))
+            x <- cbind(x, period = as.POSIXct(NA))
+
+        if (periodClass == "integer" && !"period" %in% colnames(x))
+            x <- cbind(x, period = as.integer(NA))
+
+        if (!"value" %in% colnames(x))
+            stop("Data frame cannot be converted. A column \"value\" has to be provided!")
     }
     factorCheck <- sapply(x[, factorColumns], is.factor) # nolint
     if (!all(factorCheck)) {
@@ -112,10 +112,10 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
 
     if (periodClass == "integer")
         x$period <- as.integer(x$period)
-    if (periodClass == "POSIXct") {
-        if (!("POSIXct" %in% attr(x$period, "class")))
-            x$period <- ISOyear(x$period)
-    }
+
+    if (periodClass == "POSIXct" && !("POSIXct" %in% attr(x$period, "class")))
+        x$period <- ISOyear(x$period)
+
     if (!is.numeric(x$value))
         stop("Value column must contain numeric data!")
 
@@ -147,15 +147,14 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
       magclass::getSets(x, fulldim = FALSE)[3] <- "variable"
     }
     if (   !"unit" %in% magclass::getSets(x)
-        && "variable" %in% magclass::getSets(x)) {
-      if (all(grepl(" \\(.*\\)$",
-                    magclass::getNames(x, fulldim = TRUE)$variable))) {
+        && "variable" %in% magclass::getSets(x)
+        && all(grepl(" \\(.*\\)$",
+                     magclass::getNames(x, fulldim = TRUE)$variable))) {
         magclass::getNames(x) <- sub(" \\(([^\\()]*)\\)($|\\.)", ".\\1\\2",
                                      magclass::getNames(x))
         magclass::getSets(x, fulldim = FALSE)[3] <-
           sub("variable", "variable.unit",
               magclass::getSets(x, fulldim = FALSE)[3])
-      }
     }
 
     d <- dimnames(x)
@@ -176,8 +175,7 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
       for (i in seq_along(datanames))
         colnames(x)[colnames(x) == paste0("Data", i)] <- datanames[i]
     } else {
-      if ("Data1" %in% colnames(x))
-        if (all(levels(x$Data1) == "NA"))
+      if ("Data1" %in% colnames(x) && all(levels(x$Data1) == "NA"))
           x$Data1 <- NULL # nolint
     }
 
