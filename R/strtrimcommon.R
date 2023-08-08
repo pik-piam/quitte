@@ -35,12 +35,12 @@ strtrimcommon <- function(x, split = '', USE.NAMES = FALSE,
                           return.all = FALSE) {
   split <- split[[1]]
   tmp <- lapply(strsplit(x, split, TRUE), rev)
-  for (right in seq_len(min(sapply(tmp, length))))
+  for (right in seq_len(min(lengths(tmp))))
     if (1 < length(unique(sapply(tmp, '[', i = right))))
       break
 
   tmp <- strsplit(x, split, TRUE)
-  for (left in seq_len(min(sapply(tmp, length))))
+  for (left in seq_len(min(lengths(tmp))))
     if (1 < length(unique(sapply(tmp, `[`, i = left))))
       break
 
