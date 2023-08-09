@@ -131,7 +131,7 @@ add_timesteps_columns <- function(data, timesteps, periods = 'period',
              ' missing in `timesteps`.')
     rm(missing.columns)
 
-    if (!is.numeric(gaps) | 0 > gaps)
+    if (!is.numeric(gaps) || 0 > gaps)
         stop('`gaps` must be a positive numerical.')
 
     # ---- join data frames ----
@@ -196,7 +196,7 @@ add_remind_timesteps_columns <- function(data, periods = 'period', gaps = 0) {
     if (!periods %in% colnames(data))
         stop('Column `', periods, '` is missing in `data`.')
 
-    if (!is.numeric(gaps) | 0 > gaps)
+    if (!is.numeric(gaps) || 0 > gaps)
         stop('`gaps` must be a positive numerical.')
 
     # ---- call add_timestep_columns ----

@@ -3,7 +3,7 @@ context('add_remind_timesteps_columns ranges')
 test_that(
     'remind_timesteps and add_remind_timesteps_columns are correct',
 
-    {testthat::expect_true(remind_timesteps %>%
+    expect_true(remind_timesteps %>%
                                group_by(period) %>%
                                summarise(length = sum(weight)) %>%
                                ungroup() %>%
@@ -15,4 +15,4 @@ test_that(
                                                start == lag(end))) %>%
                                getElement('correct') %>%
                                all())
-    })
+    )

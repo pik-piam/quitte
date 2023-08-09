@@ -28,18 +28,20 @@ inline.data.frame <- function(..., sep = ";", quote = "") {
     .dots <- list(...)
 
     # .dots is one long character vector?
-    if (1 == length(.dots) & "character" == typeof(.dots[[1]])) {
+    if (1 == length(.dots) && "character" == typeof(.dots[[1]])) {
         table <- .dots[[1]] %>%
             paste(sep = "\n")
 
+    }
     # .dots is a list of character vectors or NULL?
-    } else if (all(unlist(lapply(.dots, typeof)) %in% c("character", "NULL"))) {
+    else if (all(unlist(lapply(.dots, typeof)) %in% c("character", "NULL"))) {
         table <- .dots %>%
             unlist() %>%
             paste0(collapse = "\n")
 
+    }
     # .dots is something else ...
-    } else {
+    else {
         stop("Can't handle parameter. Need string or list of strings.")
     }
 

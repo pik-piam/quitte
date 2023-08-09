@@ -83,11 +83,17 @@
 calcDecompEff <- function(df, x, bau=NULL, pol=NULL, gap = "policy"){
 
   #--- Initial Checks
-  if (gap == "policy" & (is.null(bau) | is.null(pol))) stop("please provide bau and pol, if you want the differences in the policies")
-  if (gap == "time" & !(is.null(bau) & is.null(pol))) warning("differentiating by time. Change gap to 'policy' if you want the differences in the policies")
-  if (length(x[names(x) == "explained"]) != 1) stop("the explained variable has to be named 'explained in the x vector'")
+  if (gap == "policy" && (is.null(bau) || is.null(pol)))
+      stop("please provide bau and pol, if you want the differences in the policies")
 
-  if (!(gap %in% c("time", "policy") )) stop("gap is either time or policy")
+  if (gap == "time" && !(is.null(bau) && is.null(pol)))
+      warning("differentiating by time. Change gap to 'policy' if you want the differences in the policies")
+
+  if (length(x[names(x) == "explained"]) != 1)
+      stop("the explained variable has to be named 'explained in the x vector'")
+
+  if (!(gap %in% c("time", "policy") ))
+      stop("gap is either time or policy")
 
   #--- Internal Functions
 
@@ -176,7 +182,7 @@ calcDecompEff <- function(df, x, bau=NULL, pol=NULL, gap = "policy"){
 
   #replace variable names and scenario names by placeholders
   kaya$variable = factor(kaya$variable)
-  namesVar_in = letters[1:length(explanatory)]
+  namesVar_in = letters[seq_along(explanatory)]
   names(namesVar_in) = explanatory
 
   kaya = levels2letters(kaya,namesVar_in,explanatory)
@@ -256,8 +262,8 @@ calcDecompEff_scen <- function(df, x, bau){
 
   scens = setdiff(getScenarios(df), bau)
 
-  tmp = do.call(rbind,
-                lapply(scens, function(scen){
-                  tmp_kaya = calcDecompEff(df,x,bau = bau,pol = scen)
-                }))
+  do.call(rbind,
+          lapply(scens, function(scen){
+            calcDecompEff(df,x,bau = bau,pol = scen)
+          }))
 }

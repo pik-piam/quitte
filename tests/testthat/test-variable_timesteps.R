@@ -381,8 +381,7 @@ test_that(
                            xpos = c(1, 4, 6.5),
                            width = c(1.9, 3.9, 0.9))
 
-    expect_equal(object,
-                 expected)
+    expect_equal(object, expected, tolerance = testthat_tolerance())
   }
 )
 ## add_remind_timesteps_columns() calculations ----
@@ -435,15 +434,17 @@ test_that(
     expect_equal(
       object = add_remind_timesteps_columns(
         data = data.frame(facet = 'specific energy use',
-                          t     = as.integer(2005),
+                          t     = 2005L,
                           pf    = factor('feso_otherInd'),
-                          value = 0.0293),
+                          value = 0.0293,
+                          stringsAsFactors = FALSE),
         periods = 't'),
       expected = add_remind_timesteps_columns(
-        data = data.frame(facet = 'specific energy use',
-                          period     = as.integer(2005),
-                          pf    = factor('feso_otherInd'),
-                          value = 0.0293),
+        data = data.frame(facet  = 'specific energy use',
+                          period = 2005L,
+                          pf     = factor('feso_otherInd'),
+                          value  = 0.0293,
+                          stringsAsFactors = FALSE),
         periods = 'period') %>%
         rename(t = period))
   }

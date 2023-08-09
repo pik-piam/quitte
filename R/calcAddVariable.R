@@ -36,10 +36,12 @@
 #'
 #' @author Anselm Schultes, Michaja Pehl
 #'
+#' @importFrom stats as.formula setNames
+#'
 #' @export
 calcAddVariable <- function(data, formula, newUnit = "None", na.act = "no") {
 
-    formula <- stats::as.formula(formula)
+    formula <- as.formula(formula)
     .dots <- list(c(as.character(formula[3]), newUnit))
     names(.dots) <- as.character(formula[2])
 

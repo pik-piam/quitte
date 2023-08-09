@@ -218,7 +218,7 @@ aggregate_map <- function(data,
   diff_map_data = setdiff(items_map, items_data)
   diff_data_map = setdiff(items_data, items_map)
 
-  if(length(diff_map_data) > 0 | length(diff_data_map) >0 ){
+  if (length(diff_map_data) > 0 || length(diff_data_map) > 0) {
 
     message_mismatch = paste0("the number of regions/variables does not correspond: \n",
                               "these regions/variables are in the mapping but not in data : ",paste(diff_map_data, collapse = " "), "\n",

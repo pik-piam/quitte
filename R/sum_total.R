@@ -41,17 +41,14 @@
 sum_total <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
                       weight = NA) {
 
-    if (!is.null(group <- substitute(group)))
-        if (!is.logical(group))
-            group <- deparse(group)
+    if (!is.null(group <- substitute(group)) && !is.logical(group))
+        group <- deparse(group)
 
-    if (!is.null(value <- substitute(value)))
-        if (!is.logical(value))
-            value <- deparse(value)
+    if (!is.null(value <- substitute(value)) && !is.logical(value))
+        value <- deparse(value)
 
-    if (!is.null(weight <- substitute(weight)))
-        if (!is.logical(weight))
-            weight <- deparse(weight)
+    if (!is.null(weight <- substitute(weight)) && !is.logical(weight))
+        weight <- deparse(weight)
 
     sum_total_(data, group, value, name, na.rm, weight)
 }
@@ -74,7 +71,7 @@ sum_total_ <- function(data, group, value = NA, name = "Total", na.rm = TRUE,
     if (!(value %in% colnames(data)))
         stop("No column '", value, "' in data frame")
 
-    if (!is.na(weight) & !(weight %in% colnames(data)))
+    if (!is.na(weight) && !weight %in% colnames(data))
         stop('No column \'', weight, '\' in data frame')
 
     .colnames <- colnames(data)

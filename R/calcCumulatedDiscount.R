@@ -21,6 +21,8 @@
 #'     erg <- calcCumulatedDiscount(data, disRate=0.03)
 #'   }
 #'
+#' @importFrom reshape2 dcast
+#'
 #' @export
 calcCumulatedDiscount = function(data,
                                  nameVar='Consumption',
@@ -42,7 +44,7 @@ calcCumulatedDiscount = function(data,
   }
   data=data[,!(names(data) == 'unit')]
   #convert to wide format
-  data = reshape2::dcast(data,... ~ variable)
+  data = dcast(data,... ~ variable)
   #rename variable
   names(data)[names(data) == nameVar] = 'varToAggregate'
 
@@ -72,8 +74,8 @@ calcCumulatedDiscount = function(data,
     mutate(
       weight1 = mapply(
         function(dt,dr) {
-          sum( (1+dr)^(-seq(as.double(0.5),as.double(dt-0.5)) )
-             * (1 - seq(as.double(0.5),as.double(dt-0.5))/dt)
+          sum( (1+dr)^(-seq(0.5, as.double(dt-0.5)) )
+             * (1 - seq(0.5, as.double(dt-0.5))/dt)
               )
           },   # Why no use (1:dt) instead??
         (!!sym('year') - lag(!!sym('year'), default = first(!!sym('year')), order_by = !!sym('year'))),  # first element in year here doesnt matter anyways, will be thrown out later on..
@@ -81,8 +83,8 @@ calcCumulatedDiscount = function(data,
       ),
     weight2 = mapply(
       function(dt,dr) {
-        sum( (1+dr)^(-(seq(as.double(0.5),as.double(dt-0.5)) - dt))
-           * (seq(as.double(0.5),as.double(dt-0.5))/dt)
+        sum( (1+dr)^(-(seq(0.5, as.double(dt-0.5)) - dt))
+           * (seq(0.5, as.double(dt-0.5))/dt)
            )
          },
       (!!sym('year') - lag(!!sym('year'), default = first(!!sym('year')), order_by = !!sym('year'))),

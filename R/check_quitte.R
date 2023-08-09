@@ -75,6 +75,9 @@
 #'
 #' check_quitte(quitte, check_variables, check_regions)
 #'
+#' @importFrom lazyeval lazy_dots
+#' @importFrom stats na.omit
+#'
 #' @export check_quitte
 check_quitte <- function(quitte, check_variables, check_regions = NULL) {
 
@@ -85,7 +88,7 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
 
             l %>%
                 unlist() %>%
-                stats::na.omit() %>%
+                na.omit() %>%
                 as.character()
         ) %>%
             unique()
@@ -97,17 +100,14 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
             getElement(1)
 
         l <- sub("^[^\n]*\n", "", s) %>%
-            strsplit("\n") %>%
-            lapply(function(l) {
-                    return(l)
-                })
+            strsplit("\n")
 
         names(l) <- sub("^([^\n]*)\n.*$", "\\1", s)
 
         return(l)
     }
 
-    .summarise.expression <- list(lazyeval::interp(~sum(value)))
+    .summarise.expression <- list(interp(~sum(value)))
     names(.summarise.expression) <- "sum.value"
 
     # if NULL, use all regions in quitte
@@ -139,10 +139,8 @@ check_quitte <- function(quitte, check_variables, check_regions = NULL) {
                 paste(collapse = "\n")
 
         check_variables <- .str2lst(check_variables)
-
-        all_variables <- .getAllNames(check_variables)
-
-    } else if (!is.list(check_variables)) {
+    }
+    else if (!is.list(check_variables)) {
         stop("Can't handle check_variables")
     }
 

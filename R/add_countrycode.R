@@ -20,6 +20,8 @@
 #' @author Michaja Pehl
 #'
 #' @importFrom countrycode countrycode
+#' @importFrom lazyeval lazy_dots
+#' @importFrom stats setNames
 #'
 #' @examples
 #' library(dplyr)
@@ -33,7 +35,7 @@
 
 #' @export
 add_countrycode <- function(data, ..., warn = TRUE, na.rm = FALSE) {
-    dots <- lazyeval::lazy_dots(...)
+    dots <- lazy_dots(...)
 
     source.type   <- as.character(dots[[1]]$expr)
     source.column <- ifelse('' == names(dots[1]), source.type, names(dots[1]))
@@ -43,8 +45,8 @@ add_countrycode <- function(data, ..., warn = TRUE, na.rm = FALSE) {
                                  names(dots[2]))
 
     add_countrycode_(data,
-                     stats::setNames(source.type, source.column),
-                     stats::setNames(destination.type, destination.column),
+                     setNames(source.type, source.column),
+                     setNames(destination.type, destination.column),
                      warn = warn, na.rm = na.rm)
 }
 
@@ -53,11 +55,11 @@ add_countrycode <- function(data, ..., warn = TRUE, na.rm = FALSE) {
 add_countrycode_ <- function(data, origin, destination, warn = TRUE,
                              na.rm = FALSE) {
 
-    source.type        <- stats::setNames(origin, NULL)
+    source.type        <- setNames(origin, NULL)
     source.column      <- ifelse(is.null(names(origin)), source.type,
                                  names(origin))
 
-    destination.type   <- stats::setNames(destination, NULL)
+    destination.type   <- setNames(destination, NULL)
     destination.column <- ifelse(is.null(names(destination)), destination.type,
                                  names(destination))
 

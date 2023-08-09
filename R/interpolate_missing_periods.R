@@ -28,8 +28,10 @@
 #' @return A data frame or a quitte object, the same as `data`.
 #' @author Michaja Pehl
 #'
+#' @importFrom lazyeval lazy_dots lazy_eval
+#' @importFrom lubridate is.POSIXct
 #' @importFrom rlang :=
-#' @importFrom stats na.omit spline
+#' @importFrom stats na.omit setNames spline
 #' @importFrom tidyr complete nesting crossing
 #' @importFrom zoo na.approx
 #'
@@ -87,15 +89,15 @@ interpolate_missing_periods <- function(data, ..., value = 'value',
                                         combinations = 'nesting') {
 
     # ---- normalise periods to a named list of numerics/POSIXct ----
-    periods <- lazyeval::lazy_dots(...)[1]
+    periods <- lazy_dots(...)[1]
 
     if (is.null(periods[[1]])) {
         periods <- stats::setNames(
-            list(unique(lazyeval::lazy_eval('period', data))),
+            list(unique(lazy_eval('period', data))),
             'period')
     } else {
-        periods <- stats::setNames(
-            list(lazyeval::lazy_eval(periods[[1]], data)),
+        periods <- setNames(
+            list(lazy_eval(periods[[1]], data)),
             ifelse('' == names(periods),
                    ifelse(as.character(periods[[1]]$expr) %in% colnames(data),
                           as.character(periods[[1]]$expr),
@@ -122,13 +124,13 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         stop("Works only on data frames")
 
     if (!period %in% colnames(data))
-        stop(paste0('period column \'', period, '\' not found'))
+        stop('period column \'', period, '\' not found')
 
-    if (!is.numeric(data[[period]]) & !lubridate::is.POSIXct(data[[period]]))
+    if (!is.numeric(data[[period]]) && !is.POSIXct(data[[period]]))
         stop('period column class must be of either \'numeric\' or \'POSIXct\'')
 
     if (!value %in% colnames(data))
-        stop(paste0('value column \'', value, '\' not found'))
+        stop('value column \'', value, '\' not found')
 
     return_quitte <- is.quitte(data)
 
@@ -137,7 +139,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
              ' spline_natural')
 
     # ---- convert POSIXct periods to integer ----
-    if (return_POSIXct <- 'POSIXct' %in% class(getElement(data, period))) {
+    if (return_POSIXct <- inherits(getElement(data, period), 'POSIXct')) {
         data <- data %>%
             mutate(!!sym(period) := as.integer(!!sym(period)))
         periods[[1]] <- as.integer(periods[[1]])
@@ -181,7 +183,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         # set a to NA for all NA on the fringes of b
         if (!all(is.na(b))) {
             is.na(a) <- setdiff(
-                1:length(a),
+                seq_along(a),
                 seq_range(range(which(!is.na(b) | expand.values))))
         } else {
             is.na(a) <- is.na(b)
@@ -250,7 +252,7 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
         data <- as.quitte(data)
 
     # issue warning if splines are extended beyond original data range
-    if ('linear' != method & expand.values)
+    if ('linear' != method && expand.values)
         warning('Expanded values of spline interpolation beyond original data',
                 ' range. Results may be nonsensical.')
 

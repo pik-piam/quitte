@@ -21,12 +21,10 @@
 #' @export
 madrat_mule <- function(x)
 {
-    if (!'magpie' %in% class(x))
-    {
+    if (!inherits(x, 'magpie')) {
         return(as.magpie(as.integer(serialize(x, NULL))))
     }
-    else
-    {
+    else {
         return(unserialize(as.raw(as.vector(x))))
     }
 }

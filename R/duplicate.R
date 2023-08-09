@@ -32,7 +32,7 @@ duplicate_ <- function(data, column) {
     if (!is.data.frame(data))
         stop('Only works with data frames.')
 
-    if (!is.list(column) | is.null(names(column)))
+    if (!is.list(column) || is.null(names(column)))
         stop('Need a key-value list for column to modify.')
 
     if (!names(column[1]) %in% colnames(data))

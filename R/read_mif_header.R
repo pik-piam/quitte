@@ -50,6 +50,8 @@ read_mif_header <- function(file, sep, comment) {
         unlist() %>%
         tolower()
 
-    return(mget(c('header', 'comment_header', 'sep', 'useless.last.column'),
-                envir = environment()))
+    return(list('header'              = header,
+                'comment_header'      = comment_header,
+                'sep'                 = sep,
+                'useless.last.column' = useless.last.column))
 }

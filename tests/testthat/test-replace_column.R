@@ -7,35 +7,41 @@ test_that(
     model_data <- data.frame(
       model  = c('Model1', '2ndModel', 'Model Three'),
       region = c('Region 1', 'Region 2', 'Region 1'),
-      value  = 1:3)
+      value  = 1:3,
+      stringsAsFactors = FALSE)
 
     mask <- data.frame(
       model  = c('Model1', '2ndModel', 'Model Three', 'fourth Model'),
-      clear_name = paste('Model', 1:4))
+      clear_name = paste('Model', 1:4),
+      stringsAsFactors = FALSE)
 
     expect_equal(
       object = replace_column(model_data, mask, model, clear_name),
       expected = data.frame(model  = paste('Model', 1:3),
                             region = paste('Region', c(1, 2, 1)),
-                            value  = 1:3)
+                            value  = 1:3,
+      stringsAsFactors = FALSE)
     )
 
     # ---- mismatched column names ----
     model_data <- data.frame(
       model  = c('Model1', '2ndModel', 'Model Three', 'fourth Model'),
       region = c('Region 1', 'Region 2', 'Region 1', 'Region 2'),
-      value  = 1:4)
+      value  = 1:4,
+      stringsAsFactors = FALSE)
 
     mask <- data.frame(
       ugly_name  = c('Model1', '2ndModel', 'Model Three'),
-      clear_name = paste('Model', 1:3))
+      clear_name = paste('Model', 1:3),
+      stringsAsFactors = FALSE)
 
     expect_equal(
       object = replace_column(model_data, mask, model = ugly_name, clear_name),
       expected = data.frame(
         model   = c(paste('Model', 1:3), NA),
         region  = paste('Region', c(1, 2, 1, 2)),
-        value   = 1:4)
+        value   = 1:4,
+      stringsAsFactors = FALSE)
     )
 
     # ---- SE example ----
@@ -45,7 +51,8 @@ test_that(
       expected = data.frame(
         model   = c(paste('Model', 1:3), NA),
         region  = paste('Region', c(1, 2, 1, 2)),
-        value   = 1:4)
+        value   = 1:4,
+      stringsAsFactors = FALSE)
     )
 
     # ---- dropping the extra entries in model ----
@@ -54,7 +61,8 @@ test_that(
                               drop.extra = TRUE),
       expected = data.frame(model  = paste('Model', 1:3),
                             region = paste('Region', c(1, 2, 1)),
-                            value  = 1:3)
+                            value  = 1:3,
+      stringsAsFactors = FALSE)
     )
 
     # ---- also works on quitte objects ----
@@ -86,11 +94,13 @@ test_that(
     model_data <- data.frame(
       model  = c('Model1', '2ndModel', 'Model Three'),
       region = c('Region 1', 'Region 2', 'Region 3'),
-      value  = 1:3)
+      value  = 1:3,
+      stringsAsFactors = FALSE)
 
     mask <- data.frame(
       model  = c('Model1', '2ndModel', 'Model Three')[c(1, 2, 3, 3, 2)],
-      clear_name = paste('Model', 1:5))
+      clear_name = paste('Model', 1:5),
+      stringsAsFactors = FALSE)
 
     expect_warning(
       object = replace_column(model_data, mask, model, clear_name),
@@ -105,7 +115,8 @@ test_that(
 
     mask <- data.frame(
       model  = c('Model1', '2ndModel', 'Model Three')[c(1, 2, 3)],
-      clear_name = paste('Model', 1:3))
+      clear_name = paste('Model', 1:3),
+      stringsAsFactors = FALSE)
 
     expect_failure(
       expect_warning(

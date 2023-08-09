@@ -29,11 +29,9 @@ write.IAMCxlsx <- function(x, path, append = FALSE) {
     . <- NULL
 
     # guardians
-    no_quitte <- any(
-        !is.data.frame(x),
-        !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
-               'value') %in% tolower(names(x))))
-    if (no_quitte) {
+    if (   !is.data.frame(x)
+        || !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
+                  'value') %in% tolower(names(x)))) {
         stop('x must be a quitte data frame')
     }
 
@@ -51,5 +49,5 @@ write.IAMCxlsx <- function(x, path, append = FALSE) {
                filter(is.finite(.data$Value), '' != .data$Value) %>%
                pivot_wider(names_from = 'Period', names_sort = TRUE, values_from = 'Value', values_fill = NA)
 
-    writexl::write_xlsx(list("data" = x), path)
+    write_xlsx(list("data" = x), path)
 }

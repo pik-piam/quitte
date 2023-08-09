@@ -34,11 +34,9 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
     . <- NULL
 
     # guardians
-    no_quitte <- any(
-        !is.data.frame(x),
-        !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
-               'value') %in% tolower(names(x))))
-    if (no_quitte) {
+    if (   !is.data.frame(x)
+        || !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
+                  'value') %in% tolower(names(x)))) {
         stop('x must be a quitte data frame')
     }
 
@@ -72,7 +70,7 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
         # write column header
         paste(c(colnames(x), ''), collapse = ';') %>%
             write_lines(file = path,
-                        append = ifelse(is.null(comment_header), FALSE, TRUE))
+                        append = !is.null(comment_header))
     }
 
     # write data

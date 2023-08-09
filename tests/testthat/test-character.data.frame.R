@@ -25,10 +25,8 @@ test_that(
             object = setequal(names(attributes(df)), names(attributes(cdf))))
 
         # no 'dim' or 'dimnames' attributes
-        expect_equal(
-            object = length(
-                match(unlist(lapply(cdf, function(x) { names(attributes(x)) })),
-                      c('dim', 'dimnames'))),
-            expected = 0)
+        expect_false(any(sapply(cdf, function(x) {
+            any(c('dim', 'dimnames') %in% names(attributes(x)))
+            })))
     }
 )

@@ -39,7 +39,7 @@ test_that(
                               sets = c("region", "year", "model", "variable"))
     # missing columns (scenario) should not have implicit <NA>s, since
     # tidyverse warns about them
-    expect_false(any(is.na(levels(as.quitte(a)[['scenario']]))))
+    expect_false(anyNA(levels(as.quitte(a)[['scenario']])))
   }
 )
 
@@ -55,7 +55,7 @@ test_that(
       mutate(unit = ifelse('VARIABLE' == variable, '', 'Unit2'))
     # missing columns (scenario) should not have implicit <NA>s, since
     # tidyverse warns about them
-    expect_false(any(is.na(levels(as.quitte(a)[['scenario']]))))
+    expect_false(anyNA(levels(as.quitte(a)[['scenario']])))
   }
 )
 

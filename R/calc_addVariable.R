@@ -99,10 +99,10 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
 
   if (!all(is.na(units))) {
     if (length(units) == length(.dots)) {
-      for (i in 1:length(.dots))
+      for (i in seq_along(.dots))
         .dots[i][[1]] <- c(.dots[i][[1]], units[i])
     } else if (1 == length(units)) {
-      for (i in 1:length(.dots))
+      for (i in seq_along(.dots))
         .dots[i][[1]] <- c(.dots[i][[1]], units)
     } else
       stop('`units` must be of the same length as `...` or of length one.')

@@ -21,10 +21,12 @@
 #'
 #' @seealso [character.data.frame()]
 #'
+#' @importFrom lazyeval lazy_dots
+#'
 #' @export
 factor.data.frame <- function(df, ...) {
     .dots <- sapply(
-        lazyeval::lazy_dots(...), USE.NAMES = FALSE,
+        lazy_dots(...), USE.NAMES = FALSE,
 
         FUN = function(x) {
             x %>%
