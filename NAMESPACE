@@ -2,6 +2,7 @@
 
 S3method(as.quitte,character)
 S3method(as.quitte,data.frame)
+S3method(as.quitte,list)
 S3method(as.quitte,magpie)
 S3method(as.quitte,quitte)
 export(ISOyear)

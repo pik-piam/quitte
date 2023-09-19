@@ -228,7 +228,17 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
     class(x) <- c("quitte", class(x))
 
     return(x)
-  }
+}
+
+#' @method as.quitte list
+#' @export
+as.quitte.list <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
+    out <- NULL
+    for (xi in x) {
+      out <- rbind(out, as.quitte(xi, periodClass = periodClass, addNA = addNA, na.rm = na.rm))
+    }
+    return(out)
+}
 
 qaddNA <- function(x) {
   for (col in colnames(x)) {
