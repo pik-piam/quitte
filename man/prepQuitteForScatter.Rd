@@ -27,6 +27,7 @@ needs to be replaced by None.
   \dontrun{
     quitteOut <- prepQuitteForScatter(quitteIn, c('Emissions|CO2', 'Price|Carbon'))
   }
+
 }
 \author{
 Nico Bauer, Anselm Schultes, Jerome Hilaire
