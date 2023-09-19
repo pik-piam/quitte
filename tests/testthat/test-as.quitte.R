@@ -74,3 +74,15 @@ test_that(
                      as.quitte(semicolonfile))
   }
 )
+
+test_that(
+  'as.quitte understands lists()',
+  {
+    expect_identical(quitte_example_data, as.quitte(list(list(quitte_example_data))))
+    miffile <- tempfile(fileext = ".mif")
+    writeLines(c("Model,Scenario,Region,Variable,Unit,2005,2010",
+                 "REMIND,Base,World,FE,EJ/yr,12,14"),
+               con = miffile, sep = "\n")
+    expect_identical(as.quitte(miffile), as.quitte(list(miffile)))
+  }
+)
