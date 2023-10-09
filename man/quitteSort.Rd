@@ -10,6 +10,9 @@ quitteSort(x)
 \arguments{
 \item{x}{A quitte object}
 }
+\value{
+the sorted quitte object
+}
 \description{
 Sorts a quitte object in a standardized way:
 model -> scenario -> variable -> unit -> region -> period

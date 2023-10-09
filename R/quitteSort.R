@@ -7,12 +7,12 @@
 #'
 #' @importFrom dplyr arrange relocate
 #'
+#' @return the sorted quitte object
 #' @export
 quitteSort <- function(x) {
   model <- scenario <- region <- variable <- unit <- period <- NULL
-  if (! is.quitte(x)) x <- as.quitte(x)
-  x <- x %>%
+  x <- as.quitte(x) %>%
     relocate(model, scenario, region, variable, unit, period) %>%
-    arrange(model, scenario, variable, unit, region, period)
-  return(x)
+    arrange(model, scenario, variable, unit, region, period) %>%
+    return()
 }
