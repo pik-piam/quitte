@@ -17,6 +17,7 @@
 #' @param na.rm if set to TRUE entries with value NA will be removed
 #' @author Jan Philipp Dietrich
 #' @keywords classes
+#' @importFrom dplyr bind_rows relocate
 #' @importFrom forcats fct_na_value_to_level
 #' @importFrom magclass clean_magpie getNames getNames<- getSets getSets<-
 #' @importFrom reshape2 melt
@@ -41,10 +42,11 @@ as.quitte.character <- function(x, periodClass = "integer", addNA = FALSE, na.rm
 #' @method as.quitte quitte
 #' @export
 as.quitte.quitte <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
+    model <- scenario <- region <- variable <- unit <- period <- NULL
     if (is.quitte(x, warn = FALSE)) {
         if (addNA) x <- qaddNA(x)
         if (na.rm) x <- x[!is.na(x$value), ]
-        return(x)
+        return(relocate(x, model, scenario, region, variable, unit, period))
     } else {
         class(x) <- class(x)[class(x) != "quitte"]
         return(as.quitte.data.frame(x, periodClass = periodClass, addNA = addNA, na.rm = na.rm))
@@ -233,11 +235,7 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
 #' @method as.quitte list
 #' @export
 as.quitte.list <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
-    out <- NULL
-    for (xi in x) {
-      out <- rbind(out, as.quitte(xi, periodClass = periodClass, addNA = addNA, na.rm = na.rm))
-    }
-    return(out)
+    return(bind_rows(lapply(x, as.quitte, periodClass = periodClass, addNA = addNA, na.rm = na.rm)))
 }
 
 qaddNA <- function(x) {

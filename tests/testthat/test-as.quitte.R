@@ -76,7 +76,7 @@ test_that(
 )
 
 test_that(
-  'as.quitte understands lists()',
+  'as.quitte understands lists',
   {
     expect_identical(quitte_example_data, as.quitte(list(list(quitte_example_data))))
     miffile <- tempfile(fileext = ".mif")
