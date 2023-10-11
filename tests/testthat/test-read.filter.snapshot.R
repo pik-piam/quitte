@@ -5,6 +5,8 @@ test_that("read.filter.snapshot works", {
             file = tmpfile, append = FALSE, quote = FALSE, sep = ",",
             eol = "\n", na = "", dec = ".", row.names = FALSE,
             col.names = TRUE) # mimick IIASA snapshot format
+  system(paste("sed -i 's/GCAM/\"GCAM\"/g;'", tmpfile))
+  system(paste("sed -i 's/Delayed transition/\"Delayed transition\"/g;'", tmpfile))
   rtests <- list(head(levels(qe$region), 1), head(levels(qe$region), 2))
   for (r in rtests) {
     expect_equal(droplevels(filter(qe, region %in% r)),
