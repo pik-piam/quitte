@@ -26,16 +26,24 @@ read.filter.snapshot <- function(file, keep = list()) {
   }
   # temporary file
   tmpfile <- tempfile(pattern = "data", fileext = ".csv")
-  if (length(keep) > 0) {
-    # always keep first lines of original file (comments, colnames)
+  if (length(setdiff(names(keep), "period")) > 0) {
+    # always keep first lines of original file (comments, colnames), grep in the rest
     alwayskeep <- 20
     system(paste("head -n", alwayskeep, file, ">", tmpfile))
-    # grep for everything that is being part of keep and append that to first lines
-    greptext <- paste0("(,|;)(", paste0(unlist(keep), collapse = "|"), ")(,|;)")
-    command <- paste0("tail -n +", (alwayskeep + 1), " ", file, " | grep -E '", greptext, "' >> ", tmpfile)
+    # the goal of the next lines is to grep one after the other through the elements of keep
+    # keep = list(variable = "GDP|PPP", region = c("World", "FRA")) should get you
+    # | grep -E '(,|;)(GDP\|PPP)(,|;)' | grep -E '(,|;)(World|FRA)(,|;)'
+    # 1. escape | in variable names and do not grep for period
+    keepescaped <- lapply(keep[setdiff(names(keep), "period")], function(x) gsub("|", "\\|", x, fixed = TRUE))
+    # 2. collapse each element with a |
+    keepcollapsed <- unlist(lapply(keepescaped, paste0, collapse = "|"))
+    # generate a grep -E statement for each element of keep list
+    greptext <- paste0(" | grep -E '(,|;)(", keepcollapsed, ")(,|;)'", collapse = "")
+    command <- paste0("tail -n +", (alwayskeep + 1), " ", file, greptext, " >> ", tmpfile)
+    # message(command)
     system(command)
   } else {
-    file.copy(file, tmpfile)
+    file.copy(file, tmpfile, overwrite = TRUE)
   }
   # read file and do correct filtering
   data <- read.quitte(tmpfile,
