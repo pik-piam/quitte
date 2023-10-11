@@ -32,13 +32,13 @@ read.filter.snapshot <- function(file, keep = list()) {
     system(paste("head -n", alwayskeep, file, ">", tmpfile))
     # the goal of the next lines is to grep one after the other through the elements of keep
     # keep = list(variable = "GDP|PPP", region = c("World", "FRA")) should get you
-    # | grep -E '(,|;)(GDP\|PPP)(,|;)' | grep -E '(,|;)(World|FRA)(,|;)'
+    # | grep -E '(,|;|^).?(GDP\|PPP).?(,|;)' | grep -E '(,|;).?(World|FRA).?(,|;)'
     # 1. escape | in variable names and do not grep for period
     keepescaped <- lapply(keep[setdiff(names(keep), "period")], function(x) gsub("|", "\\|", x, fixed = TRUE))
     # 2. collapse each element with a |
     keepcollapsed <- unlist(lapply(keepescaped, paste0, collapse = "|"))
     # generate a grep -E statement for each element of keep list
-    greptext <- paste0(" | grep -E '(,|;)(", keepcollapsed, ")(,|;)'", collapse = "")
+    greptext <- paste0(" | grep -E '(,|;|^).?(", keepcollapsed, ").?(,|;)'", collapse = "")
     command <- paste0("tail -n +", (alwayskeep + 1), " ", file, greptext, " >> ", tmpfile)
     # message(command)
     system(command)
