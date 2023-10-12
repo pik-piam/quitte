@@ -28,3 +28,15 @@ test_that(
     }
   }
 )
+
+# test correct column classes ----
+test_that(
+  desc = 'is_quitte() returns TRUE on correct column classes',
+  code = {
+    expect_true(is_quitte(quitte_example_data %>% factor.data.frame()))
+    expect_true(is_quitte(quitte_example_data %>% character.data.frame()))
+    expect_true(
+      is_quitte(quitte_example_data %>%
+                  mutate(period = ISOyear(.data[['period']]))))
+      }
+)
