@@ -37,8 +37,8 @@ is_quitte <- function(x, verbose = FALSE) {
         wrong_column_classes <- sapply(
             seq_along(column_classes),
             function(i) {
-                !column_classes[[i]] %in%
-                    required_columns[[names(column_classes)[[i]]]]
+                !any(column_classes[[i]] %in%
+                    required_columns[[names(column_classes)[[i]]]])
             }) %>%
             setNames(column_classes)
 
