@@ -65,5 +65,10 @@ is_quitte <- function(x, verbose = FALSE) {
             }
         }
 
-        return(is_quitte)
+        if (isTRUE(verbose)) {
+            return(invisible(is_quitte))
+        }
+        else {
+            return(is_quitte)
+        }
 }
