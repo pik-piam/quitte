@@ -1,3 +1,22 @@
+#' Does a data frame conform to the quitte "standard"?
+#'
+#' @md
+#' @param x An object to be tested.
+#' @param verbose If `TRUE`, prints why `x` is not a `quitte` data frame.
+#'     Intended for interactive use.
+#'
+#' @return `TRUE` if `x` conforms to the quitte "standard", `FALSE` otherwise.
+#'     If `verbose` is `TRUE`, returns invisibly.
+#'
+#' @examples
+#' library(dplyr)
+#'
+#' is_quitte(quitte_example_data)
+#' is_quitte(quitte_example_data %>% mutate(period = is.numeric(period)),
+#'           verbose = TRUE)
+#' is_quitte(quitte_example_data %>% select(-unit), verbose = TRUE)
+
+#' @export
 is_quitte <- function(x, verbose = FALSE) {
     if (!is.data.frame(x)) {
         if (isTRUE(verbose)) {
