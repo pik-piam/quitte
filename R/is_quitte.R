@@ -7,7 +7,7 @@ is_quitte <- function(x, verbose = FALSE) {
                                  'period'   = c('integer', 'POSIXct'),
                                  'value'    = 'numeric')
 
-        is_quitte <- TRUE
+        .is_quitte <- TRUE
 
         # check column existence ----
         missing_columns <- !names(required_columns) %in% colnames(x)
@@ -22,7 +22,7 @@ is_quitte <- function(x, verbose = FALSE) {
                     ifelse(sum(missing_columns) > 1, ' are ', ' is '),
                     'missing in `x`')
 
-                is_quitte <- FALSE
+                .is_quitte <- FALSE
             }
             else {
                 return(FALSE)
@@ -58,7 +58,7 @@ is_quitte <- function(x, verbose = FALSE) {
                         ),
                         collapse = '\n'))
 
-                is_quitte <- FALSE
+                .is_quitte <- FALSE
             }
             else {
                 return(FALSE)
@@ -66,9 +66,9 @@ is_quitte <- function(x, verbose = FALSE) {
         }
 
         if (isTRUE(verbose)) {
-            return(invisible(is_quitte))
+            return(invisible(.is_quitte))
         }
         else {
-            return(is_quitte)
+            return(.is_quitte)
         }
 }
