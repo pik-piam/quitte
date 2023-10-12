@@ -8,6 +8,14 @@ test_that(
   }
 )
 
+# test additional columns ----
+test_that(
+  desc = 'is_quitte() returns TRUE on additional columns',
+  code = {
+    expect_true(is_quitte(quitte_example_data %>% mutate(foo = n())))
+  }
+)
+
 # test wrong column classes ----
 test_that(
   desc = 'is_quitte() returns FALSE on wrong column classes',
