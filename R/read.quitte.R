@@ -123,7 +123,14 @@ read.quitte <- function(file,
                     F <- function(x) { x }
 
                 function(x, pos) {
-                    x %>%
+                    if ('problems' %in% names(attributes(x))) {
+                        p <- problems(x)
+                    }
+                    else {
+                        p <- NULL
+                    }
+
+                    x <- x %>%
                         relocate(all_of(default.columns)) %>%
                         # convert to long format
                         pivot_longer(all_of(periods), names_to = 'period',
@@ -137,6 +144,11 @@ read.quitte <- function(file,
                                }) %>%
                         # apply filter
                         F()
+
+                    if (!is.null(p))
+                        attr(x, 'problems') <- p
+
+                    return(x)
                 }
             })(filter.function, convert.periods, drop.na)
         )
