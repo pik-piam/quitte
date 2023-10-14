@@ -37,7 +37,7 @@
 #' @importFrom forcats as_factor
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data is_empty
-#' @importFrom readr problems read_delim read_lines
+#' @importFrom readr DataFrameCallback problems read_delim_chunked read_lines
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
