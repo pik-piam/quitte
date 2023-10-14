@@ -163,7 +163,8 @@ read.quitte <- function(file,
 
         # catch any parsing problems
         data_problems <- if (nrow(problems(data))) {
-            problems(data)
+            problems(data) %>%
+                mutate(file = f)
         }
 
         # re-attach parsing problems
