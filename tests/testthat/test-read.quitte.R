@@ -61,12 +61,17 @@ test_that(
     tmp <- tempfile('read_delim_problem', tempdir(), '.mif')
     write_lines(x, tmp)
 
+    # warns about problems
     expect_warning(
       object = x <- read.quitte(tmp),
       regexp = 'One or more parsing issues')
 
+    # returns a data frame as the `problems` attribute
     expect_s3_class(object = problems(x), class = 'data.frame')
+    # data frame has mor then one row
     expect_gt(object = nrow(problems(x)), expected = 0)
+    # data frame has a `file` column
+    expect_contains(object = colnames(problems(x)), expected = 'file')
 
     unlink(tmp)
   })
