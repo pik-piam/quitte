@@ -52,13 +52,20 @@ read.quitte <- function(file,
                         check.duplicates = TRUE,
                         factors = TRUE,
                         drop.na = FALSE,
-                        comment = '#') {
+                        comment = '#',
+                        filter.function = NULL) {
 
     if (!length(file))
         stop('\'file\' is empty.')
 
+    if (   !is.null(filter.function)
+           && !is.function(filter.function)
+           && !identical('x', formalArgs(filter.function)))
+        stop('`filter.function` must be a function taking only one argument, ',
+             '`x`.')
+
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
-                             drop.na, comment) {
+                             drop.na, comment, filter.function) {
 
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
 
@@ -104,30 +111,47 @@ read.quitte <- function(file,
                             collapse = '')
 
         # read data ----
+
+        # the callback function accepts a chunk of data, `x`, pivots the periods
+        # to long format (dropping NAs if required), converts the periods to
+        # integer or POSIXct values as required, and applies the
+        # `filter.function`.  If the `filter.function` is `NULL`, it just
+        # returns the processed data.
+        chunk_callback <- DataFrameCallback$new(
+            (function(F, convert.periods, drop.na) {
+                if (is.null(F))
+                    F <- function(x) { x }
+
+                function(x, pos) {
+                    x %>%
+                        relocate(all_of(default.columns)) %>%
+                        # convert to long format
+                        pivot_longer(all_of(periods), names_to = 'period',
+                                     values_drop_na = drop.na) %>%
+                        # convert periods
+                        mutate(period = gsub('^[A-Za-z]?', '', .data$period),
+                               period = if (convert.periods) {
+                                   ISOyear(.data$period)
+                               } else {
+                                   as.integer(as.character(.data$period))
+                               }) %>%
+                        # apply filter
+                        F()
+                }
+            })(filter.function, convert.periods, drop.na)
+        )
+
         data <- suppressWarnings(
-            read_delim(file = f, quote = quote, col_names = c(header),
-                       col_types = colClasses, delim = sep, na = na.strings,
-                       skip = length(comment_header) + 1, comment = comment,
-                       trim_ws = TRUE)
+            read_delim_chunked(
+                file = f, callback = chunk_callback, delim = sep,
+                chunk_size = 1e5L, quote = quote, col_names = header,
+                col_types = colClasses, na = na.strings, comment = comment,
+                trim_ws = TRUE, skip = length(comment_header) + 1)
         )
 
         # catch any parsing problems
         data_problems <- if (nrow(problems(data))) {
             problems(data)
-        }
-
-        data <- data %>%
-            relocate(all_of(default.columns)) %>%
-            # convert to long format
-            pivot_longer(all_of(periods), names_to = 'period',
-                         values_drop_na = drop.na)
-
-        # convert periods ----
-        data$period <- gsub("^[A-Za-z]?", "", data$period)
-        if (convert.periods) {
-            data$period <- ISOyear(data$period)
-        } else {
-            data$period <- as.integer(as.character(data$period))
         }
 
         # re-attach parsing problems
@@ -143,7 +167,7 @@ read.quitte <- function(file,
     comment_header <- list()
     for (f in file) {
         data <- .read.quitte(f, sep, quote, na.strings, convert.periods,
-                             drop.na, comment)
+                             drop.na, comment, filter.function)
         quitte <- bind_rows(quitte, data)
         quitte_problems <- bind_rows(quitte_problems, attr(data, 'problems'))
         comment_header <- c(comment_header,
