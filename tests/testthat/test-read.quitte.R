@@ -66,6 +66,7 @@ test_that(
       regexp = 'One or more parsing issues')
 
     expect_s3_class(object = problems(x), class = 'data.frame')
+    expect_gt(object = nrow(problems(x)), expected = 0)
 
     unlink(tmp)
   })
