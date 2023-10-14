@@ -1,8 +1,6 @@
-context('read.quitte()')
-
-# read.quitte() results ----
+# read.quitte() reads .mif files correctly ----
 test_that(
-  'read.quitte() results',
+  'read.quitte() reads .mif files correctly',
   {
     object = read.quitte(
       system.file('extdata',
@@ -50,4 +48,24 @@ test_that(
     expect_equal(
       object = d1,
       expected = d2)
+  })
+
+# read.quitte() reports problems ----
+test_that(
+  desc = 'read.quitte() reports problems',
+  code = {
+    # insert parsing problem into temporary file
+    x <- read_lines(system.file('extdata', 'extra_column.mif',
+                                package = 'quitte', mustWork = TRUE))
+    x[[length(x)]] <- sub('[0-9]+$', 'Inf', x[[length(x)]])
+    tmp <- tempfile('read_delim_problem', tempdir(), '.mif')
+    write_lines(x, tmp)
+
+    expect_warning(
+      object = x <- read.quitte(tmp),
+      regexp = 'One or more parsing issues')
+
+    expect_s3_class(object = problems(x), class = 'data.frame')
+
+    unlink(tmp)
   })
