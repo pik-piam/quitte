@@ -305,8 +305,8 @@ aggregate_map <- function(data,
 
     .data = .data %>%
     group_by(!!!syms(.colGroups)) %>%
-    summarise(!!sym(value) := fun(!!sym(value), na.rm = na.rm)) %>%
-    ungroup()
+    summarise(!!sym(value) := fun(!!sym(value), na.rm = na.rm),
+              .groups = 'drop')
 
     } else {
 
