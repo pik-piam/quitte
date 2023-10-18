@@ -14,8 +14,8 @@ test_that('quitteSort works', {
     expect_identical(qes, quitteSort(qewrong))
     # move first region to the end
     qewrong <- bind_rows(
-          qes %>% filter(first(region) != region),
-          qes %>% filter(first(region) == region)
+      qes %>% filter(first(region) != region),
+      qes %>% filter(first(region) == region)
     )
     expect_false(identical(qes, qewrong))
     expect_identical(qes, quitteSort(qewrong))
