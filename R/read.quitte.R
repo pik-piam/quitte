@@ -21,6 +21,38 @@
 #'   present, is returned as a `comment_header` attribute.  If multiple files
 #'   are read, the `comment_header` attribute is a list of comment headers with
 #'   file paths as names.
+#' @param filter.function A function used to filter data during read.  See
+#'     Details.
+#' @param chunk_size Number of lines to read at a time.  Defaults to 200000.
+#'     (REMIND .mif files have between 55000 and 105000 lines for H12 and EU21
+#'     regional settings, respectively.)
+#'
+#' @details
+#' In order to process large data sets, like IIASA data base snapshots,
+#' `read.quitte()` reads provided files (other then Excel files) in chunks of
+#' `chunk_size` lines, and applies `filter.function()` to the chunks.  This
+#' allows for filtering data piece-by-piece, without exceeding available memory.
+#' `filter.function` is a function taking one argument, a quitte data frame of
+#' the read chunk, and is expected to return a data frame.  Usually it should
+#' simply contain all the filters usually applied after all the data is read in.
+#' Suppose there is a file `big_IIASA_snapshot.csv`, from which only data for
+#' the REMIND and MESSAGE models between the years 2020 to 2050 is of interest.
+#' Normally, this data would be processed as
+#' ```
+#' read.quitte(file = 'big_IIASA_snapshot.csv') %>%
+#'     filter(grepl('^(REMIND|MESSAGE)', .data$model),
+#'            between(.data$period, 2020, 2060))
+#' ```
+#' If however `big_IIASA_snapshot.csv` is too large to be read in completely,
+#' it can be read using
+#' ```
+#' read.quitte(file = 'big_IIASA_snapshot.csv',
+#'             filter.function = function(x) {
+#'                 x %>%
+#'                     filter(grepl('^(REMIND|MESSAGE)', .data$model),
+#'                            between(.data$period, 2020, 2060))
+#'             })
+#' ```
 #'
 #' @return A quitte data frame.
 #'
@@ -53,7 +85,8 @@ read.quitte <- function(file,
                         factors = TRUE,
                         drop.na = FALSE,
                         comment = '#',
-                        filter.function = NULL) {
+                        filter.function = NULL,
+                        chunk_size = 200000L) {
 
     if (!length(file))
         stop('\'file\' is empty.')
@@ -65,7 +98,7 @@ read.quitte <- function(file,
              '`x`.')
 
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
-                             drop.na, comment, filter.function) {
+                             drop.na, comment, filter.function, chunk_size) {
 
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
 
@@ -156,7 +189,7 @@ read.quitte <- function(file,
         data <- suppressWarnings(
             read_delim_chunked(
                 file = f, callback = chunk_callback, delim = sep,
-                chunk_size = 1e5L, quote = quote, col_names = header,
+                chunk_size = chunk_size, quote = quote, col_names = header,
                 col_types = colClasses, na = na.strings, comment = comment,
                 trim_ws = TRUE, skip = length(comment_header) + 1)
         )
@@ -180,7 +213,7 @@ read.quitte <- function(file,
     comment_header <- list()
     for (f in file) {
         data <- .read.quitte(f, sep, quote, na.strings, convert.periods,
-                             drop.na, comment, filter.function)
+                             drop.na, comment, filter.function, chunk_size)
         quitte <- bind_rows(quitte, data)
         quitte_problems <- bind_rows(quitte_problems, attr(data, 'problems'))
         comment_header <- c(comment_header,
