@@ -93,9 +93,8 @@ read.quitte <- function(file,
 
     if (   !is.null(filter.function)
            && !is.function(filter.function)
-           && !identical('x', formalArgs(filter.function)))
-        stop('`filter.function` must be a function taking only one argument, ',
-             '`x`.')
+           && 1 != length(formals(filter.function)))
+        stop('`filter.function` must be a function taking only one argument.')
 
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
                              drop.na, comment, filter.function, chunk_size) {
