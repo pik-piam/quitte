@@ -286,7 +286,8 @@ aggregate_map <- function(data,
   }
 
 
-  if (any(.weights_df[[weight_val_col]] == "Inf")) ("Some elements of the weighting matrix are Inf. Infinite weights are not allowed!")
+  if (any(.weights_df[[weight_val_col]] == "Inf", na.rm = TRUE))
+    stop("Some elements of the weighting matrix are Inf. Infinite weights are not allowed!")
 
   #---- Multiply the values by the weights, even if the weights = 1 ----
   .colGroups_weight = intersect(c(.colnames,.mapnames), colnames(.weights_df))
@@ -304,8 +305,8 @@ aggregate_map <- function(data,
 
     .data = .data %>%
     group_by(!!!syms(.colGroups)) %>%
-    summarise(!!sym(value) := fun(!!sym(value), na.rm = na.rm)) %>%
-    ungroup()
+    summarise(!!sym(value) := fun(!!sym(value), na.rm = na.rm),
+              .groups = 'drop')
 
     } else {
 

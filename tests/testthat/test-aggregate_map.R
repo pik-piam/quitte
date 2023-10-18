@@ -73,4 +73,16 @@ test_that(
         value    = c(214.28571, 85.71429, 250, 100, 866.66667, 433.33333,
                      933.33333, 466.66667),
         variable = paste(rep(c('Urban', 'Rural'), 4), 'Population')))
+
+    # test NA weights
+    expect_identical(
+      object = data %>%
+        mutate(value = ifelse(2010 == period & 'CHN' == region, NA, value)) %>%
+        aggregate_map(mapping, by = "region", subset2agg = "GDP per Capita|MER",
+                      weights = "Population"),
+      expected = data %>%
+        filter(!(2010 == period & 'CHN' == region)) %>%
+        aggregate_map(mapping, by = "region", subset2agg = "GDP per Capita|MER",
+                      weights = "Population")
+    )
   })
