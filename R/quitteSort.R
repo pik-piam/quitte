@@ -10,9 +10,16 @@
 #' @return the sorted quitte object
 #' @export
 quitteSort <- function(x) {
-  model <- scenario <- region <- variable <- unit <- period <- NULL
   x <- as.quitte(x) %>%
-    relocate(model, scenario, region, variable, unit, period) %>%
-    arrange(model, scenario, variable, unit, region, period) %>%
-    return()
+    relocate('model', 'scenario', 'region', 'variable', 'unit', 'period')
+
+  for (col in names(which('factor' == sapply(x, class)))) {
+    x <- x %>%
+      mutate(
+        !!sym(col) := factor(.data[[col]], levels = sort(levels(.data[[col]]))))
+  }
+
+  x %>%
+    arrange(.data$model, .data$scenario, .data$region, .data$variable,
+            .data$unit, .data$period)
 }
