@@ -21,6 +21,38 @@
 #'   present, is returned as a `comment_header` attribute.  If multiple files
 #'   are read, the `comment_header` attribute is a list of comment headers with
 #'   file paths as names.
+#' @param filter.function A function used to filter data during read.  See
+#'     Details.
+#' @param chunk_size Number of lines to read at a time.  Defaults to 200000.
+#'     (REMIND .mif files have between 55000 and 105000 lines for H12 and EU21
+#'     regional settings, respectively.)
+#'
+#' @details
+#' In order to process large data sets, like IIASA data base snapshots,
+#' `read.quitte()` reads provided files (other then Excel files) in chunks of
+#' `chunk_size` lines, and applies `filter.function()` to the chunks.  This
+#' allows for filtering data piece-by-piece, without exceeding available memory.
+#' `filter.function` is a function taking one argument, a quitte data frame of
+#' the read chunk, and is expected to return a data frame.  Usually it should
+#' simply contain all the filters usually applied after all the data is read in.
+#' Suppose there is a file `big_IIASA_snapshot.csv`, from which only data for
+#' the REMIND and MESSAGE models between the years 2020 to 2050 is of interest.
+#' Normally, this data would be processed as
+#' ```
+#' read.quitte(file = 'big_IIASA_snapshot.csv') %>%
+#'     filter(grepl('^(REMIND|MESSAGE)', .data$model),
+#'            between(.data$period, 2020, 2060))
+#' ```
+#' If however `big_IIASA_snapshot.csv` is too large to be read in completely,
+#' it can be read using
+#' ```
+#' read.quitte(file = 'big_IIASA_snapshot.csv',
+#'             filter.function = function(x) {
+#'                 x %>%
+#'                     filter(grepl('^(REMIND|MESSAGE)', .data$model),
+#'                            between(.data$period, 2020, 2060))
+#'             })
+#' ```
 #'
 #' @return A quitte data frame.
 #'
@@ -37,7 +69,7 @@
 #' @importFrom forcats as_factor
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data is_empty
-#' @importFrom readr problems read_delim read_lines
+#' @importFrom readr DataFrameCallback problems read_delim_chunked read_lines
 #' @importFrom readxl read_excel excel_sheets
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
@@ -52,13 +84,20 @@ read.quitte <- function(file,
                         check.duplicates = TRUE,
                         factors = TRUE,
                         drop.na = FALSE,
-                        comment = '#') {
+                        comment = '#',
+                        filter.function = NULL,
+                        chunk_size = 200000L) {
 
     if (!length(file))
         stop('\'file\' is empty.')
 
+    if (   !is.null(filter.function)
+           && !is.function(filter.function)
+           && 1 != length(formals(filter.function)))
+        stop('`filter.function` must be a function taking only one argument.')
+
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
-                             drop.na, comment) {
+                             drop.na, comment, filter.function, chunk_size) {
 
         default.columns  <- c("model", "scenario", "region", "variable", "unit")
 
@@ -104,30 +143,60 @@ read.quitte <- function(file,
                             collapse = '')
 
         # read data ----
+
+        # the callback function accepts a chunk of data, `x`, pivots the periods
+        # to long format (dropping NAs if required), converts the periods to
+        # integer or POSIXct values as required, and applies the
+        # `filter.function`.  If the `filter.function` is `NULL`, it just
+        # returns the processed data.
+        chunk_callback <- DataFrameCallback$new(
+            (function(F, convert.periods, drop.na) {
+                if (is.null(F))
+                    F <- function(x) { x }
+
+                function(x, pos) {
+                    if ('problems' %in% names(attributes(x))) {
+                        p <- problems(x)
+                    }
+                    else {
+                        p <- NULL
+                    }
+
+                    x <- x %>%
+                        relocate(all_of(default.columns)) %>%
+                        # convert to long format
+                        pivot_longer(all_of(periods), names_to = 'period',
+                                     values_drop_na = drop.na) %>%
+                        # convert periods
+                        mutate(period = gsub('^[A-Za-z]?', '', .data$period),
+                               period = if (convert.periods) {
+                                   ISOyear(.data$period)
+                               } else {
+                                   as.integer(as.character(.data$period))
+                               }) %>%
+                        # apply filter
+                        F()
+
+                    if (!is.null(p))
+                        attr(x, 'problems') <- p
+
+                    return(x)
+                }
+            })(filter.function, convert.periods, drop.na)
+        )
+
         data <- suppressWarnings(
-            read_delim(file = f, quote = quote, col_names = c(header),
-                       col_types = colClasses, delim = sep, na = na.strings,
-                       skip = length(comment_header) + 1, comment = comment,
-                       trim_ws = TRUE)
+            read_delim_chunked(
+                file = f, callback = chunk_callback, delim = sep,
+                chunk_size = chunk_size, quote = quote, col_names = header,
+                col_types = colClasses, na = na.strings, comment = comment,
+                trim_ws = TRUE, skip = length(comment_header) + 1)
         )
 
         # catch any parsing problems
         data_problems <- if (nrow(problems(data))) {
-            problems(data)
-        }
-
-        data <- data %>%
-            relocate(all_of(default.columns)) %>%
-            # convert to long format
-            pivot_longer(all_of(periods), names_to = 'period',
-                         values_drop_na = drop.na)
-
-        # convert periods ----
-        data$period <- gsub("^[A-Za-z]?", "", data$period)
-        if (convert.periods) {
-            data$period <- ISOyear(data$period)
-        } else {
-            data$period <- as.integer(as.character(data$period))
+            problems(data) %>%
+                mutate(file = f)
         }
 
         # re-attach parsing problems
@@ -143,7 +212,7 @@ read.quitte <- function(file,
     comment_header <- list()
     for (f in file) {
         data <- .read.quitte(f, sep, quote, na.strings, convert.periods,
-                             drop.na, comment)
+                             drop.na, comment, filter.function, chunk_size)
         quitte <- bind_rows(quitte, data)
         quitte_problems <- bind_rows(quitte_problems, attr(data, 'problems'))
         comment_header <- c(comment_header,
