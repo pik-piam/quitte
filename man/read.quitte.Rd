@@ -13,7 +13,9 @@ read.quitte(
   check.duplicates = TRUE,
   factors = TRUE,
   drop.na = FALSE,
-  comment = "#"
+  comment = "#",
+  filter.function = NULL,
+  chunk_size = 200000L
 )
 }
 \arguments{
@@ -43,12 +45,47 @@ header with metadata at the head of \code{file}.  The comment header, if
 present, is returned as a \code{comment_header} attribute.  If multiple files
 are read, the \code{comment_header} attribute is a list of comment headers with
 file paths as names.}
+
+\item{filter.function}{A function used to filter data during read.  See
+Details.}
+
+\item{chunk_size}{Number of lines to read at a time.  Defaults to 200000.
+(REMIND .mif files have between 55000 and 105000 lines for H12 and EU21
+regional settings, respectively.)}
 }
 \value{
 A quitte data frame.
 }
 \description{
 Reads IAMC-style .csv or .xlsx files into a quitte data frame.
+}
+\details{
+In order to process large data sets, like IIASA data base snapshots,
+\code{read.quitte()} reads provided files (other then Excel files) in chunks of
+\code{chunk_size} lines, and applies \code{filter.function()} to the chunks.  This
+allows for filtering data piece-by-piece, without exceeding available memory.
+\code{filter.function} is a function taking one argument, a quitte data frame of
+the read chunk, and is expected to return a data frame.  Usually it should
+simply contain all the filters usually applied after all the data is read in.
+Suppose there is a file \code{big_IIASA_snapshot.csv}, from which only data for
+the REMIND and MESSAGE models between the years 2020 to 2050 is of interest.
+Normally, this data would be processed as
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{read.quitte(file = 'big_IIASA_snapshot.csv') \%>\%
+    filter(grepl('^(REMIND|MESSAGE)', .data$model),
+           between(.data$period, 2020, 2060))
+}\if{html}{\out{</div>}}
+
+If however \code{big_IIASA_snapshot.csv} is too large to be read in completely,
+it can be read using
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{read.quitte(file = 'big_IIASA_snapshot.csv',
+            filter.function = function(x) \{
+                x \%>\%
+                    filter(grepl('^(REMIND|MESSAGE)', .data$model),
+                           between(.data$period, 2020, 2060))
+            \})
+}\if{html}{\out{</div>}}
 }
 \examples{
 \dontrun{
