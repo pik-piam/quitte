@@ -25,13 +25,21 @@ read.snapshot <- function(file, keep = list()) {
   if (length(unknowntype) > 0) {
     stop("Unknown types to be kept: ", toString(unknowntype))
   }
+  testcommand <- c("grep", "head", "tail", "sed")
+  exitcodes <- suppressWarnings(
+      sapply(paste(testcommand, '--version'), system,
+             ignore.stdout = TRUE, ignore.stderr = TRUE))
+  if (any(0 != exitcodes)) {
+      stop(paste(paste0('`', testcommand[0 != exitcodes], '`', collapse = ', '),
+                "are not available system commands, please use 'read.quitte'."))
+  }
+
   # temporary file
   tmpfile <- tempfile(pattern = "data", fileext = ".csv")
   if (length(setdiff(names(keep), "period")) > 0) {
     # always keep first lines of original file (comments, colnames), grep in the rest
     alwayskeep <- 20
-    exitCode <- system(paste("head -n", alwayskeep, file, ">", tmpfile))
-    if (exitCode != 0) stop("'head' command failed. Please use 'read.quitte()'")
+    system(paste("head -n", alwayskeep, file, ">", tmpfile))
     # the goal of the next lines is to grep one after the other through the elements of keep
     # keep = list(variable = "GDP|PPP", region = c("World", "FRA")) should get you
     # | grep -E '(GDP\|PPP)' | grep -E '(World|FRA)'
@@ -46,8 +54,7 @@ read.snapshot <- function(file, keep = list()) {
     # generate a grep -E statement for each element of keep list
     greptext <- paste0(" | grep -E '(", keepcollapsed, ")'", collapse = "")
     command <- paste0("tail -n +", (alwayskeep + 1), " ", file, greptext, " >> ", tmpfile)
-    exitCode <- system(command)
-    if (exitCode != 0) stop("'tail' or 'grep' command created problems. Please use 'read.quitte()'")
+    system(command)
   } else {
     file.copy(file, tmpfile, overwrite = TRUE)
   }

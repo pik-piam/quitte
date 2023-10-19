@@ -2,16 +2,12 @@ test_that("read.snapshot works", {
   qe <- droplevels(quitteSort(as.quitte(quitte_example_dataAR6, na.rm = TRUE)))
   tmpfile <- tempfile(pattern = "data", fileext = ".csv")
   write.table(pivot_wider(qe, names_from = "period"), 
-            file = tmpfile, append = FALSE, quote = FALSE, sep = ",",
-            eol = "\n", na = "", dec = ".", row.names = FALSE,
-            col.names = TRUE) # mimick IIASA snapshot format
-  testlog <- tempfile(pattern = "log", fileext = ".txt")
-  testcommand <- c("grep 'odel'", "head -1", "tail -1", "sed 's/odel/ODEL/g;'")
-  for (t in testcommand) {
-    exitcode <- suppressWarnings(system(paste(t, tmpfile, ">", testlog),
-                                 ignore.stderr = TRUE, ignore.stdout = TRUE))
-    if (exitcode != 0) skip(paste0("read.snapshot tests skipped, as '", gsub(" .*", "", t),
-                                   "' is no available system command."))
+              file = tmpfile, append = FALSE, quote = FALSE, sep = ",",
+              eol = "\n", na = "", dec = ".", row.names = FALSE,
+              col.names = TRUE) # mimick IIASA snapshot format
+  fails <- tryCatch(read.snapshot(tmpfile), error = function(e) { paste(e) })
+  if (is.character(fails) && length(fails) == 1 && grepl("not available system commands", fails)) {
+    skip(paste0(gsub("Error in ", "", gsub(", pleas.*", "", fails)), ", skipping tests."))
   }
   system(paste("sed -i 's/GCAM/\"GCAM\"/g;'", tmpfile))
   system(paste("sed -i 's/Delayed transition/\"Delayed transition\"/g;'", tmpfile))
