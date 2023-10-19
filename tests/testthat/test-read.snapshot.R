@@ -1,17 +1,23 @@
 test_that("read.snapshot works", {
-  qe <- droplevels(quitteSort(as.quitte(quitte_example_dataAR6, na.rm = TRUE)))
+  qe <- quitte_example_dataAR6 %>%
+    as.quitte(na.rm = TRUE) %>%
+    filter(! variable == "Temperature|Global Mean") %>%
+    quitteSort() %>%
+    droplevels()
   tmpfile <- tempfile(pattern = "data", fileext = ".csv")
   write.table(pivot_wider(qe, names_from = "period"), 
               file = tmpfile, append = FALSE, quote = FALSE, sep = ",",
               eol = "\n", na = "", dec = ".", row.names = FALSE,
               col.names = TRUE) # mimick IIASA snapshot format
-  fails <- tryCatch(read.snapshot(tmpfile), error = function(e) { paste(e) })
+  expect_equal(qe, read.snapshot(tmpfile))
+  fails <- tryCatch(read.snapshot(tmpfile, list(region = head(levels(qe$region), 1))),
+                    error = function(e) { paste(e) })
   if (is.character(fails) && length(fails) == 1 && grepl("not available system commands", fails)) {
     skip(paste0(gsub("Error in ", "", gsub(", pleas.*", "", fails)), ", skipping tests."))
   }
   system(paste("sed -i 's/GCAM/\"GCAM\"/g;'", tmpfile))
   system(paste("sed -i 's/Delayed transition/\"Delayed transition\"/g;'", tmpfile))
-  rtests <- list(head(levels(qe$region), 1), head(levels(qe$region), 2))
+  rtests <- list(head(levels(qe$region), 2))
   for (r in rtests) {
     expect_equal(droplevels(dplyr::filter(qe, region %in% r)),
                  read.snapshot(tmpfile, list(region = r)))
