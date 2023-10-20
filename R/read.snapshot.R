@@ -43,7 +43,7 @@ read.snapshot <- function(file, keep = list(), filter.function = NULL) {
                ignore.stdout = TRUE, ignore.stderr = TRUE))
     if (any(0 != exitcodes)) {
         stop(paste(paste0('`', testcommand[0 != exitcodes], '`', collapse = ', '),
-                  "are not available system commands, please use 'read.quitte'."))
+                  "are not available system commands, please only use 'filter.function' for filtering."))
     }
     # always keep first lines of original file (comments, colnames), grep in the rest
     alwayskeep <- 20

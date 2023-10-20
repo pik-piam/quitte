@@ -7,12 +7,16 @@ filtering the data. This function is helpful if the csv file is large and R runs
 of memory loading it completely. This function requires head, tail and grep on your system.
 If not supported, use read.quitte().}
 \usage{
-read.snapshot(file, keep = list())
+read.snapshot(file, keep = list(), filter.function = NULL)
 }
 \arguments{
 \item{file}{Path of single IAMC-style .csv/.mif file}
 
-\item{keep}{list with quitte columns as names and data points that should be kept.}
+\item{keep}{list with quitte columns as names and data points that should be kept. Using 'grep',
+this list is used to extract the data before reading it into R. The more you restrict the data here,
+the faster the data is read.}
+
+\item{filter.function}{A function used to filter data during read, see read.quitte description.}
 }
 \value{
 A quitte data frame.
