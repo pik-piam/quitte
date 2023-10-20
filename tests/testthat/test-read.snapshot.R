@@ -10,14 +10,11 @@ test_that("read.snapshot works", {
               eol = "\n", na = "", dec = ".", row.names = FALSE,
               col.names = TRUE) # mimick IIASA snapshot format
   expect_equal(qe, read.snapshot(tmpfile))
-  fails <- tryCatch(read.snapshot(tmpfile, list(region = head(levels(qe$region), 1))),
-                    error = function(e) { paste(e) })
-  if (is.character(fails) && length(fails) == 1 && grepl("not available system commands", fails)) {
-    skip(paste0(gsub("Error in ", "", gsub(", pleas.*", "", fails)), ", skipping tests."))
+  if (Sys.which("sed") != "") {
+    system(paste("sed -i 's/GCAM/\"GCAM\"/g;'", tmpfile))
+    system(paste("sed -i 's/Delayed transition/\"Delayed transition\"/g;'", tmpfile))
   }
-  system(paste("sed -i 's/GCAM/\"GCAM\"/g;'", tmpfile))
-  system(paste("sed -i 's/Delayed transition/\"Delayed transition\"/g;'", tmpfile))
-  rtests <- list(head(levels(qe$region), 2))
+  rtests <- list(head(levels(qe$region), 1), head(levels(qe$region), 2))
   for (r in rtests) {
     expect_equal(droplevels(dplyr::filter(qe, region %in% r)),
                  read.snapshot(tmpfile, list(region = r)))
