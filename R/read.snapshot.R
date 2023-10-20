@@ -5,7 +5,10 @@
 #'
 #' @md
 #' @param file Path of single IAMC-style .csv/.mif file
-#' @param keep list with quitte columns as names and data points that should be kept.
+#' @param keep list with quitte columns as names and data points that should be kept. Using 'grep',
+#' this list is used to extract the data before reading it into R. The more you restrict the data here,
+#' the faster the data is read.
+#' @param filter.function A function used to filter data during read, see read.quitte description.
 #'
 #' @return A quitte data frame.
 #'
@@ -17,14 +20,18 @@
 #' }
 #'
 #' @importFrom dplyr filter
+#' @importFrom stats setNames
 #'
 #' @export
 
-read.snapshot <- function(file, keep = list()) {
+read.snapshot <- function(file, keep = list(), filter.function = NULL) {
   unknowntype <- setdiff(names(keep), c("model", "scenario", "region", "variable", "unit", "period"))
   if (length(unknowntype) > 0) {
-    stop("Unknown types to be kept: ", toString(unknowntype))
+    stop("Unknown types in 'keep': ", toString(unknowntype))
   }
+  # join if multiple elements with same name exist in list
+  joinelements <- function(v, list) return(setNames(list(unique(unname(unlist(list[names(list) == v])))), v))
+  keep <- do.call(c, lapply(unique(names(keep)), joinelements, list = keep))
 
   # temporary file
   tmpfile <- tempfile(pattern = "data", fileext = ".csv")
@@ -59,14 +66,21 @@ read.snapshot <- function(file, keep = list()) {
   } else {
     file.copy(file, tmpfile, overwrite = TRUE)
   }
+  joinedfilter <- function(data) {
+    for (t in names(keep)) {
+      data <- droplevels(filter(data, .data[[t]] %in% keep[[t]]))
+    }
+    if (is.function(filter.function)) {
+      data <- filter.function(data)
+    }
+    return(data)
+  }
   # read file and do correct filtering
   data <- read.quitte(tmpfile,
                       na.strings = c("UNDF", "NA", "N/A", "n_a", ""),
                       quote = '"',
-                      drop.na = TRUE)
+                      drop.na = TRUE,
+                      filter.function = joinedfilter)
   unlink(tmpfile)
-  for (t in names(keep)) {
-    data <- droplevels(filter(data, .data[[t]] %in% keep[[t]]))
-  }
   return(data)
 }

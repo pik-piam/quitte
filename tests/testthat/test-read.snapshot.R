@@ -37,7 +37,11 @@ test_that("read.snapshot works", {
     expect_equal(droplevels(dplyr::filter(qe, period %in% p)),
                  read.snapshot(tmpfile, list(period = p)))
   }
-  # test all jointly with last setting
-  expect_equal(droplevels(dplyr::filter(qe, period %in% p, variable %in% v, region %in% r, scenario %in% s)),
-               read.snapshot(tmpfile, list(period = p, variable = v, region = r, scenario = s)))
+  # test all jointly with last setting, test passing of filter.function
+  filter.function <- function(x) droplevels(dplyr::filter(x, period %in% p, variable %in% v, region %in% r, scenario %in% s))
+  snapshotdata <- read.snapshot(tmpfile, list(period = p, variable = v, region = r, scenario = s))
+  expect_equal(filter.function(qe),
+               snapshotdata)
+  expect_equal(read.snapshot(tmpfile, filter.function = filter.function),
+               snapshotdata)
 })
