@@ -27,6 +27,6 @@ cartesian <- function(..., sep = '.') {
         ),
         MARGIN = 1,
         FUN = paste,
-        collapse = '.'
+        collapse = sep
     )
 }
