@@ -1,4 +1,4 @@
-#' Generate cartesian product from to character vectors
+#' Generate Cartesian product from character vectors
 #'
 #' @param ... objects that can be coerced to character vectors
 #' @param sep a character string that will separate the elements of `...` in the
@@ -14,25 +14,14 @@
 #'
 #' @export
 cartesian <- function(..., sep = '.') {
-    dots <- list(...)
+    if (0 == length(dots <- list(...)))
+        return(NULL)
 
-    L <- lengths(dots)
+    v <- as.character(dots[[1]])
+    for (i in dots[-1])
+        v <- paste(rep(v, each = length(i)),
+                   rep(as.character(i), times = length(v)),
+                   sep = sep)
 
-    apply(
-        X = sapply(
-            X = seq_along(dots),
-            FUN = function(i) {
-                # lengths of dots elements before i (excluding)
-                times_slice <- L[seq_len(i - 1)]
-                # lengths of dot elements after i (excluding)
-                each_slice  <- L[setdiff(seq_along(dots), seq_len(i))]
-
-                rep(rep(dots[[i]], times = prod(times_slice)),
-                    each = prod(each_slice))
-            }
-        ),
-        MARGIN = 1,
-        FUN = paste,
-        collapse = sep
-    )
+    return(v)
 }

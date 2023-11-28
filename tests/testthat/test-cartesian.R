@@ -1,5 +1,5 @@
 test_that(
-    desc = 'cartesian() generates correct combinations',
+    desc = 'cartesian(...) generates correct combinations',
     code = {
         expect_equal(
             object = cartesian(1:2),
@@ -17,4 +17,10 @@ test_that(
                          '1.5.7', '1.5.8', '1.5.9', '1.6.7', '1.6.8', '1.6.9',
                          '2.3.7', '2.3.8', '2.3.9', '2.4.7', '2.4.8', '2.4.9',
                          '2.5.7', '2.5.8', '2.5.9', '2.6.7', '2.6.8', '2.6.9'))
+    })
+
+test_that(
+    desc = 'cartesian() returns NULL',
+    code = {
+        expect_null(object = cartesian())
     })
