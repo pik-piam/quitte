@@ -4,7 +4,7 @@
 #' @param file A path to a `.mif` file.
 #' @param sep Column separator, defaults to ";".
 #' @param comment A character which at line start signifies the optional comment
-#'   header with metadata at the head of `file`.
+#'   header with metadata at the head of `file`, defaults to "#".
 #'
 #' @return A `list` with elements `header`, `comment_header`, and
 #'   `useless.last.column`.
@@ -15,7 +15,8 @@
 #' @importFrom magrittr %>%
 #' @importFrom readr read_lines
 
-read_mif_header <- function(file, sep, comment) {
+#' @export
+read_mif_header <- function(file, sep = ';', comment = '#') {
     . <- NULL
 
     # Read as much of the file as is necessary to collect the comment header
