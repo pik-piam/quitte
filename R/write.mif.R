@@ -28,6 +28,7 @@
 write.mif <- function(x, path, comment_header = NULL, comment = '#',
                       append = FALSE) {
     x <- as.quitte(x)
+    if (nrow(x) == 0) warning("Empty data frame written to ", path)
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
                          'Period', 'Value')
 

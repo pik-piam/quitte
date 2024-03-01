@@ -23,6 +23,7 @@
 #' @export
 write.IAMCxlsx <- function(x, path, append = FALSE) {
     x <- as.quitte(x)
+    if (nrow(x) == 0) warning("Empty data frame written to ", path)
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
                          'Period', 'Value')
 
