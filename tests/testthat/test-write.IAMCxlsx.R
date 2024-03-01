@@ -39,3 +39,11 @@ test_that(
     writexl::write_xlsx(list("data" = quitte_incomplete), f2)
     expect_warning(object = read.quitte(f2), "misses default columns")
   })
+
+test_that(
+  'write empty data to a .xlsx file',
+  {
+    f3 <- paste0(tempfile(), ".xlsx")
+    expect_warning(write.IAMCxlsx(filter(quitte_example_data, model == "x"), f3),
+                   "Writing empty data frame")
+  })

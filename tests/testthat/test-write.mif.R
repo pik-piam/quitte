@@ -35,3 +35,12 @@ test_that(
       expected = read_lines(system.file('extdata', 'comment_header.mif',
                                         package = 'quitte')))
   })
+
+# expect warning for empty data
+test_that(
+  desc = 'write .mif file passing empty data',
+  code = {
+    f <- tempfile()
+    expect_warning(write.mif(filter(quitte_example_data, model == "x"), f),
+                   "Writing empty data frame")
+  })

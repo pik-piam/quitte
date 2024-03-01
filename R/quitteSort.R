@@ -20,6 +20,6 @@ quitteSort <- function(x) {
   }
 
   x %>%
-    arrange(.data$model, .data$scenario, .data$region, .data$variable,
-            .data$unit, .data$period)
+    arrange(.data$model, .data$scenario, .data$variable,
+            .data$unit, .data$region, .data$period)
 }

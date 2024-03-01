@@ -129,6 +129,10 @@ read.quitte <- function(file,
             stop("missing default columns in header of file ", f, ": ",
                  paste(setdiff(default.columns, header[1:5]), collapse = ", "))
 
+        if (length(period.columns) == 0) {
+            stop("No column name found that could be understood as a 4-digit year in file ", f, ".")
+        }
+
         if (last(period.columns) != length(header))
             stop("unallowed extra columns in header of file ", f)
 
