@@ -2,25 +2,26 @@
 % Please edit documentation in R/cartesian.R
 \name{cartesian}
 \alias{cartesian}
-\title{Generate cartesian product from to character vectors}
+\title{Generate Cartesian product from character vectors}
 \usage{
-cartesian(x, y, sep = ".")
+cartesian(..., sep = ".")
 }
 \arguments{
-\item{x, y}{objects that can be coerced to character vectors}
+\item{...}{objects that can be coerced to character vectors}
 
-\item{sep}{a character string that will seperate the elements of \code{x}
-and \code{y} in the output. Defaults to \code{'.'}.}
+\item{sep}{a character string that will separate the elements of \code{...} in the
+output.  Defaults to \code{'.'}.}
 }
 \value{
-A character vector of the concatenated elements of \code{x} and
-\code{y}.
+A character vector of the concatenated elements of \code{...}.
 }
 \description{
-Generate cartesian product from to character vectors
+Generate Cartesian product from character vectors
 }
 \examples{
-cartesian(c('a', 'b'), 1:3)
-# [1] "a.1" "a.2" "a.3" "b.1" "b.2" "b.3"
+cartesian(c('a', 'b'), 1:3, c('X', 'Y', 'Z'))
+#  [1] "a.1.X" "a.1.Y" "a.1.Z" "a.2.X" "a.2.Y" "a.2.Z" "a.3.X" "a.3.Y"
+#  [9] "a.3.Z" "b.1.X" "b.1.Y" "b.1.Z" "b.2.X" "b.2.Y" "b.2.Z" "b.3.X"
+# [17] "b.3.Y" "b.3.Z"
 
 }

@@ -3,7 +3,6 @@
 \docType{package}
 \name{quitte-package}
 \alias{quitte-package}
-\alias{_PACKAGE}
 \alias{quitte}
 \title{The quitte R package}
 \description{

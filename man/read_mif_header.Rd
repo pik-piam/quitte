@@ -4,7 +4,7 @@
 \alias{read_mif_header}
 \title{Read .mif Header}
 \usage{
-read_mif_header(file, sep, comment)
+read_mif_header(file, sep = ";", comment = "#")
 }
 \arguments{
 \item{file}{A path to a \code{.mif} file.}
@@ -12,7 +12,7 @@ read_mif_header(file, sep, comment)
 \item{sep}{Column separator, defaults to ";".}
 
 \item{comment}{A character which at line start signifies the optional comment
-header with metadata at the head of \code{file}.}
+header with metadata at the head of \code{file}, defaults to "#".}
 }
 \value{
 A \code{list} with elements \code{header}, \code{comment_header}, and
