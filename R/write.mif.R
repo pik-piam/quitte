@@ -27,18 +27,11 @@
 #' @export
 write.mif <- function(x, path, comment_header = NULL, comment = '#',
                       append = FALSE) {
-
+    x <- as.quitte(x)
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
                          'Period', 'Value')
 
     . <- NULL
-
-    # guardians
-    if (   !is.data.frame(x)
-        || !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
-                  'value') %in% tolower(names(x)))) {
-        stop('x must be a quitte data frame')
-    }
 
     # make column names upper-case
     x <- x %>%

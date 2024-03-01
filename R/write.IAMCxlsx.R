@@ -22,18 +22,11 @@
 
 #' @export
 write.IAMCxlsx <- function(x, path, append = FALSE) {
-
+    x <- as.quitte(x)
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
                          'Period', 'Value')
 
     . <- NULL
-
-    # guardians
-    if (   !is.data.frame(x)
-        || !all(c('model', 'scenario', 'region', 'variable', 'unit', 'period',
-                  'value') %in% tolower(names(x)))) {
-        stop('x must be a quitte data frame')
-    }
 
     if (append && file.exists(path)) {
         x <- rbind(read.quitte(path), x)
