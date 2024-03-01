@@ -45,5 +45,5 @@ test_that(
   {
     f3 <- paste0(tempfile(), ".xlsx")
     expect_warning(write.IAMCxlsx(filter(quitte_example_data, model == "x"), f3),
-                   "Empty data frame written")
+                   "Writing empty data frame")
   })

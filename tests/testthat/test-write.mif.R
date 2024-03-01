@@ -42,5 +42,5 @@ test_that(
   code = {
     f <- tempfile()
     expect_warning(write.mif(filter(quitte_example_data, model == "x"), f),
-                   "Empty data frame written")
+                   "Writing empty data frame")
   })
