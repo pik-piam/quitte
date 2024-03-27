@@ -1,7 +1,7 @@
 #' Write .mif file
 #'
-#' A wrapper around [`readr::write_lines] for writing files conforming to the
-#' [`.mif` standard](https://redmine.pik-potsdam.de/projects/mo/wiki/Model_Intercomparison_File_Format_(mif)).
+#' A wrapper around [`readr::write_lines`] for writing files conforming to the
+#' [`.mif` standard](https://gitlab.pik-potsdam.de/rse/rsewiki/-/wikis/Model-Intercomparison-File-Format-(mif)).
 #'
 #' @md
 #' @param x A [`quitte`] data frame.
