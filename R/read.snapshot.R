@@ -33,9 +33,11 @@ read.snapshot <- function(file, keep = list(), filter.function = NULL) {
   joinelements <- function(v, list) return(setNames(list(unique(unname(unlist(list[names(list) == v])))), v))
   keep <- do.call(c, lapply(unique(names(keep)), joinelements, list = keep))
 
+  if (! file.exists(file)) stop("file '", file, "' not found.")
+
   # temporary file
-  tmpfile <- tempfile(pattern = "data", fileext = ".csv")
-  if (length(setdiff(names(keep), "period")) > 0) {
+  tmpfile <- tempfile(pattern = "data", fileext = gsub("^.*\\.", ".", basename(file)))
+  if (length(setdiff(names(keep), "period")) > 0 && ! grepl("\\.xlsx?$", file)) {
     # check whether system commands are supported
     testcommand <- c("grep", "head", "tail")
     notavailable <- Sys.which(testcommand) == ""

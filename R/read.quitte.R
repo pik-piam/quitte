@@ -103,6 +103,10 @@ read.quitte <- function(file,
 
         if (grepl("\\.xlsx?$", f)) {
             data <- read_excel(path = f, sheet = if ('data' %in% excel_sheets(f)) 'data' else 1, guess_max = 21474836)
+            if (! any(grepl("^[0-9]{4}$", colnames(data)))) {
+                warning("File ", f, " contains no data, returning empty data.frame.")
+                return(as.quitte(NULL))
+            }
             data <- pivot_longer(data, matches("^[0-9]{4}$"), names_to = 'period', values_drop_na = drop.na)
             missing.default.columns <- default.columns[! default.columns %in% tolower(colnames(data))]
             if (length(missing.default.columns) > 0) {
@@ -130,7 +134,9 @@ read.quitte <- function(file,
                  paste(setdiff(default.columns, header[1:5]), collapse = ", "))
 
         if (length(period.columns) == 0) {
-            stop("No column name found that could be understood as a 4-digit year in file ", f, ".")
+            warning("No column name found that could be understood as a 4-digit year in file ", f,
+                    ". Returning empty data.frame.")
+            return(as.quitte(NULL))
         }
 
         if (last(period.columns) != length(header))

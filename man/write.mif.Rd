@@ -21,7 +21,8 @@ existing comment characters in file \code{path} if \code{append} is \code{TRUE}.
 (\code{TRUE}).}
 }
 \description{
-A wrapper around \href{https://redmine.pik-potsdam.de/projects/mo/wiki/Model_Intercomparison_File_Format_(mif)}{\verb{readr::write_lines] for writing files conforming to the [}.mif` standard}.
+A wrapper around \code{\link[readr:read_lines]{readr::write_lines}} for writing files conforming to the
+\href{https://gitlab.pik-potsdam.de/rse/rsewiki/-/wikis/Model-Intercomparison-File-Format-(mif)}{\code{.mif} standard}.
 }
 \examples{
 write.mif(quitte_example_data, tempfile())

@@ -17,10 +17,11 @@
 #' @param na.rm if set to TRUE entries with value NA will be removed
 #' @author Jan Philipp Dietrich
 #' @keywords classes
-#' @importFrom dplyr bind_rows relocate
+#' @importFrom dplyr bind_rows filter relocate
 #' @importFrom forcats fct_na_value_to_level
 #' @importFrom magclass clean_magpie getNames getNames<- getSets getSets<-
 #' @importFrom reshape2 melt
+#' @importFrom rlang .data
 #' @importFrom stats setNames
 #' @importFrom tibble as_tibble
 #'
@@ -236,6 +237,12 @@ as.quitte.magpie <- function(x, periodClass = "integer", addNA = FALSE, na.rm = 
 #' @export
 as.quitte.list <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
     return(bind_rows(lapply(x, as.quitte, periodClass = periodClass, addNA = addNA, na.rm = na.rm)))
+}
+
+#' @method as.quitte NULL
+#' @export
+as.quitte.NULL <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
+    return(filter(as_tibble(as.quitte(data.frame(value = 0), periodClass = periodClass)), .data$value > 1))
 }
 
 qaddNA <- function(x) {
