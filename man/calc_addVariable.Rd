@@ -16,7 +16,7 @@ calc_addVariable(
   unit = unit,
   value = value,
   overwrite = TRUE,
-  skip.fails = FALSE
+  skip.missing.rhs = FALSE
 )
 
 calc_addVariable_(
@@ -29,7 +29,7 @@ calc_addVariable_(
   unit = "unit",
   value = "value",
   overwrite = TRUE,
-  skip.fails = FALSE
+  skip.missing.rhs = FALSE
 )
 }
 \arguments{
@@ -66,8 +66,9 @@ column).}
 already exist. If \code{FALSE} values are discarded and not overwritten if they
 already exist}
 
-\item{skip.fails}{If \code{FALSE} (the default), fail if any right-hand-side variable is missing
-If \code{TRUE}, just skip that calculation.}
+\item{skip.missing.rhs}{If \code{FALSE} (the default), fail if any right-hand-side
+variable is missing.  If \code{TRUE}, warn, and skip that calculation.
+If \code{"silent"}, skip without warning.}
 
 \item{.dots}{Used to work around non-standard evaluation.  See details.}
 }

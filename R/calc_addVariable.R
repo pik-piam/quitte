@@ -56,6 +56,7 @@
 #'   already exist
 #' @param skip.missing.rhs If `FALSE` (the default), fail if any right-hand-side
 #'   variable is missing.  If `TRUE`, warn, and skip that calculation.
+#'                         If `"silent"`, skip without warning.
 #' @param .dots Used to work around non-standard evaluation.  See details.
 #'
 #' @return A data frame.
