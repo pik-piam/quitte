@@ -33,17 +33,17 @@ read.snapshot <- function(file, keep = list(), filter.function = NULL) {
   joinelements <- function(v, list) return(setNames(list(unique(unname(unlist(list[names(list) == v])))), v))
   keep <- do.call(c, lapply(unique(names(keep)), joinelements, list = keep))
 
-  if (! file.exists(file)) stop("file '", file, "' not found.")
+  if (!file.exists(file)) stop("file '", file, "' not found.")
 
   # temporary file
   tmpfile <- tempfile(pattern = "data", fileext = gsub("^.*\\.", ".", basename(file)))
-  if (length(setdiff(names(keep), "period")) > 0 && ! grepl("\\.xlsx?$", file)) {
+  if (length(setdiff(names(keep), "period")) > 0 && !grepl("\\.xlsx?$", file)) {
     # check whether system commands are supported
     testcommand <- c("grep", "head", "tail")
     notavailable <- Sys.which(testcommand) == ""
     if (any(notavailable)) {
-        message(paste(paste0('`', testcommand[notavailable], '`', collapse = ', '),
-                "are not available system commands, so the entire file is read."))
+        message(paste0("`", testcommand[notavailable], "`", collapse = ", "),
+                " are not available system commands, so the entire file is read.")
     } else {
       # always keep first lines of original file (comments, colnames), grep in the rest
       alwayskeep <- 20
@@ -65,7 +65,7 @@ read.snapshot <- function(file, keep = list(), filter.function = NULL) {
       system(command)
     }
   }
-  if (! file.exists(tmpfile)) { # if either system commands do not exist or something went wrong
+  if (!file.exists(tmpfile)) { # if either system commands do not exist or something went wrong
     file.copy(file, tmpfile, overwrite = TRUE)
   }
   joinedfilter <- function(data) {

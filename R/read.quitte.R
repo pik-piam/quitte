@@ -160,9 +160,9 @@ read.quitte <- function(file,
         # `filter.function`.  If the `filter.function` is `NULL`, it just
         # returns the processed data.
         chunk_callback <- DataFrameCallback$new(
-            (function(F, convert.periods, drop.na) {
-                if (is.null(F))
-                    F <- function(x) { x }
+            (function(FilterF, convert.periods, drop.na) {
+                if (is.null(FilterF))
+                    FilterF <- function(x) { x }
 
                 function(x, pos) {
                     if ('problems' %in% names(attributes(x))) {
@@ -185,7 +185,7 @@ read.quitte <- function(file,
                                    as.integer(as.character(.data$period))
                                }) %>%
                         # apply filter
-                        F()
+                        FilterF()
 
                     if (!is.null(p))
                         attr(x, 'problems') <- p
