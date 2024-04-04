@@ -87,6 +87,7 @@
 #' @importFrom glue glue
 #' @importFrom lazyeval f_eval interp
 #' @importFrom magrittr %>%
+#' @importFrom methods getFunction
 #' @importFrom rlang := is_false sym syms
 #' @importFrom stats formula setNames
 #' @importFrom tidyr pivot_wider replace_na
@@ -160,6 +161,10 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
       all.vars() %>%
       unique()
   }
+
+  # store column classes ----
+  column_classes <- sapply(data, class)
+
 
   # filter for required data ----
   rhs_variables <- .dots %>%
@@ -260,6 +265,13 @@ calc_addVariable_ <- function(data, .dots, na.rm = TRUE,
         data
       )
     }
+  }
+
+  # restore column classes ----
+  for (i in unique(column_classes)) {
+    data <- data %>%
+      mutate(across(names(column_classes[i == column_classes]),
+                    getFunction(paste0('as.', i))))
   }
 
   return(data)
