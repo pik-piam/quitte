@@ -13,7 +13,7 @@ data <- inline.data.frame(c(
   "REMIND;   Baseline;   CHN;      Population;   million;              2010;      1349"))
 
 test_that(
-  'Test calc_addVariable() results',
+  'calc_addVariable() results',
   {
     result <- tibble(
       model    = 'REMIND',
@@ -25,10 +25,10 @@ test_that(
                                   'US$2005/cap', NA), each = 3)),
       period   = rep(c(2010L, 2010L, 2020L), 5)[1:13],
       result = c(91.62,
-                4119, 8882, 12990,
-                1349, 1387, 310.4,
-                3053.3728687917, 6403.74909877433, 41849.2268041237,
-                8.02400211721046, 8.76463889451935, 10.6418286003377))
+                 4119, 8882, 12990,
+                 1349, 1387, 310.4,
+                 3053.3728687917, 6403.74909877433, 41849.2268041237,
+                 8.02400211721046, 8.76463889451935, 10.6418286003377))
 
     expect_equal(
       object = full_join(
@@ -75,7 +75,7 @@ test_that(
   })
 
 test_that(
-  'Test calc_addVariable() unit column substitution',
+  'calc_addVariable() unit column substitution',
   {
     expect_equal(
       object = data %>%
@@ -89,12 +89,12 @@ test_that(
         calc_addVariable("GDPpC" = "`GDP|MER` / Population * 1e3",
                          "`ln GDPpC`" = "log(GDPpC)",
                          units = c("US$2005/cap", NA))
-        )
+    )
   })
 
 test_that(
-  desc = 'Test calc_addVariable() testing for duplicated data',
-  code = {
+  'calc_addVariable() testing for duplicated data',
+  {
     test_data <- quitte_example_data %>%
       filter(first(.data$model)    == .data$model,
              first(.data$scenario) == .data$scenario,
@@ -111,8 +111,8 @@ test_that(
   })
 
 test_that(
-  desc = 'name of new variable can be existing variable name',
-  code = {
+  'name of new variable can be existing variable name',
+  {
     expect_equal(
       object = data %>%
         calc_addVariable('`PE`' = '`PE` * 8760 * 3600 * 1e-9',
@@ -130,8 +130,8 @@ test_that(
 )
 
 test_that(
-  desc = 'missing unit columns work',
-  code = {
+  'missing unit columns work',
+  {
     expect_equal(
       object = data %>%
         select(-unit) %>%
@@ -143,8 +143,8 @@ test_that(
 )
 
 test_that(
-  desc = 'completly missing variables yield an error',
-  code = {
+  'completly missing variables yield an error',
+  {
     test_data <- tibble(variable = 'A', value = 1)
 
     expect_error(
