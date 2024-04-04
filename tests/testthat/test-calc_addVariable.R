@@ -166,3 +166,20 @@ test_that(
                                 skip.missing.rhs = 'silent'),
       expected = test_data)
   })
+
+test_that(
+  'calc_addVariable() preserves column classes',
+  {
+    expect_equal(
+      object = data %>%
+        mutate(across(c('scenario', 'variable', 'unit'), factor)) %>%
+        calc_addVariable('GDPpC' = '`GDP|MER` / Population * 1e3',
+                         '`ln GDPpC`' = 'log(GDPpC)',
+                         units = c('US$2005/cap', NA)),
+      expected = data %>%
+        calc_addVariable('GDPpC' = '`GDP|MER` / Population * 1e3',
+                         '`ln GDPpC`' = 'log(GDPpC)',
+                         units = c('US$2005/cap', NA)) %>%
+        mutate(across(c('scenario', 'variable', 'unit'), factor))
+    )
+  })
