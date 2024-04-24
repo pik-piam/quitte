@@ -3,6 +3,8 @@
 #' A wrapper around [`readr::write_lines`] for writing files conforming to the
 #' [`.mif` standard](https://gitlab.pik-potsdam.de/rse/rsewiki/-/wikis/Model-Intercomparison-File-Format-(mif)).
 #'
+#'  `write.IAMC()` uses commas as filed separators instead of semi-colons.
+#'
 #' @md
 #' @param x A [`quitte`] data frame.
 #' @param path Path or connection to write to.
@@ -12,6 +14,8 @@
 #'   existing comment characters in file `path` if `append` is `TRUE`.
 #' @param append Overwrite existing files (`FALSE`, default), or append to them
 #'   (`TRUE`).
+#' @param sep Single character used to separate fields within a record.
+#'  Defaults to `;`.
 #'
 #' @author Michaja Pehl
 #'
@@ -24,9 +28,10 @@
 #' @importFrom readr write_lines
 #' @importFrom stringr str_to_title
 
+#' @rdname write.mif
 #' @export
 write.mif <- function(x, path, comment_header = NULL, comment = '#',
-                      append = FALSE) {
+                      append = FALSE, sep = ';') {
     x <- as.quitte(x)
     if (nrow(x) == 0) warning("Writing empty data frame to ", path)
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
@@ -48,7 +53,7 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
     if (append) {
         # read the header, comment_header, and useless.last.column from file and
         # assign them to the environment
-        header <- read_mif_header(path, ';', comment)$header
+        header <- read_mif_header(path, sep, comment)$header
 
         if (any(header != tolower(colnames(x)))) {
             stop('Column headers of x and path do not match.')
@@ -62,15 +67,22 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
         }
 
         # write column header
-        paste(c(colnames(x), ''), collapse = ';') %>%
+        paste(c(colnames(x), ''), collapse = sep) %>%
             write_lines(file = path,
                         append = !is.null(comment_header))
     }
 
     # write data
     x %>%
-        unite(!!sym('text'), everything(), sep = ';') %>%
-        mutate(!!sym('text') := paste0(!!sym('text'), ';')) %>%
+        unite(!!sym('text'), everything(), sep = sep) %>%
+        mutate(!!sym('text') := paste0(!!sym('text'), sep)) %>%
         pull(!!sym('text')) %>%
         write_lines(file = path, append = TRUE)
+}
+
+#' @rdname write.mif
+#' @export
+write.IAMC <- function(x, path, comment_header = NULL, comment = '#',
+                      append = FALSE, sep = ',') {
+    write.mif(x, path, comment_header, comment, append, sep)
 }
