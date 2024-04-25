@@ -41,3 +41,11 @@ test_that(
     expect_warning(write.mif(filter(quitte_example_data, model == "x"), f),
                    "Writing empty data frame")
   })
+
+test_that(
+  'write IAMC format',
+  {
+    f <- tempfile(fileext = 'csv')
+    write.IAMC.csv(quitte_example_data, f)
+    expect_equal(object = read.snapshot(f), expected = quitte_example_data)
+  })

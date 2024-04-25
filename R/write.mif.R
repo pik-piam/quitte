@@ -3,7 +3,7 @@
 #' A wrapper around [`readr::write_lines`] for writing files conforming to the
 #' [`.mif` standard](https://gitlab.pik-potsdam.de/rse/rsewiki/-/wikis/Model-Intercomparison-File-Format-(mif)).
 #'
-#'  `write.IAMC()` uses commas as filed separators instead of semi-colons.
+#'  `write.IAMC.csv()` uses commas as filed separators instead of semi-colons.
 #'
 #' @md
 #' @param x A [`quitte`] data frame.
@@ -82,7 +82,7 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
 
 #' @rdname write.mif
 #' @export
-write.IAMC <- function(x, path, comment_header = NULL, comment = '#',
-                      append = FALSE, sep = ',') {
+write.IAMC.csv <- function(x, path, comment_header = NULL, comment = '#',
+                           append = FALSE, sep = ',') {
     write.mif(x, path, comment_header, comment, append, sep)
 }
