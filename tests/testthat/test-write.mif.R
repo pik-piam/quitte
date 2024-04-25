@@ -46,6 +46,8 @@ test_that(
   'write IAMC format',
   {
     f <- tempfile(fileext = 'csv')
-    write.IAMCcsv(quitte_example_data, f)
-    expect_equal(object = read.snapshot(f), expected = quitte_example_data)
+    write.IAMCcsv(quitte_example_dataAR6, f)
+    expect_equal(object = read.snapshot(f),
+                 expected = quitte_example_dataAR6 %>%
+                   filter(!is.na(.data$value)))
   })

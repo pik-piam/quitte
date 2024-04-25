@@ -16,14 +16,16 @@
 #'   (`TRUE`).
 #' @param sep Single character used to separate fields within a record.
 #'  Defaults to `;`.
+#' @param na String used for `NA` elements.  Defaults to `'NA'` for
+#'   `write.mif()` and to `''` for `write.IAMCcsv()`.
 #'
 #' @author Michaja Pehl
 #'
 #' @examples
 #' write.mif(quitte_example_data, tempfile())
 #'
-#' @importFrom dplyr mutate pull rename_with select
-#' @importFrom tidyr pivot_wider unite
+#' @importFrom dplyr %>% across arrange mutate last pull rename_with select
+#' @importFrom tidyr pivot_wider replace_na unite
 #' @importFrom tidyselect everything matches
 #' @importFrom readr write_lines
 #' @importFrom stringr str_to_title
@@ -31,7 +33,7 @@
 #' @rdname write.mif
 #' @export
 write.mif <- function(x, path, comment_header = NULL, comment = '#',
-                      append = FALSE, sep = ';') {
+                      append = FALSE, sep = ';', na = 'NA') {
     x <- as.quitte(x)
     if (nrow(x) == 0) warning("Writing empty data frame to ", path)
     default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
@@ -74,6 +76,8 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
 
     # write data
     x %>%
+        mutate(across(everything(), as.character)) %>%
+        replace_na(replace = setNames(rep(list(na), ncol(x)), colnames(x))) %>%
         unite(!!sym('text'), everything(), sep = sep) %>%
         mutate(!!sym('text') := paste0(!!sym('text'), sep)) %>%
         pull(!!sym('text')) %>%
@@ -83,6 +87,6 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
 #' @rdname write.mif
 #' @export
 write.IAMCcsv <- function(x, path, comment_header = NULL, comment = '#',
-                           append = FALSE, sep = ',') {
-    write.mif(x, path, comment_header, comment, append, sep)
+                          append = FALSE, sep = ',', na = '') {
+    write.mif(x, path, comment_header, comment, append, sep, na)
 }
