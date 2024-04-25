@@ -1,6 +1,5 @@
 context('write.mif()')
 
-# write .mif files ----
 test_that(
   'write .mif files',
   {
@@ -20,10 +19,9 @@ test_that(
       )
   })
 
-# write .mif file with comment header ----
 test_that(
-  desc = 'write .mif file with comment header',
-  code = {
+  'write .mif file with comment header',
+  {
     f <- tempfile()
     set.seed(0)
     quitte_example_data %>%
@@ -36,11 +34,20 @@ test_that(
                                         package = 'quitte')))
   })
 
-# expect warning for empty data
 test_that(
-  desc = 'write .mif file passing empty data',
-  code = {
+  'write .mif file passing empty data',
+  {
     f <- tempfile()
     expect_warning(write.mif(filter(quitte_example_data, model == "x"), f),
                    "Writing empty data frame")
+  })
+
+test_that(
+  'write IAMC format',
+  {
+    f <- tempfile(fileext = 'csv')
+    write.IAMCcsv(quitte_example_dataAR6, f)
+    expect_equal(object = read.snapshot(f),
+                 expected = quitte_example_dataAR6 %>%
+                   filter(!is.na(.data$value)))
   })
