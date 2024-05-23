@@ -9,21 +9,21 @@
 #'
 #' @author Oliver Richters
 #'
-#' @importFrom dplyr group_by mutate filter select rename
+#' @importFrom dplyr filter group_by lag mutate rename select
 #'
 #' @return the sorted quitte object
 #' @export
 growthrate <- function(x) {
+  x <- as.quitte(x, na.rm = TRUE)
+  levels(x$variable) <- paste(levels(x$variable), "[Growth Rate]")
   x %>%
-    as.quitte(na.rm = TRUE) %>%
     quitteSort() %>%
     group_by(.data$model, .data$scenario, .data$region, .data$variable) %>%
-    mutate(diffyear = .data$period - lag(.data$period)) %>%
-    mutate(growthrate = 100 * ((.data$value/lag(.data$value))^(1/.data$diffyear) - 1)) %>%
-    filter(! .data$growthrate %in% c(NA, Inf, NaN)) %>%
-    mutate(variable = factor(paste0(.data$variable, " [Growth Rate]"))) %>%
-    mutate(unit = factor("%/yr")) %>%
+    mutate(diffyear = .data$period - lag(.data$period),
+           growthrate = 100 * ((.data$value/lag(.data$value))^(1/.data$diffyear) - 1),
+           unit = factor("%/yr")) %>%
+    filter(! .data$growthrate %in% c(NA, -Inf, Inf, NaN)) %>%
     select(-"value", -"diffyear") %>%
-    rename(value = "growthrate") %>% 
+    rename(value = "growthrate") %>%
     return()
 }
