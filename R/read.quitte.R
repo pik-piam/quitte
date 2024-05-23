@@ -29,8 +29,8 @@
 #'
 #' @details
 #' In order to process large data sets, like IIASA data base snapshots,
-#' `read.quitte()` reads provided files (other then Excel files) in chunks of
-#' `chunk_size` lines, and applies `filter.function()` to the chunks.  This
+#' `read.quitte()` reads provided files in chunks of `chunk_size` lines
+#' (not for Excel files), and applies `filter.function()` to the chunks.  This
 #' allows for filtering data piece-by-piece, without exceeding available memory.
 #' `filter.function` is a function taking one argument, a quitte data frame of
 #' the read chunk, and is expected to return a data frame.  Usually it should
@@ -91,9 +91,9 @@ read.quitte <- function(file,
     if (!length(file))
         stop('\'file\' is empty.')
 
-    if (   !is.null(filter.function)
-           && !is.function(filter.function)
-           && 1 != length(formals(filter.function)))
+    if (is.null(filter.function)) filter.function <- identity
+    if (! is.function(filter.function)
+        && 1 != length(formals(filter.function)))
         stop('`filter.function` must be a function taking only one argument.')
 
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
@@ -112,7 +112,7 @@ read.quitte <- function(file,
             if (length(missing.default.columns) > 0) {
                 warning(f, " misses default columns: ", paste(missing.default.columns, collapse = ", "))
             }
-            return(as.quitte(data))
+            return(filter.function(as.quitte(data)))
         }
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
@@ -161,8 +161,6 @@ read.quitte <- function(file,
         # returns the processed data.
         chunk_callback <- DataFrameCallback$new(
             (function(FilterF, convert.periods, drop.na) {
-                if (is.null(FilterF))
-                    FilterF <- function(x) { x }
 
                 function(x, pos) {
                     if ('problems' %in% names(attributes(x))) {

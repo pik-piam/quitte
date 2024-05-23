@@ -2,9 +2,28 @@
 % Please edit documentation in R/write.mif.R
 \name{write.mif}
 \alias{write.mif}
+\alias{write.IAMCcsv}
 \title{Write .mif file}
 \usage{
-write.mif(x, path, comment_header = NULL, comment = "#", append = FALSE)
+write.mif(
+  x,
+  path,
+  comment_header = NULL,
+  comment = "#",
+  append = FALSE,
+  sep = ";",
+  na = "NA"
+)
+
+write.IAMCcsv(
+  x,
+  path,
+  comment_header = NULL,
+  comment = "#",
+  append = FALSE,
+  sep = ",",
+  na = ""
+)
 }
 \arguments{
 \item{x}{A \code{\link{quitte}} data frame.}
@@ -19,10 +38,19 @@ existing comment characters in file \code{path} if \code{append} is \code{TRUE}.
 
 \item{append}{Overwrite existing files (\code{FALSE}, default), or append to them
 (\code{TRUE}).}
+
+\item{sep}{Single character used to separate fields within a record.
+Defaults to \verb{;}.}
+
+\item{na}{String used for \code{NA} elements.  Defaults to \code{'NA'} for
+\code{write.mif()} and to \code{''} for \code{write.IAMCcsv()}.}
 }
 \description{
 A wrapper around \code{\link[readr:read_lines]{readr::write_lines}} for writing files conforming to the
 \href{https://gitlab.pik-potsdam.de/rse/rsewiki/-/wikis/Model-Intercomparison-File-Format-(mif)}{\code{.mif} standard}.
+}
+\details{
+\code{write.IAMCcsv()} uses commas as filed separators instead of semi-colons.
 }
 \examples{
 write.mif(quitte_example_data, tempfile())
