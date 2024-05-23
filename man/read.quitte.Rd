@@ -14,7 +14,7 @@ read.quitte(
   factors = TRUE,
   drop.na = FALSE,
   comment = "#",
-  filter.function = NULL,
+  filter.function = identity,
   chunk_size = 200000L
 )
 }
