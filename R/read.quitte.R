@@ -85,15 +85,14 @@ read.quitte <- function(file,
                         factors = TRUE,
                         drop.na = FALSE,
                         comment = '#',
-                        filter.function = NULL,
+                        filter.function = identity,
                         chunk_size = 200000L) {
 
     if (!length(file))
         stop('\'file\' is empty.')
 
-    if (is.null(filter.function)) filter.function <- identity
-    if (! is.function(filter.function)
-        && 1 != length(formals(filter.function)))
+    if (!(   is.function(filter.function)
+          && 1 == length(formals(filter.function))))
         stop('`filter.function` must be a function taking only one argument.')
 
     .read.quitte <- function(f, sep, quote, na.strings, convert.periods,
@@ -157,8 +156,7 @@ read.quitte <- function(file,
         # the callback function accepts a chunk of data, `x`, pivots the periods
         # to long format (dropping NAs if required), converts the periods to
         # integer or POSIXct values as required, and applies the
-        # `filter.function`.  If the `filter.function` is `NULL`, it just
-        # returns the processed data.
+        # `filter.function`.
         chunk_callback <- DataFrameCallback$new(
             (function(FilterF, convert.periods, drop.na) {
 
