@@ -21,7 +21,7 @@
 #'                            filter.function = function(x) filter(x, grepl("GDP", .data$variable)))
 #' }
 #'
-#' @importFrom dplyr filter group_by lag mutate rename select %>%
+#' @importFrom dplyr filter group_by lag mutate rename select ungroup %>%
 #' @importFrom rlang .data
 #'
 #' @return data as a quitte object
@@ -46,6 +46,7 @@ calc_growthrate <- function(x, only.new = FALSE, filter.function = identity) {
     filter(is.finite(.data$growthrate)) %>%
     select(-"value", -"diffyear") %>%
     rename(value = "growthrate") %>%
+    ungroup() %>%
     droplevels()
   # return data
   if (isTRUE(only.new)) {

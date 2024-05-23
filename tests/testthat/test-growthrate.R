@@ -32,4 +32,11 @@ test_that("calc_growthrate works", {
                calc_growthrate(mifdata, only.new = TRUE,
                                filter.function = function(x) filter(x, scenario == "Base")))
   expect_equal(nrow(calc_growthrate(mifdata, only.new = TRUE, filter.function = "whatever")), 0)
+
+
+  expect_no_warning(alldata <- calc_growthrate(quitte_example_data, only.new = FALSE,
+                    filter.function = function(x) filter(x, grepl("GDP", .data$variable))))
+  expect_no_warning(GDPgrowth <- calc_growthrate(quitte_example_data, only.new = TRUE, filter.function = "GDP|PPP"))
+  expect_identical(quitteSort(droplevels(GDPgrowth)),
+                   droplevels(quitteSort(filter(alldata, grepl("Growth Rate", .data$variable)))))
 })
