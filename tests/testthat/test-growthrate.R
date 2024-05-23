@@ -1,6 +1,6 @@
-test_that("growthrate works", {
+test_that("calc_growthrate works", {
   qe <- quitte_example_dataAR6
-  expect_no_warning(qegr <- growthrate(qe))
+  expect_no_warning(qegr <- calc_growthrate(qe))
   expect_equal(sort(paste(levels(qe$variable), "[Growth Rate]")),
                sort(levels(qegr$variable)))
   expect_identical(levels(qegr$unit), "%/yr")
@@ -16,7 +16,7 @@ test_that("growthrate works", {
     "region"   = "GLO",
     "unit"     = "US$2010/GJ"
   ))
-  expect_no_warning(mifdatagr <- growthrate(mifdata))
+  expect_no_warning(mifdatagr <- calc_growthrate(mifdata))
   expect_equal(levels(mifdatagr$variable), "Price|Energy [Growth Rate]")
   base <- filter(mifdatagr, .data$scenario == "Base")
   expect_true(nrow(base) == 2)
