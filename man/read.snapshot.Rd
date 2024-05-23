@@ -2,30 +2,30 @@
 % Please edit documentation in R/read.snapshot.R
 \name{read.snapshot}
 \alias{read.snapshot}
-\title{Reads IAMC-style .csv files obtained as a IIASA snapshot into a quitte data frame,
-filtering the data. This function is helpful if the csv file is large and R runs out
-of memory loading it completely. This function requires head, tail and grep on your system.
-If not supported, use read.quitte().}
+\title{Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
+allowing to filter the loaded data. If head, tail and grep are on your system, a pre-filtering
+improves performance.}
 \usage{
-read.snapshot(file, keep = list(), filter.function = NULL)
+read.snapshot(file, keep = list(), filter.function = identity)
 }
 \arguments{
 \item{file}{Path of single IAMC-style .csv/.mif file}
 
-\item{keep}{list with quitte columns as names and data points that should be kept. Using 'grep',
-this list is used to extract the data before reading it into R. The more you restrict the data here,
-the faster the data is read.}
+\item{keep}{list with quitte columns as names and data points that should be kept.
+If head, tail and grep are available, this list is used to extract the data before reading it
+into R. The more you restrict the data here, the faster the data is read.}
 
-\item{filter.function}{A function used to filter data during read, see read.quitte description.}
+\item{filter.function}{A function used to filter data during read, see read.quitte description.
+This allows for more complex filtering, but no performance-enhancing pre-filtering using grep is used.
+The 'keep' list and the 'filter.function' can be combined.}
 }
 \value{
 A quitte data frame.
 }
 \description{
-Reads IAMC-style .csv files obtained as a IIASA snapshot into a quitte data frame,
-filtering the data. This function is helpful if the csv file is large and R runs out
-of memory loading it completely. This function requires head, tail and grep on your system.
-If not supported, use read.quitte().
+Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
+allowing to filter the loaded data. If head, tail and grep are on your system, a pre-filtering
+improves performance.
 }
 \examples{
 \dontrun{

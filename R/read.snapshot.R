@@ -1,14 +1,15 @@
-#' Reads IAMC-style .csv files obtained as a IIASA snapshot into a quitte data frame,
-#' filtering the data. This function is helpful if the csv file is large and R runs out
-#' of memory loading it completely. This function requires head, tail and grep on your system.
-#' If not supported, use read.quitte().
+#' Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
+#' allowing to filter the loaded data. If head, tail and grep are on your system, a pre-filtering
+#' improves performance.
 #'
 #' @md
 #' @param file Path of single IAMC-style .csv/.mif file
-#' @param keep list with quitte columns as names and data points that should be kept. Using 'grep',
-#' this list is used to extract the data before reading it into R. The more you restrict the data here,
-#' the faster the data is read.
+#' @param keep list with quitte columns as names and data points that should be kept.
+#' If head, tail and grep are available, this list is used to extract the data before reading it
+#' into R. The more you restrict the data here, the faster the data is read.
 #' @param filter.function A function used to filter data during read, see read.quitte description.
+#' This allows for more complex filtering, but no performance-enhancing pre-filtering using grep is used.
+#' The 'keep' list and the 'filter.function' can be combined.
 #'
 #' @return A quitte data frame.
 #'
@@ -24,7 +25,7 @@
 #'
 #' @export
 
-read.snapshot <- function(file, keep = list(), filter.function = NULL) {
+read.snapshot <- function(file, keep = list(), filter.function = identity) {
   unknowntype <- setdiff(names(keep), c("model", "scenario", "region", "variable", "unit", "period"))
   if (length(unknowntype) > 0) {
     stop("Unknown types in 'keep': ", toString(unknowntype))
@@ -72,9 +73,7 @@ read.snapshot <- function(file, keep = list(), filter.function = NULL) {
     for (t in names(keep)) {
       data <- droplevels(filter(data, .data[[t]] %in% keep[[t]]))
     }
-    if (is.function(filter.function)) {
-      data <- filter.function(data)
-    }
+    data <- filter.function(data)
     return(data)
   }
   # read file and do correct filtering

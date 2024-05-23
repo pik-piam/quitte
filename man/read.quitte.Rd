@@ -14,7 +14,7 @@ read.quitte(
   factors = TRUE,
   drop.na = FALSE,
   comment = "#",
-  filter.function = NULL,
+  filter.function = identity,
   chunk_size = 200000L
 )
 }
@@ -61,8 +61,8 @@ Reads IAMC-style .csv or .xlsx files into a quitte data frame.
 }
 \details{
 In order to process large data sets, like IIASA data base snapshots,
-\code{read.quitte()} reads provided files (other then Excel files) in chunks of
-\code{chunk_size} lines, and applies \code{filter.function()} to the chunks.  This
+\code{read.quitte()} reads provided files in chunks of \code{chunk_size} lines
+(not for Excel files), and applies \code{filter.function()} to the chunks.  This
 allows for filtering data piece-by-piece, without exceeding available memory.
 \code{filter.function} is a function taking one argument, a quitte data frame of
 the read chunk, and is expected to return a data frame.  Usually it should
