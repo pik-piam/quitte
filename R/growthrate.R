@@ -21,7 +21,7 @@ growthrate <- function(x) {
     mutate(diffyear = .data$period - lag(.data$period)) %>%
     mutate(growthrate = 100 * ((.data$value/lag(.data$value))^(1/.data$diffyear) - 1)) %>%
     filter(! .data$growthrate %in% c(NA, Inf, NaN)) %>%
-    mutate(variable = factor(paste0(.data$variable, "|Growth rate"))) %>%
+    mutate(variable = factor(paste0(.data$variable, " [Growth Rate]"))) %>%
     mutate(unit = factor("%/yr")) %>%
     select(-"value", -"diffyear") %>%
     rename(value = "growthrate") %>% 
