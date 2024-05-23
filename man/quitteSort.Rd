@@ -8,7 +8,7 @@ model -> scenario -> variable -> unit -> region -> period}
 quitteSort(x)
 }
 \arguments{
-\item{x}{A quitte object}
+\item{x}{anything with an as.quitte method (data.frame, quitte or magclass object, mif file, ...)}
 }
 \value{
 the sorted quitte object
