@@ -290,6 +290,14 @@ data %>%
         only.new = TRUE)
 ```
 
+`calc_growthrate()` calculates the growth rate (in `%/yr`) of a time series,
+appending ` [Growth Rate]` to the variable name:
+```
+data %>%
+    calc_growthrate(only.new = TRUE, filter.function = "Consumption")
+```
+returns a data.frame with the variable `Consumption [Growth Rate]`.
+`filter.function` can be a vector of variable names or a function that filters `data`.
 
 # Net Present Value of a Time Series
 
