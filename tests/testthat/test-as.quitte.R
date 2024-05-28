@@ -86,3 +86,11 @@ test_that(
     expect_identical(as.quitte(miffile), as.quitte(list(miffile)))
   }
 )
+
+test_that(
+  'as.quitte(NULL) works',
+  {
+    expect_true(is.quitte(as.quitte(NULL)))
+    expect_equal(nrow(as.quitte(NULL)), 0)
+  }
+)
