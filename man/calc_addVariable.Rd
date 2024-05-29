@@ -35,7 +35,7 @@ calc_addVariable_(
 \arguments{
 \item{data}{A data frame.}
 
-\item{...}{Name-value pairs of calculation formulas. See details.}
+\item{...}{Name-value pairs of calculation formulas or a single filename. See details.}
 
 \item{units}{Character vector of units corresponding to new variables.  Must
 be of length equal to \code{...} or of length one (in which case all new
@@ -104,6 +104,10 @@ Units are optionally included with the formulas in a vector like
 }\if{html}{\out{</div>}}
 
 Units do not require quoting.
+
+As an alternative, the variable, unit and formula can be specified as a csv file in this format:
+variable;unit;formula
+Carbon Intensity|Cement;Mt CO2/Mt;\code{Emi|CO2|Cement} / \code{Production|Cement}
 
 \code{...} and \code{.dots} are processed in order, and variables already
 calculated in the same call can be used for further calculations. Other

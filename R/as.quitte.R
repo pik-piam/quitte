@@ -242,7 +242,7 @@ as.quitte.list <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FA
 #' @method as.quitte NULL
 #' @export
 as.quitte.NULL <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
-    return(filter(as_tibble(as.quitte(data.frame(value = 0), periodClass = periodClass)), .data$value > 1))
+    return(filter(as.quitte(as_tibble(as.quitte(data.frame(value = 0), periodClass = periodClass))), .data$value > 1))
 }
 
 qaddNA <- function(x) {
