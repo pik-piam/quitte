@@ -2,41 +2,10 @@
 #'
 #' Calculate new variables from existing ones, using generic formulas.
 #'
-#' `...` is a list of name-value pairs with the general format
-#' ```
-#' "lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
-#' ```
-#' where `lhs` are the names of new variables to be calculated and
-#' `rhs` are the variables to calculate from. If `lhs` and `rhs`
-#' are no proper *identifiers*, they need to be quoted (see
-#' [Quotes][base::Quotes] for details). When in doubt, just quote.
-#'
-#' If the new variables should have units, set `units` appropriately.
-#'
-#' `.dots` is a named list of strings denoting formulas and optionally
-#' units. The general format is
-#' ```
-#' list("`lhs 1`" = "`rhs` / `calculation`",
-#'      "`lhs 2`" = "sin(`rhs 2`)")
-#' ```
-#'
-#' Units are optionally included with the formulas in a vector like
-#' ```
-#' list("`lhs w/ unit`" = c("`rhs 1` + `rhs 2`", "rhs unit")
-#' ```
-#' Units do not require quoting.
-#'
-#' As an alternative, the variable, unit and formula can be specified as a csv file in this format:
-#' variable;unit;formula
-#' Carbon Intensity|Cement;Mt CO2/Mt;`Emi|CO2|Cement` / `Production|Cement`
-#'
-#' `...` and `.dots` are processed in order, and variables already
-#' calculated in the same call can be used for further calculations. Other
-#' existing columns, including `period`, can be referenced, but this is
-#' not supported and the results are considered *undefined*.
-#'
 #' @param data A data frame.
-#' @param ... Name-value pairs of calculation formulas or a single filename. See details.
+#' @param ... Formulas to calculate new variables.  Either name-value pairs,
+#'   the path to a .csv file, the content of a .csv file as a string, or a data
+#'   frame.  See details.
 #' @param units Character vector of units corresponding to new variables.  Must
 #'   be of length equal to `...` or of length one (in which case all new
 #'   variables receive the same unit).
@@ -62,6 +31,56 @@
 #'   variable is missing.  If `TRUE`, warn, and skip that calculation.
 #'                         If `"silent"`, skip without warning.
 #' @param .dots Used to work around non-standard evaluation.  See details.
+#'
+#' If `...` is a list of name-value pairs, it has the general format
+#' ```
+#' "lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
+#' ```
+#' where `lhs` are the names of new variables to be calculated and `rhs` are the
+#' variables to calculate from.  If `lhs` and `rhs` are no proper *identifiers*,
+#' they need to be quoted (see [Quotes][base::Quotes] for details).  When in
+#' doubt, just quote.
+#'
+#' If the new variables should have units, set `units` appropriately.
+#'
+#' `.dots` is a named list of strings denoting formulas and optionally units.
+#' The general format is
+#' ```
+#' list("`lhs 1`" = "`rhs` / `calculation`",
+#'      "`lhs 2`" = "sin(`rhs 2`)")
+#' ```
+#' Units are optionally included with the formulas in a vector like
+#' ```
+#' list("`lhs w/ unit`" = c("`rhs 1` + `rhs 2`", "rhs unit")
+#' ```
+#' Units do not require quoting.
+#'
+#' As an alternative, the variable, unit and formula can be specified as a .csv
+#' file in this format:
+#' ```
+#' variable;                unit;      formula
+#' Carbon Intensity|Cement; Mt CO2/Mt; `Emi|CO2|Cement` / `Production|Cement`
+#' ```
+#' or as a single string containing the .csv content (joined by `\n` line
+#' breaks)
+#' ```
+#' paste(c(
+#'     "variable;         unit;        formula",
+#'     "Consumption|pCap; US$2005/cap; 0.001 * `Consumption`/`Population`"),
+#'     collapse = '\n')
+#' ```
+#' or as a data frame with the same columns:
+#' ```
+#' data.frame(
+#'     variable = 'Consumption|pCap',
+#'     unit     = 'US$2005/cap',
+#'     formula  = '0.001 * `Consumption`/`Population`')
+#' ```
+#'
+#' `...` and `.dots` are processed in order, and variables already
+#' calculated in the same call can be used for further calculations. Other
+#' existing columns, including `period`, can be referenced, but this is
+#' not supported and the results are considered *undefined*.
 #'
 #' @return A data frame.
 #'
@@ -92,6 +111,7 @@
 #' @importFrom lazyeval f_eval interp
 #' @importFrom magrittr %>%
 #' @importFrom methods getFunction
+#' @importFrom readr read_delim
 #' @importFrom rlang := is_false sym syms
 #' @importFrom stats formula setNames
 #' @importFrom tidyr pivot_wider replace_na
@@ -106,10 +126,23 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
 
   .dots    <- list(...)
 
-  if (length(.dots) == 1 && is.null(names(.dots)) && file.exists(.dots[[1]])) {
-    filedata <- as_tibble(read.csv2(.dots[[1]], comment.char = "#"))
+  if (length(.dots) == 1 && is.null(names(.dots))) {
+    if (is.data.frame(.dots[[1]])) {
+      filedata <- .dots[[1]]
+    }
+    else {
+      filedata <- read_delim(.dots[[1]], delim = ';', comment = "#")
+    }
+
+    if (!all(c('variable', 'formula') %in% colnames(filedata))) {
+      stop('.csv file must have `variable` and `formula` columns.')
+    }
+
     .dots <- as.list(setNames(filedata$formula, filedata$variable))
-    if (is.na(units) && "unit" %in% names(filedata)) units <- filedata$unit
+
+    if (is.na(units) && "unit" %in% colnames(filedata)) {
+      units <- filedata$unit
+    }
   }
 
   if (!all(is.na(units))) {
