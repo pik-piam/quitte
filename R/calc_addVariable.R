@@ -26,13 +26,17 @@
 #' ```
 #' Units do not require quoting.
 #'
+#' As an alternative, the variable, unit and formula can be specified as a csv file in this format:
+#' variable;unit;formula
+#' Carbon Intensity|Cement;Mt CO2/Mt;`Emi|CO2|Cement` / `Production|Cement`
+#'
 #' `...` and `.dots` are processed in order, and variables already
 #' calculated in the same call can be used for further calculations. Other
 #' existing columns, including `period`, can be referenced, but this is
 #' not supported and the results are considered *undefined*.
 #'
 #' @param data A data frame.
-#' @param ... Name-value pairs of calculation formulas. See details.
+#' @param ... Name-value pairs of calculation formulas or a single filename. See details.
 #' @param units Character vector of units corresponding to new variables.  Must
 #'   be of length equal to `...` or of length one (in which case all new
 #'   variables receive the same unit).
@@ -101,6 +105,12 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
                              skip.missing.rhs = FALSE) {
 
   .dots    <- list(...)
+
+  if (length(.dots) == 1 && is.null(names(.dots)) && file.exists(.dots[[1]])) {
+    filedata <- as_tibble(read.csv2(.dots[[1]], comment.char = "#"))
+    .dots <- as.list(setNames(filedata$formula, filedata$variable))
+    if (is.na(units) && "unit" %in% names(filedata)) units <- filedata$unit
+  }
 
   if (!all(is.na(units))) {
     if (length(units) == length(.dots)) {

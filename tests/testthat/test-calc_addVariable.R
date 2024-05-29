@@ -183,3 +183,21 @@ test_that(
         mutate(across(c('scenario', 'variable', 'unit'), factor))
     )
   })
+
+test_that(
+  'calc_addVariable() works with filename',
+  {
+    csvstring <- c(
+      "variable;unit;formula",
+      "Consumption|pCap;US$2005/cap;0.001 * `Consumption`/`Population`"
+  )
+  filename <- file.path(tempdir(), "addVariable.csv")
+  writeLines(csvstring, filename)
+  expect_equal(
+    quitte_example_data %>%
+      calc_addVariable("Consumption|pCap" = "0.001 * `Consumption`/`Population`",
+                       units = "US$2005/cap", only.new = TRUE),
+    quitte_example_data %>%
+      calc_addVariable(filename, only.new = TRUE)
+  )
+  })
