@@ -1,6 +1,6 @@
 test_that(
-    desc = 'cartesian(...) generates correct combinations',
-    code = {
+    'cartesian(...) generates correct combinations',
+    {
         expect_equal(
             object = cartesian(1:2),
             expected = c('1', '2')
@@ -20,7 +20,7 @@ test_that(
     })
 
 test_that(
-    desc = 'cartesian() returns NULL',
-    code = {
+    'cartesian() returns NULL',
+    {
         expect_null(object = cartesian())
     })
