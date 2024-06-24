@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.quitte.R
 \name{read.quitte}
 \alias{read.quitte}
-\title{Read IAMC-style .csv or .xlsx files}
+\title{Read IAMC-style .csv or .xlsx files, or object from rds file.}
 \usage{
 read.quitte(
   file,
@@ -19,7 +19,7 @@ read.quitte(
 )
 }
 \arguments{
-\item{file}{Path of IAMC-style .csv or xlsx. file or vector of paths to read.}
+\item{file}{Path of IAMC-style .csv, .xlsx, or rds file or vector of paths to read.}
 
 \item{sep}{Column separator, defaults to ";" in read_mif_header().}
 
@@ -57,7 +57,7 @@ regional settings, respectively.)}
 A quitte data frame.
 }
 \description{
-Reads IAMC-style .csv or .xlsx files into a quitte data frame.
+Reads IAMC-style .csv or .xlsx files or object from rds file into a quitte data frame.
 }
 \details{
 In order to process large data sets, like IIASA data base snapshots,

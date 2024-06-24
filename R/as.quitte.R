@@ -32,7 +32,7 @@ as.quitte <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) 
 
 #' @export
 as.quitte.character <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
-    if (all(file.exists(x) & grepl("\\.(mif|csv|xlsx?)$", x)))
+    if (all(file.exists(x) & grepl("\\.(mif|csv|rds|xlsx?)$", x)))
         return(as.quitte(read.quitte(x, sep = NULL),
                          periodClass = periodClass, addNA = addNA, na.rm = na.rm))
     stop(

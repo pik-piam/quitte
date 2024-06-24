@@ -3,8 +3,8 @@
 \name{read.snapshot}
 \alias{read.snapshot}
 \title{Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
-allowing to filter the loaded data. If head, tail and grep are on your system, a pre-filtering
-improves performance.}
+or data from rds file, allowing to filter the loaded data.
+If head, tail and grep are on your system, a pre-filtering improves performance for csv files.}
 \usage{
 read.snapshot(file, keep = list(), filter.function = identity)
 }
@@ -12,8 +12,8 @@ read.snapshot(file, keep = list(), filter.function = identity)
 \item{file}{Path of single IAMC-style .csv/.mif file}
 
 \item{keep}{list with quitte columns as names and data points that should be kept.
-If head, tail and grep are available, this list is used to extract the data before reading it
-into R. The more you restrict the data here, the faster the data is read.}
+If head, tail and grep are available and a csv/mif file is read, this list is used to extract the
+data before reading it into R. The more you restrict the data here, the faster the data is read.}
 
 \item{filter.function}{A function used to filter data during read, see read.quitte description.
 This allows for more complex filtering, but no performance-enhancing pre-filtering using grep is used.
@@ -24,8 +24,8 @@ A quitte data frame.
 }
 \description{
 Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
-allowing to filter the loaded data. If head, tail and grep are on your system, a pre-filtering
-improves performance.
+or data from rds file, allowing to filter the loaded data.
+If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
 }
 \examples{
 \dontrun{

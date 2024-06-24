@@ -35,7 +35,9 @@ calc_addVariable_(
 \arguments{
 \item{data}{A data frame.}
 
-\item{...}{Name-value pairs of calculation formulas or a single filename. See details.}
+\item{...}{Formulas to calculate new variables.  Either name-value pairs,
+the path to a .csv file, the content of a .csv file as a string, or a data
+frame.  See details.}
 
 \item{units}{Character vector of units corresponding to new variables.  Must
 be of length equal to \code{...} or of length one (in which case all new
@@ -70,29 +72,22 @@ already exist}
 variable is missing.  If \code{TRUE}, warn, and skip that calculation.
 If \code{"silent"}, skip without warning.}
 
-\item{.dots}{Used to work around non-standard evaluation.  See details.}
-}
-\value{
-A data frame.
-}
-\description{
-Calculate new variables from existing ones, using generic formulas.
-}
-\details{
-\code{...} is a list of name-value pairs with the general format
+\item{.dots}{Used to work around non-standard evaluation.  See details.
+
+If \code{...} is a list of name-value pairs, it has the general format
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{"lhs" = "rhs + calculations - formula", "`lhs 2`" = "lhs / `rhs 2`"
 }\if{html}{\out{</div>}}
 
-where \code{lhs} are the names of new variables to be calculated and
-\code{rhs} are the variables to calculate from. If \code{lhs} and \code{rhs}
-are no proper \emph{identifiers}, they need to be quoted (see
-\link[base:Quotes]{Quotes} for details). When in doubt, just quote.
+where \code{lhs} are the names of new variables to be calculated and \code{rhs} are the
+variables to calculate from.  If \code{lhs} and \code{rhs} are no proper \emph{identifiers},
+they need to be quoted (see \link[base:Quotes]{Quotes} for details).  When in
+doubt, just quote.
 
 If the new variables should have units, set \code{units} appropriately.
 
-\code{.dots} is a named list of strings denoting formulas and optionally
-units. The general format is
+\code{.dots} is a named list of strings denoting formulas and optionally units.
+The general format is
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{list("`lhs 1`" = "`rhs` / `calculation`",
      "`lhs 2`" = "sin(`rhs 2`)")
@@ -105,14 +100,40 @@ Units are optionally included with the formulas in a vector like
 
 Units do not require quoting.
 
-As an alternative, the variable, unit and formula can be specified as a csv file in this format:
-variable;unit;formula
-Carbon Intensity|Cement;Mt CO2/Mt;\code{Emi|CO2|Cement} / \code{Production|Cement}
+As an alternative, the variable, unit and formula can be specified as a .csv
+file in this format:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{variable;                unit;      formula
+Carbon Intensity|Cement; Mt CO2/Mt; `Emi|CO2|Cement` / `Production|Cement`
+}\if{html}{\out{</div>}}
+
+or as a single string containing the .csv content (joined by \verb{\\n} line
+breaks)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{paste(c(
+    "variable;         unit;        formula",
+    "Consumption|pCap; US$2005/cap; 0.001 * `Consumption`/`Population`"),
+    collapse = '\\n')
+}\if{html}{\out{</div>}}
+
+or as a data frame with the same columns:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{data.frame(
+    variable = 'Consumption|pCap',
+    unit     = 'US$2005/cap',
+    formula  = '0.001 * `Consumption`/`Population`')
+}\if{html}{\out{</div>}}
 
 \code{...} and \code{.dots} are processed in order, and variables already
 calculated in the same call can be used for further calculations. Other
 existing columns, including \code{period}, can be referenced, but this is
-not supported and the results are considered \emph{undefined}.
+not supported and the results are considered \emph{undefined}.}
+}
+\value{
+A data frame.
+}
+\description{
+Calculate new variables from existing ones, using generic formulas.
 }
 \examples{
 data <- inline.data.frame(c(

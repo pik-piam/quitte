@@ -2,21 +2,24 @@
 % Please edit documentation in R/cartesian.R
 \name{cartesian}
 \alias{cartesian}
-\title{Generate Cartesian product from character vectors}
+\title{Generate Cartesian Product from Vectors}
 \usage{
 cartesian(..., sep = ".")
 }
 \arguments{
-\item{...}{objects that can be coerced to character vectors}
+\item{...}{Vectors to be combined}
 
-\item{sep}{a character string that will separate the elements of \code{...} in the
-output.  Defaults to \code{'.'}.}
+\item{sep}{If a character string, that string will separate the elements of
+\code{...} (if necessary cast to \code{character}) in the output.  If \code{NULL},
+elements of \code{...} will not be cast.  Defaults to \code{'.'}.}
 }
 \value{
-A character vector of the concatenated elements of \code{...}.
+If \code{sep} is a character string, then a character vector of
+concatenated elements.  If \code{sep} is \code{NULL}, then a list of concatenated
+elements.
 }
 \description{
-Generate Cartesian product from character vectors
+Generate Cartesian Product from Vectors
 }
 \examples{
 cartesian(c('a', 'b'), 1:3, c('X', 'Y', 'Z'))
@@ -24,4 +27,24 @@ cartesian(c('a', 'b'), 1:3, c('X', 'Y', 'Z'))
 #  [9] "a.3.Z" "b.1.X" "b.1.Y" "b.1.Z" "b.2.X" "b.2.Y" "b.2.Z" "b.3.X"
 # [17] "b.3.Y" "b.3.Z"
 
+str(cartesian(c('a', 'b'), 17:19, sep = NULL))
+# List of 6
+#  $ :List of 2
+#   ..$ : chr "a"
+#   ..$ : int 17
+#  $ :List of 2
+#   ..$ : chr "a"
+#   ..$ : int 18
+#  $ :List of 2
+#   ..$ : chr "a"
+#   ..$ : int 19
+#  $ :List of 2
+#   ..$ : chr "b"
+#   ..$ : int 17
+#  $ :List of 2
+#   ..$ : chr "b"
+#   ..$ : int 18
+#  $ :List of 2
+#   ..$ : chr "b"
+#   ..$ : int 19
 }
