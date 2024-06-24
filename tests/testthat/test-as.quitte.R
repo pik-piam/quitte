@@ -94,3 +94,12 @@ test_that(
     expect_equal(nrow(as.quitte(NULL)), 0)
   }
 )
+
+test_that(
+  'as.quitte works on rds files',
+  {
+    rdsfile <- tempfile(pattern = "report", fileext = ".rds")
+    saveRDS(quitte_example_data, rdsfile)
+    expect_identical(as.quitte(rdsfile), quitte_example_data)
+  }
+)

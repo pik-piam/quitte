@@ -1,12 +1,12 @@
 #' Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
-#' allowing to filter the loaded data. If head, tail and grep are on your system, a pre-filtering
-#' improves performance.
+#' or data from rds file, allowing to filter the loaded data.
+#' If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
 #'
 #' @md
 #' @param file Path of single IAMC-style .csv/.mif file
 #' @param keep list with quitte columns as names and data points that should be kept.
-#' If head, tail and grep are available, this list is used to extract the data before reading it
-#' into R. The more you restrict the data here, the faster the data is read.
+#' If head, tail and grep are available and a csv/mif file is read, this list is used to extract the
+#' data before reading it into R. The more you restrict the data here, the faster the data is read.
 #' @param filter.function A function used to filter data during read, see read.quitte description.
 #' This allows for more complex filtering, but no performance-enhancing pre-filtering using grep is used.
 #' The 'keep' list and the 'filter.function' can be combined.
@@ -38,7 +38,7 @@ read.snapshot <- function(file, keep = list(), filter.function = identity) {
 
   # temporary file
   tmpfile <- tempfile(pattern = "data", fileext = gsub("^.*\\.", ".", basename(file)))
-  if (length(setdiff(names(keep), "period")) > 0 && !grepl("\\.xlsx?$", file)) {
+  if (length(setdiff(names(keep), "period")) > 0 && !grepl("\\.(rds|xlsx?)$", file)) {
     # check whether system commands are supported
     testcommand <- c("grep", "head", "tail")
     notavailable <- Sys.which(testcommand) == ""

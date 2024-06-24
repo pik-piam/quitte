@@ -1,9 +1,9 @@
-#' Read IAMC-style .csv or .xlsx files
+#' Read IAMC-style .csv or .xlsx files, or object from rds file.
 #'
-#' Reads IAMC-style .csv or .xlsx files into a quitte data frame.
+#' Reads IAMC-style .csv or .xlsx files or object from rds file into a quitte data frame.
 #'
 #' @md
-#' @param file Path of IAMC-style .csv or xlsx. file or vector of paths to read.
+#' @param file Path of IAMC-style .csv, .xlsx, or rds file or vector of paths to read.
 #' @param sep Column separator, defaults to ";" in read_mif_header().
 #' @param quote Quote characters, empty by default.
 #' @param na.strings Entries to interpret as NA; defaults to
@@ -113,6 +113,10 @@ read.quitte <- function(file,
             }
             return(filter.function(as.quitte(data)))
         }
+        if (grepl("\\.rds$", f)) {
+            return(filter.function(as.quitte(readRDS(f))))
+        }
+
         # Check the header for correct names, periods all in one block and no
         # additional columns after the periods
 
