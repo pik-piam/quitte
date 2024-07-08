@@ -9,18 +9,24 @@
 #' @param fields fields to read from variables and equations (any of `lo`,
 #'        `l`, `m`, and `up`); ignored for parameters
 #' @param colNames string vector of column names to override dimension names
-#' @param factors return non-numerical columns as factors (default) or character
-#'        vectors
-#' @param squeeze if TRUE, squeeze out any zero or EPS stored in the GDX
+#' @param factors Deprecated.  Do not use any more.
+#' @param squeeze if `TRUE`, squeeze out any zero or EPS stored in the GDX
 #'        container
 #' @return quitte data frame
 #' @author Michaja Pehl
 #'
+#' @importFrom lifecycle deprecated deprecate_warn is_present
 #' @importFrom tibble as_tibble
 #'
 #' @export
 read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
-                     factors = TRUE, squeeze = TRUE) {
+                     factors = deprecated(), squeeze = TRUE) {
+
+    if (is_present(factors))
+    {
+        deprecate_warn('0.3135.0', 'quitte::read.gdx(factors = )',
+                       details = 'Please do not use the argument anymore.')
+    }
 
     # Check if gdxrrw package is installed
     if (!any(.packages(all.available = TRUE) == "gdxrrw"))
@@ -116,11 +122,6 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
     }
 
     data <- as_tibble(data.frame(data))
-
-    if (!factors) {
-        data <- data %>%
-            character.data.frame()
-    }
 
     return(data)
 }
