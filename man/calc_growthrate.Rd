@@ -9,8 +9,9 @@ calc_growthrate(x, only.new = FALSE, filter.function = identity)
 \arguments{
 \item{x}{anything with an as.quitte method (data.frame, quitte or magclass object, mif file, ...)}
 
-\item{only.new}{If \code{FALSE} (the default), add new variables to existing
-ones.  If \code{TRUE}, return only new variables.}
+\item{only.new}{If \code{FALSE} (the default), add new variables to existing ones.
+If variable names already exist in the data.frame, they are replaced.
+If \code{TRUE}, return only new variables.}
 
 \item{filter.function}{A function used to filter data before calculating growth rates.
 If instead a character vector is passed, only variables matching this vector are used.}
