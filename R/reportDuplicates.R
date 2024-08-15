@@ -10,6 +10,7 @@ reportDuplicates <- function(mifdata) {
   duplicates <- mifdata %>% 
     group_by(.data$model, .data$region, .data$variable, .data$period, .data$scenario) %>% 
     filter(n() > 1) %>%
+    ungroup() %>%
     droplevels()
   if (nrow(duplicates) > 0) {
     short <- duplicates %>%
