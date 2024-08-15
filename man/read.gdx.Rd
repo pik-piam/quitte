@@ -9,32 +9,40 @@ read.gdx(
   requestList.name,
   fields = "l",
   colNames = NULL,
-  factors = TRUE,
+  factors = deprecated(),
   squeeze = TRUE
 )
 }
 \arguments{
-\item{gdxName}{path to \code{.gdx} file}
+\item{gdxName}{Path to a \code{.gdx} file.}
 
-\item{requestList.name}{name of item to read}
+\item{requestList.name}{Name of the item to read.}
 
-\item{fields}{fields to read from variables and equations (any of \code{lo},
-\code{l}, \code{m}, and \code{up}); ignored for parameters}
+\item{fields}{Fields to read from variables and equations.  When using
+\href{gdxrrw-package}{gdxrrw}, any of \code{l}, \code{m}, \code{lo}, \code{up}, \code{s}.  When using
+using \href{gamstransfer-package}{gamstransfer}, \code{level}, \code{marginal}, \code{lower},
+\code{upper}, and \code{scale} are understood as well.  \code{all} will return all
+fields.  Ignored when reading sets or parameters.}
 
-\item{colNames}{string vector of column names to override dimension names}
+\item{colNames}{String vector of column names to override dimension and field
+names.}
 
-\item{factors}{return non-numerical columns as factors (default) or character
-vectors}
+\item{factors}{Deprecated.  Do not use any more.}
 
-\item{squeeze}{if TRUE, squeeze out any zero or EPS stored in the GDX
-container}
+\item{squeeze}{If \code{TRUE}, squeeze out any zero or EPS stored in the GDX
+container.  Ignored when using \href{gamstransfer-package}{gamstransfer}.}
 }
 \value{
-quitte data frame
+A quitte data frame.
 }
 \description{
-\code{read.gdx()} is a wrapper function for \code{\link[gdxrrw:rgdx]{gdxrrw::rgdx()}} that
-returns a quitte data frame.
+\code{read.gdx()} is a wrapper function for either \code{\link[gdxrrw:rgdx]{gdxrrw::rgdx()}} or
+\code{\link[gamstransfer:readGDX]{gamstransfer::readGDX()}} that returns a quitte data frame.
+}
+\details{
+\code{read.gdx()} will use \code{\link[gdxrrw:rgdx]{gdxrrw::rgdx()}} if \href{gdxrrw-package}{gdxrrw} is
+installed and the option \code{quitte_force_gamstransfer} is not \code{TRUE}, otherwise
+it will use \code{\link[gamstransfer:readGDX]{gamstransfer::readGDX()}}.
 }
 \author{
 Michaja Pehl
