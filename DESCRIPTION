@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3135.0
-Date: 2024-06-26
+Version: 0.3136.0
+Date: 2024-08-15
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -62,5 +62,5 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
