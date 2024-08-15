@@ -2,15 +2,18 @@
 % Please edit documentation in R/reportDuplicates.R
 \name{reportDuplicates}
 \alias{reportDuplicates}
-\title{Finds duplicates in a quitte object and warns about them.
-It removes any |+| notation and also warns if units or value differ}
+\title{Finds duplicates in a quitte object and warns about them per model and scenario.
+Also warn if variables are identical but value or units differ.}
 \usage{
 reportDuplicates(mifdata)
 }
 \arguments{
-\item{mifdata}{object that can be converted with as.quitte into quitte data.frame}
+\item{mifdata}{object that can be converted with as.quitte}
+}
+\value{
+only the data that is duplicated. Has 0 rows if everything is fine
 }
 \description{
-Finds duplicates in a quitte object and warns about them.
-It removes any |+| notation and also warns if units or value differ
+Finds duplicates in a quitte object and warns about them per model and scenario.
+Also warn if variables are identical but value or units differ.
 }
