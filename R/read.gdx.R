@@ -56,9 +56,7 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
     }
 }
 
-.read.gdx_gdxrrw <- function(gdxName, requestList.name, fields, colNames,
-                             squeeze) {
-    # Initialise external gdx libraries
+init_gdxrrw <- function() {
     if (!(done <- gdxrrw::igdx(silent = TRUE, returnStr = FALSE))) {
         if ("Windows" == getElement(Sys.info(), "sysname")) {
             path <- strsplit(Sys.getenv("PATH"), ";")[[1]]
@@ -70,13 +68,23 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
                     break
         }
         else {
-            done <- gdxrrw::igdx(system("which gams | xargs dirname",
-                                        intern = TRUE),
-                                 silent = TRUE)
+            suppressWarnings(
+                s <- system("which gams | xargs dirname", intern = TRUE,
+                            ignore.stderr = TRUE))
+            if (0 != length(s)) {
+                done <- gdxrrw::igdx(s, silent = TRUE)
+            }
+            else {
+                done <- FALSE
+            }
         }
     }
+    return(done)
+}
 
-    if (!done) {
+.read.gdx_gdxrrw <- function(gdxName, requestList.name, fields, colNames,
+                             squeeze) {
+    if (!init_gdxrrw()) {
         stop("Could not load gdx libraries")
     }
 

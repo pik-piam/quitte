@@ -210,15 +210,14 @@
 # set up test data to compare to
 source(test_path('test_data/make_test_data.R'))
 
-if ('gdxrrw' %in% .packages(all.available = TRUE))
-{
+if (   'gdxrrw' %in% .packages(all.available = TRUE)
+    && init_gdxrrw()) {
     withr::with_options(
         new = list('quitte_force_gamstransfer' = FALSE),
         `test-read.gdx`())
 }
 
-if ('gamstransfer' %in% .packages(all.available = TRUE))
-{
+if ('gamstransfer' %in% .packages(all.available = TRUE)) {
     withr::with_options(
         new = list('quitte_force_gamstransfer' = TRUE),
         `test-read.gdx`())
