@@ -2,13 +2,14 @@
 % Please edit documentation in R/reportDuplicates.R
 \name{reportDuplicates}
 \alias{reportDuplicates}
-\title{Finds duplicates in a quitte object and warns about them per model and scenario.
-Also warn if variables are identical but value or units differ.}
+\title{Checks for duplicates in quitte object}
 \usage{
-reportDuplicates(mifdata)
+reportDuplicates(mifdata, action = "warn")
 }
 \arguments{
 \item{mifdata}{object that can be converted with as.quitte}
+
+\item{action}{if set to 'warn', a warning with duplicate variables is raised}
 }
 \value{
 only the data that is duplicated. Has 0 rows if everything is fine

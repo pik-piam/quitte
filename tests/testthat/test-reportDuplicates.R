@@ -14,6 +14,11 @@ test_that("report duplicate works", {
   expect_warning(dupl <- reportDuplicates(d),
                  "Emi")
   expect_true(nrow(dupl) > 0)
+  # differs by variant is acceptable
+  d <- data.frame(variable = "Emi", unit = "Mt CO2/yr", period = 2020,
+                  variant = c('A', 'B'), value = 1)
+  expect_no_warning(dupl <- reportDuplicates(d))
+  expect_true(nrow(dupl) == 0)
   # everything fine
   d <- data.frame(variable = "Emi", unit = "Mt CO2/yr", period = 2020, value = 1)
   expect_no_warning(dupl <- reportDuplicates(d))
