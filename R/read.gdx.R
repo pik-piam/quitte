@@ -229,7 +229,8 @@ init_gdxrrw <- function() {
     }
 
     # select correct columns ----
-    column_selector <- c(d[['domain']], fields)
+    column_selector <- c(colnames(d[['records']])[seq_len(d[['dimension']])],
+                         fields)
     if (!is.null(colNames)) {
         if (length(colNames) != length(column_selector)) {
             cli_abort(c(
@@ -241,11 +242,13 @@ init_gdxrrw <- function() {
         }
 
         column_selector <- setNames(column_selector, colNames)
-    } else if ('level' %in% column_selector) {
-        # level is always reported as value
-        column_selector <- setNames(column_selector,
-                                    sub('level', 'value', column_selector,
-                                        fixed = TRUE))
+    } else {
+        column_selector <- setNames(
+            column_selector,
+            c(  # unique names for identical defining sets
+                make.names(d[['domain']], unique = TRUE),
+                # always return `level` as `value`
+                sub('level', 'value', fields, fixed = TRUE)))
     }
 
     # filter data ----
