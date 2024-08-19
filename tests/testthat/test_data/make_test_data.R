@@ -6,6 +6,10 @@ set_d1_lower <- letters[23:26]
 set_d1_UPPER <- LETTERS[1:3]
 set_d2 <- expand_grid(set_d1_UPPER, set_d1_lower)
 
+set_d2_identical <- tibble(set_d1_lower, set_d1_lower,
+                           .name_repair = function(names) {
+                               make.names(names, unique = TRUE) })
+
 # parameters ----
 parameter_d0 <- 13
 

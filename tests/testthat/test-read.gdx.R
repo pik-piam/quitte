@@ -70,6 +70,15 @@
             expect_identical(x, y, info = info)
         })
 
+    test_that(
+        'read.gdx() reads two-dimensional sets with identical defining sets',
+        {
+            x <- read.gdx(gdx, 'set_d2_identical')
+
+            expect_identical(x, set_d2_identical)
+        })
+
+
     ## parameters ----
     test_that(
         'read.gdx() reads scalars correctly',
