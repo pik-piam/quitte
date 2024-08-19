@@ -42,7 +42,7 @@
         })
 
     test_that(
-        'read.gdx() reas two-dimensional sets correctly',
+        'read.gdx() reads two-dimensional sets correctly',
         {
             x <- read.gdx(gdx, 'set_d2_alias')
 
@@ -99,7 +99,7 @@
 
     ## variables ----
     test_that(
-        'reaf.gdx() reads scalar variables correctly',
+        'read.gdx() reads scalar variables correctly',
         {
             x <- read.gdx(gdx, 'variable_d0')
 
