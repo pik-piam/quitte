@@ -29,6 +29,15 @@ test_that(
                    regexp = NA)
   })
 
+test_that(
+  'warning raised in case of duplicates',
+  {
+    expect_warning(object = read.quitte(rep(system.file('extdata',
+                                                        'extra_column.mif',
+                                                        package = 'quitte'), 2)),
+                   regexp = "Duplicated data found for")
+  })
+
 # read .mif file with comment header ----
 test_that(
   desc = 'read .mif file with comment header',

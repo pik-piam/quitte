@@ -1,8 +1,9 @@
 #' Calculates the growth rate in '%/yr' for variables
 #'
 #' @param x anything with an as.quitte method (data.frame, quitte or magclass object, mif file, ...)
-#' @param only.new If `FALSE` (the default), add new variables to existing
-#'   ones.  If `TRUE`, return only new variables.
+#' @param only.new If `FALSE` (the default), add new variables to existing ones.
+#'   If variable names already exist in the data.frame, they are replaced.
+#'   If `TRUE`, return only new variables.
 #' @param filter.function A function used to filter data before calculating growth rates.
 #'   If instead a character vector is passed, only variables matching this vector are used.
 #'
@@ -52,6 +53,6 @@ calc_growthrate <- function(x, only.new = FALSE, filter.function = identity) {
   if (isTRUE(only.new)) {
     return(xg)
   } else {
-    return(rbind(x, xg))
+    return(rbind(filter(x, ! .data$variable %in% levels(xg$variable)), xg))
   }
 }
