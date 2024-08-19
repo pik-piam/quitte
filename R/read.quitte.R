@@ -238,12 +238,7 @@ read.quitte <- function(file,
 
     # check for duplicate entries, ignoring values
     if (check.duplicates) {
-        distinct_rows <- quitte %>%
-            select(-'value') %>%
-            distinct() %>%
-            nrow()
-        if (nrow(quitte) != distinct_rows)
-            warning('Duplicates in resulting quitte')
+        reportDuplicates(quitte, action = "warn")
     }
 
     # apply quitte "class" attribute
