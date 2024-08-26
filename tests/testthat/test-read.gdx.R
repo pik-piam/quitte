@@ -8,22 +8,18 @@
     info <- paste('`quitte_force_gamstransfer` =',
                   options('quitte_force_gamstransfer'))
 
-    identical_tibble <- function(x, y)
-    {
+    identical_tibble <- function(x, y) {
         a <- all.equal(x, y)
         b <- all.equal(attributes(x)[sort(names(attributes(x)))],
                        attributes(y)[sort(names(attributes(y)))])
 
-        if (!isTRUE(a))
-        {
+        if (!isTRUE(a)) {
             return(a)
         }
-        else if (!isTRUE(b))
-        {
+        else if (!isTRUE(b)) {
             return(b)
         }
-        else
-        {
+        else {
             return(TRUE)
         }
     }

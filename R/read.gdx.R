@@ -220,12 +220,12 @@ init_gdxrrw <- function() {
 
     # select correct fields ----
     # only equations and variables have fields, parameters always report value
-    if (is.Set(d)) {
-        fields <- character(0)
+    fields <- if (is.Set(d)) {
+        character(0)
     } else if (is.Parameter(d)) {
-        fields <- 'value'
+        'value'
     } else {
-        fields <- convert_field_names(fields)
+        convert_field_names(fields)
     }
 
     # select correct columns ----
