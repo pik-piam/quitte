@@ -182,6 +182,25 @@ init_gdxrrw <- function() {
         0 == d[['dimension']]
     }
 
+    is.integer.string <- function(x) {
+        all(grepl('^[0-9]+$', x))
+    }
+
+    nothing.defined <- function(d) {
+        is.null(d[['records']])
+    }
+
+    make.gamstransfer.names <- function(s) {
+        for (i in seq_along(s)) {
+            matches <- s[i] == s
+            count <- sum(matches)
+            if (1 < count) {
+                s[matches] <- paste(s[i], seq_len(count), sep = '_')
+            }
+        }
+        return(s)
+    }
+
     convert_field_names <- function(fields) {
         # convert short (gdxrrw) to long (gamstransfer) field names, check for
         # unknown field names
@@ -220,16 +239,16 @@ init_gdxrrw <- function() {
 
     # select correct fields ----
     # only equations and variables have fields, parameters always report value
-    if (is.Set(d)) {
-        fields <- character(0)
+    fields <- if (is.Set(d)) {
+        character(0)
     } else if (is.Parameter(d)) {
-        fields <- 'value'
+        'value'
     } else {
-        fields <- convert_field_names(fields)
+        convert_field_names(fields)
     }
 
     # select correct columns ----
-    column_selector <- c(d[['domain']], fields)
+    column_selector <- c(make.gamstransfer.names(d[['domain']]), fields)
     if (!is.null(colNames)) {
         if (length(colNames) != length(column_selector)) {
             cli_abort(c(
@@ -241,17 +260,29 @@ init_gdxrrw <- function() {
         }
 
         column_selector <- setNames(column_selector, colNames)
-    } else if ('level' %in% column_selector) {
-        # level is always reported as value
-        column_selector <- setNames(column_selector,
-                                    sub('level', 'value', column_selector,
-                                        fixed = TRUE))
+    } else {
+        column_selector <- setNames(
+            column_selector,
+            c(  # unique names for identical defining sets
+                make.names(d[['domain']], unique = TRUE),
+                # always return `level` as `value`
+                sub('level', 'value', fields, fixed = TRUE)))
     }
 
     # filter data ----
-    result <- as_tibble(d[['records']]) %>%
-        select(all_of(column_selector)) %>%
-        mutate(across(where(is.factor), as.character))
+    result <- if (nothing.defined(d)) {
+        matrix(nrow = 0, ncol = length(column_selector),
+               dimnames = list(NULL, column_selector)) %>%
+            as_tibble() %>%
+            mutate(across(all_of(d[['domain']]), as.character),
+                   across(all_of(fields), as.numeric))
+    } else {
+        d[['records']] %>%
+            as_tibble() %>%
+            select(all_of(column_selector)) %>%
+            mutate(across(where(is.factor), as.character),
+                   across(where(is.integer.string), as.numeric))
+    }
 
     # extract scalars ----
     if (is.Scalar(d)) {

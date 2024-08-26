@@ -28,6 +28,13 @@ invisible(m$addSet(name = 'set_d2',
 ## alias of two-dimensional set ----
 invisible(m$addAlias(name = 'set_d2_alias', aliasWith = m['set_d2']))
 
+## two-dimensional set with identical defining sets ----
+invisible(m$addSet(name = 'set_d2_identical',
+                   domain = list('set_d1_lower', 'set_d1_lower'),
+                   records = set_d2_identical,
+                   description = paste('a two-dimensional set with identical',
+                                       'defining sets')))
+
 # parameters ----
 ## scalar/parameter over no set ----
 invisible(m$addParameter(name = 'parameter_d0',
@@ -45,6 +52,12 @@ invisible(m$addParameter(name = 'parameter_d2',
                          domain = c(m['set_d1_UPPER'], m['set_d1_lower']),
                          records = parameter_d2,
                          description = 'a parameter over two sets'))
+
+## parameter with no defined values ----
+invisible(m$addParameter(name = 'parameter_d2_0',,
+                         domain = c(m['set_d1_UPPER'], m['set_d1_lower']),
+                         records = parameter_d2_0,
+                         description = 'a parameter with no defined values'))
 
 # variables ----
 ## variable over no set ----

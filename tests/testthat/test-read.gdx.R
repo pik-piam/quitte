@@ -8,22 +8,18 @@
     info <- paste('`quitte_force_gamstransfer` =',
                   options('quitte_force_gamstransfer'))
 
-    identical_tibble <- function(x, y)
-    {
+    identical_tibble <- function(x, y) {
         a <- all.equal(x, y)
         b <- all.equal(attributes(x)[sort(names(attributes(x)))],
                        attributes(y)[sort(names(attributes(y)))])
 
-        if (!isTRUE(a))
-        {
+        if (!isTRUE(a)) {
             return(a)
         }
-        else if (!isTRUE(b))
-        {
+        else if (!isTRUE(b)) {
             return(b)
         }
-        else
-        {
+        else {
             return(TRUE)
         }
     }
@@ -42,7 +38,7 @@
         })
 
     test_that(
-        'read.gdx() reas two-dimensional sets correctly',
+        'read.gdx() reads two-dimensional sets correctly',
         {
             x <- read.gdx(gdx, 'set_d2_alias')
 
@@ -69,6 +65,15 @@
 
             expect_identical(x, y, info = info)
         })
+
+    test_that(
+        'read.gdx() reads two-dimensional sets with identical defining sets',
+        {
+            x <- read.gdx(gdx, 'set_d2_identical')
+
+            expect_identical(x, set_d2_identical)
+        })
+
 
     ## parameters ----
     test_that(
@@ -97,9 +102,17 @@
             expect_true(identical_tibble(x, parameter_d2), info = info)
         })
 
+    test_that(
+        'read.gdx() reads parameters with no defined values correctly',
+        {
+            x <- read.gdx(gdx, 'parameter_d2_0', squeeze = FALSE)
+
+            expect_true(identical_tibble(x, parameter_d2_0), info = info)
+        })
+
     ## variables ----
     test_that(
-        'reaf.gdx() reads scalar variables correctly',
+        'read.gdx() reads scalar variables correctly',
         {
             x <- read.gdx(gdx, 'variable_d0')
 
