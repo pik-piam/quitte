@@ -53,6 +53,12 @@ invisible(m$addParameter(name = 'parameter_d2',
                          records = parameter_d2,
                          description = 'a parameter over two sets'))
 
+## parameter with no defined values ----
+invisible(m$addParameter(name = 'parameter_d2_0',,
+                         domain = c(m['set_d1_UPPER'], m['set_d1_lower']),
+                         records = parameter_d2_0,
+                         description = 'a parameter with no defined values'))
+
 # variables ----
 ## variable over no set ----
 invisible(m$addVariable(name = 'variable_d0',

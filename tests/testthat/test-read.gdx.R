@@ -102,6 +102,14 @@
             expect_true(identical_tibble(x, parameter_d2), info = info)
         })
 
+    test_that(
+        'read.gdx() reads parameters with no defined values correctly',
+        {
+            x <- read.gdx(gdx, 'parameter_d2_0', squeeze = FALSE)
+
+            expect_true(identical_tibble(x, parameter_d2_0), info = info)
+        })
+
     ## variables ----
     test_that(
         'read.gdx() reads scalar variables correctly',

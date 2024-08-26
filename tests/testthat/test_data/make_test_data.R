@@ -21,6 +21,9 @@ parameter_d2 <- set_d2 %>%
         value = as.integer((Vectorize(charToRaw))(set_d1_UPPER)) * 10000
               + as.integer((Vectorize(charToRaw))(set_d1_lower)))
 
+parameter_d2_0 <- parameter_d2 %>%
+    filter(FALSE)
+
 # variables ----
 variable_d0 <- data.frame('level'    =  13,
                           'marginal' =  -1,
