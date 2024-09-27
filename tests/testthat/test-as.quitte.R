@@ -92,6 +92,14 @@ test_that(
   {
     expect_true(is.quitte(as.quitte(NULL)))
     expect_equal(nrow(as.quitte(NULL)), 0)
+    expect_equal(length(levels(as.quitte(NULL)$model)), 0)
+  }
+)
+
+test_that(
+  'as.quitte fails on non-supported filename',
+  {
+    expect_error(as.quitte('unknownfiletype.§§$%'))
   }
 )
 

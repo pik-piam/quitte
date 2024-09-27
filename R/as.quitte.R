@@ -32,12 +32,12 @@ as.quitte <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) 
 
 #' @export
 as.quitte.character <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
-    if (all(file.exists(x) & grepl("\\.(mif|csv|rds|xlsx?)$", x)))
+    welldefined <- file.exists(x) & grepl("\\.(mif|csv|rds|xlsx?)$", x)
+    if (all(welldefined))
         return(as.quitte(read.quitte(x, sep = NULL),
                          periodClass = periodClass, addNA = addNA, na.rm = na.rm))
-    stop(
-        "Provided character cannot be converted to quitte as it does not seem to be a valid file path!"
-    )
+    stop("Provided character cannot be converted to quitte as those do not seem to be a valid file path:",
+         paste(x[! welldefined], collapse = ", "))
 }
 
 #' @method as.quitte quitte
@@ -242,7 +242,7 @@ as.quitte.list <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FA
 #' @method as.quitte NULL
 #' @export
 as.quitte.NULL <- function(x, periodClass = "integer", addNA = FALSE, na.rm = FALSE) { # nolint
-    return(filter(as.quitte(as_tibble(as.quitte(data.frame(value = 0), periodClass = periodClass))), .data$value > 1))
+    return(droplevels(filter(as.quitte(as_tibble(as.quitte(data.frame(value = 0), periodClass = periodClass))), .data$value > 1)))
 }
 
 qaddNA <- function(x) {
