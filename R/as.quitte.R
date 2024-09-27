@@ -36,7 +36,7 @@ as.quitte.character <- function(x, periodClass = "integer", addNA = FALSE, na.rm
     if (all(welldefined))
         return(as.quitte(read.quitte(x, sep = NULL),
                          periodClass = periodClass, addNA = addNA, na.rm = na.rm))
-    stop("Provided character cannot be converted to quitte as those do not seem to be a valid file path:",
+    stop("Provided character cannot be converted to quitte as those do not seem to be a valid file path: ",
          paste(x[! welldefined], collapse = ", "))
 }
 

@@ -99,7 +99,8 @@ test_that(
 test_that(
   'as.quitte fails on non-supported filename',
   {
-    expect_error(as.quitte('unknownfiletype.§§$%'))
+    expect_error(as.quitte('unknownfiletype.§§$%'),
+                 'do not seem to be a valid file path: unknownfiletype.§§$%', fixed = TRUE)
   }
 )
 
