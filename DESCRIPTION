@@ -24,7 +24,6 @@ Depends:
 Imports:
     cli,
     countrycode,
-    data.table,
     dplyr (>= 1.1.1),
     forcats (>= 1.0.0),
     ggplot2,
