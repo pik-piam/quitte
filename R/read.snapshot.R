@@ -3,7 +3,7 @@
 #' If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
 #'
 #' @md
-#' @param file Path of single IAMC-style .csv/.mif file
+#' @param file Path of single IAMC-style .csv/.mif/.xlsx/.rds file
 #' @param keep list with quitte columns as names and data points that should be kept.
 #' If head, tail and grep are available and a csv/mif file is read, this list is used to extract the
 #' data before reading it into R. The more you restrict the data here, the faster the data is read.
@@ -20,8 +20,11 @@
 #' read.filter.snapshot("snapshot.csv", list(scenario = c("CurPol", "NDC"), region = "World"))
 #' }
 #'
+#' @importFrom data.table fread
 #' @importFrom dplyr filter
 #' @importFrom stats setNames
+#' @importFrom tidyr pivot_longer
+#' @importFrom readxl read_excel excel_sheets
 #'
 #' @export
 
@@ -76,12 +79,17 @@ read.snapshot <- function(file, keep = list(), filter.function = identity) {
     data <- filter.function(data)
     return(data)
   }
-  # read file and do correct filtering
-  data <- read.quitte(tmpfile,
-                      na.strings = c("UNDF", "NA", "N/A", "n_a", ""),
-                      quote = '"',
-                      drop.na = TRUE,
-                      filter.function = joinedfilter)
+  if (grepl("\\.rds$", tmpfile)) {
+    data <- as.quitte(readRDS(tmpfile), na.rm = TRUE)
+  } else if (grepl("\\.xlsx?$", tmpfile)) {
+    data <- read_excel(path = tmpfile, sheet = if ("data" %in% excel_sheets(tmpfile)) "data" else 1, guess_max = 21474836) %>%
+      pivot_longer(matches("[0-9]+"), names_to = "period", values_drop_na = TRUE)
+  } else {
+    sep <- if (grepl(",", read_lines(file = tmpfile, n_max = 1), fixed = TRUE)) "," else ";"
+    data <- fread(tmpfile, sep = sep, header = TRUE, na.strings =  c("UNDF", "NA", "N/A", "n_a", "")) %>%
+      as_tibble() %>%
+      pivot_longer(matches("[0-9]+"), names_to = "period", values_drop_na = TRUE)
+  }
   unlink(tmpfile)
-  return(data)
+  return(joinedfilter(as.quitte(data)))
 }
