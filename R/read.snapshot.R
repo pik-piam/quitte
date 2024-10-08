@@ -3,7 +3,7 @@
 #' If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
 #'
 #' @md
-#' @param file Path of single IAMC-style .csv/.mif file
+#' @param file Path of single IAMC-style .csv/.mif/.xlsx/.rds file
 #' @param keep list with quitte columns as names and data points that should be kept.
 #' If head, tail and grep are available and a csv/mif file is read, this list is used to extract the
 #' data before reading it into R. The more you restrict the data here, the faster the data is read.
@@ -81,6 +81,7 @@ read.snapshot <- function(file, keep = list(), filter.function = identity) {
                       na.strings = c("UNDF", "NA", "N/A", "n_a", ""),
                       quote = '"',
                       drop.na = TRUE,
+                      check.duplicates = FALSE,
                       filter.function = joinedfilter)
   unlink(tmpfile)
   return(data)
