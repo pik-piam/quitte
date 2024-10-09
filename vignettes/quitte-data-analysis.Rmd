@@ -3,10 +3,9 @@ title: "REMIND/IAM Data Analysis Using quitte"
 author: "Michaja Pehl"
 date: "`r as.Date(file.mtime('./quitte-data-analysis.Rmd'))`"
 output: 
-  rmarkdown::html_document:
-      toc: yes
-      toc_float: yes
-      df_print: tibble
+  rmarkdown::html_vignette:
+    toc: yes
+    df_print: tibble
 vignette: >
   %\VignetteIndexEntry{REMIND/IAM Data Analysis Using quitte}
   %\VignetteEncoding{UTF-8}
