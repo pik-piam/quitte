@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3139.0
-Date: 2024-12-05
+Version: 0.3140.0
+Date: 2025-02-12
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -27,8 +27,8 @@ Imports:
     dplyr (>= 1.1.1),
     forcats (>= 1.0.0),
     ggplot2,
-    gms (>= 0.17.0),
     glue,
+    gms (>= 0.17.0),
     lazyeval,
     lifecycle,
     lubridate,
@@ -47,7 +47,7 @@ Imports:
     tidyr,
     tidyselect,
     writexl,
-    zoo,
+    zoo
 Suggests:
     covr,
     gamstransfer,
@@ -57,10 +57,10 @@ Suggests:
     rmarkdown,
     testthat (>= 3.2.0),
     tidyverse,
-    withr,
+    withr
 VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
