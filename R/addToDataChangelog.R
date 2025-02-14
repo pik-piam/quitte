@@ -10,6 +10,7 @@
 #' @param ... Reserved for future expansion.
 #' @param maxEntries The maximum number of versionIds to keep in the changelog, the oldest one is removed first.
 #' @param roundDigits Numbers are rounded to this many decimal places before being written to the changelog.
+#' @return Invisibly, the written changelog as data.frame
 #'
 #' @author Pascal Sauer
 #' @export
@@ -42,6 +43,8 @@ addToDataChangelog <- function(report, changelog, versionId, years, variables, .
   }
 
   if (file.exists(changelog)) {
+    # TODO tryCatch()
+    # TODO documentation
     out <- rbind(out, read.csv(changelog))
     out <- out[seq_len(min(maxEntries, nrow(out))), ]
   }
