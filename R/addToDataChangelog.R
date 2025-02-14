@@ -43,10 +43,16 @@ addToDataChangelog <- function(report, changelog, versionId, years, variables, .
   }
 
   if (file.exists(changelog)) {
-    # TODO tryCatch()
-    # TODO documentation
-    out <- rbind(out, read.csv(changelog))
-    out <- out[seq_len(min(maxEntries, nrow(out))), ]
+    changelog <- normalizePath(changelog)
+    tryCatch({
+      out <- rbind(out, read.csv(changelog))
+      out <- out[seq_len(min(maxEntries, nrow(out))), ]
+    }, error = function(e) {
+      renamedTo <- paste0(dirname(changelog), "/old_", basename(changelog))
+      file.rename(changelog, renamedTo)
+      warning("New data is incompatible with existing data changelog at ", changelog, ". ",
+              "Renamed existing changelog to ", renamedTo)
+    })
   }
   write.csv(out, changelog, quote = FALSE, row.names = FALSE)
   return(invisible(out))
