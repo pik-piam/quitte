@@ -32,6 +32,9 @@ addToDataChangelog(
 
 \item{roundDigits}{Numbers are rounded to this many decimal places before being written to the changelog.}
 }
+\value{
+Invisibly, the written changelog as data.frame
+}
 \description{
 Prepend data from the given report to the changelog.
 }
