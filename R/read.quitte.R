@@ -64,13 +64,13 @@
 #' read.quitte("some/data/file.csv", sep = ",", quote = '"')
 #' }
 #'
-#' @importFrom dplyr as_tibble bind_rows distinct first last mutate tibble
-#'   relocate select
+#' @importFrom dplyr bind_rows distinct first last mutate relocate select
 #' @importFrom forcats as_factor
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data is_empty
 #' @importFrom readr DataFrameCallback problems read_delim_chunked read_lines
 #' @importFrom readxl read_excel excel_sheets
+#' @importFrom tibble as_tibble tibble
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.table
