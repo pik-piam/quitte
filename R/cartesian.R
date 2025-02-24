@@ -57,4 +57,3 @@ cartesian <- function(..., sep = '.')
 
     return(v)
 }
-
