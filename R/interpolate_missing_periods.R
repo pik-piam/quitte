@@ -264,4 +264,3 @@ interpolate_missing_periods_ <- function(data, periods, value = 'value',
 
     return(data)
 }
-
