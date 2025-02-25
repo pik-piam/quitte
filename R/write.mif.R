@@ -24,11 +24,12 @@
 #' @examples
 #' write.mif(quitte_example_data, tempfile())
 #'
-#' @importFrom dplyr %>% across arrange mutate last pull rename_with select
-#' @importFrom tidyr pivot_wider replace_na unite
-#' @importFrom tidyselect everything matches
+#' @importFrom dplyr across arrange mutate last pull rename_with select
+#' @importFrom magrittr %>%
 #' @importFrom readr write_lines
 #' @importFrom stringr str_to_title
+#' @importFrom tidyr pivot_wider replace_na unite
+#' @importFrom tidyselect everything matches
 
 #' @rdname write.mif
 #' @export
