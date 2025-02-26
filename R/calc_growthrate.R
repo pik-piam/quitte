@@ -22,7 +22,8 @@
 #'                            filter.function = function(x) filter(x, grepl("GDP", .data$variable)))
 #' }
 #'
-#' @importFrom dplyr filter group_by lag mutate rename select ungroup %>%
+#' @importFrom dplyr filter group_by lag mutate rename select ungroup
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @return data as a quitte object
