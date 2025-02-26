@@ -24,7 +24,7 @@ tribbelise <- function(df)
                   if (is.numeric(df[[i]])) {
                       format(df[[i]])                    # justified numbers
                   } else {
-                      paste0("'", df[[i]], "'")
+                      ifelse(is.na(df[[i]]), 'NA', paste0("'", df[[i]], "'"))
                   }),
                 # All but the last column are followed by a comma and separating
                 # whitespace.  The last column and row is followed by a closing
