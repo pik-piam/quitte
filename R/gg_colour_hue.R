@@ -20,10 +20,11 @@
 #' @export
 gg_colour_hue <- function(n) {
     if (is.numeric(n) && all(as.integer(n) == n)) {
-        head(hcl(h = seq(15, 375, length = n + 1), l = 65, c = 100), -1)
+        head(hcl(h = seq(15, 375, length.out = n + 1), l = 65, c = 100), -1)
     } else if (is.character(n)) {
         setNames(
-            head(hcl(h = seq(15, 375, length = length(n) + 1), l = 65, c = 100),
+            head(hcl(h = seq(15, 375, length.out = length(n) + 1), l = 65,
+                     c = 100),
                  -1),
             n)
     } else {
