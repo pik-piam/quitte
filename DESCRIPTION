@@ -13,7 +13,7 @@ Authors@R: c(
     person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut"),
     person("Oliver", "Richters", role = "aut")
   )
-Maintainer: Michaja Pehl <michaja.pehl@pik-potsdam.de>
+Maintainer: Falk Benke <benke@pik-potsdam.de>
 Description: A collection of functions for easily dealing with
     quitte-style data frames, doing multi-model comparisons and plots.
 License: GPL-2
