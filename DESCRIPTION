@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3141.3
-Date: 2025-03-05
+Version: 0.3142.0
+Date: 2025-03-19
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -13,7 +13,7 @@ Authors@R: c(
     person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut"),
     person("Oliver", "Richters", role = "aut")
   )
-Maintainer: Michaja Pehl <michaja.pehl@pik-potsdam.de>
+Maintainer: Falk Benke <benke@pik-potsdam.de>
 Description: A collection of functions for easily dealing with
     quitte-style data frames, doing multi-model comparisons and plots.
 License: GPL-2

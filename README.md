@@ -1,6 +1,6 @@
 # Bits and pieces of code to use with quitte-style data frames
 
-R package **quitte**, version **0.3141.3**
+R package **quitte**, version **0.3142.0**
 
 [![CRAN status](https://www.r-pkg.org/badges/version/quitte)](https://cran.r-project.org/package=quitte) [![R build status](https://github.com/pik-piam/quitte/workflows/check/badge.svg)](https://github.com/pik-piam/quitte/actions) [![codecov](https://codecov.io/gh/pik-piam/quitte/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/quitte) [![r-universe](https://pik-piam.r-universe.dev/badges/quitte)](https://pik-piam.r-universe.dev/builds)
 
@@ -41,13 +41,13 @@ vignette("quitte-data-analysis") # REMIND/IAM Data Analysis Using quitte
 
 ## Questions / Problems
 
-In case of questions / problems please contact Michaja Pehl <michaja.pehl@pik-potsdam.de>.
+In case of questions / problems please contact Falk Benke <benke@pik-potsdam.de>.
 
 ## Citation
 
 To cite package **quitte** in publications use:
 
-Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich J, Richters O (2025). "quitte: Bits and pieces of code to use with quitte-style data frames." Version: 0.3141.3, <https://github.com/pik-piam/quitte>.
+Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich J, Richters O (2025). "quitte: Bits and pieces of code to use with quitte-style data frames." Version: 0.3142.0, <https://github.com/pik-piam/quitte>.
 
 A BibTeX entry for LaTeX users is
 
@@ -55,9 +55,9 @@ A BibTeX entry for LaTeX users is
 @Misc{,
   title = {quitte: Bits and pieces of code to use with quitte-style data frames},
   author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich and Oliver Richters},
-  date = {2025-03-05},
+  date = {2025-03-19},
   year = {2025},
   url = {https://github.com/pik-piam/quitte},
-  note = {Version: 0.3141.3},
+  note = {Version: 0.3142.0},
 }
 ```
