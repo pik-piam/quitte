@@ -30,8 +30,8 @@ is.quitte <- function(x, warn=TRUE) {
   }
 
   #is period column of type POSIXct?
-  if(!methods::is(x$period,"POSIXct") && !is.integer(x$period)) {
-    if(warn) warning("Object formally defined as quitte object, but period column is neither integer nor of type POSIXct!")
+  if(!methods::is(x$period,"POSIXct") && !is.integer(x$period) && !is.na(x$period)) {
+    if(warn) warning("Object formally defined as quitte object, but period column is neither integer or NA nor of type POSIXct!")
     return(FALSE)
   }
 
