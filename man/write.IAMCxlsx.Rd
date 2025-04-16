@@ -4,7 +4,7 @@
 \alias{write.IAMCxlsx}
 \title{Write .xlsx file}
 \usage{
-write.IAMCxlsx(x, path, append = FALSE)
+write.IAMCxlsx(x, path, append = FALSE, is.IAMCTimeseries = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link{quitte}} data frame.}
