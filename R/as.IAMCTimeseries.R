@@ -4,7 +4,7 @@
 #'
 #' @md
 #' @param df A [`quitte`] data frame
-#' @param df A fill value. Defaults to `NA`
+#' @param fill A fill value. Defaults to `NA`
 #'
 #' @author Michaja Pehl, Tonn Rüter
 #'
@@ -13,12 +13,16 @@
 #'   qf <- read.quitte("path/to/file") %>% as.IAMCTimeseries()
 #' }
 #'
+#' @importFrom rlang .data
 #' @importFrom dplyr rename_with select
 #' @importFrom tidyr pivot_wider
 #' @importFrom tidyselect matches
 #' @importFrom stringr str_to_title
 #' @export
 as.IAMCTimeseries <- function(df, fill = NA) {
+  # Silence "no visible binding for global variable '.'" build problems. We'll use colnames(.) later on. When using
+  # . (dot) in a magrittr pipe, it refers to whatever is on the left hand side of %>%
+  . <- NULL
   default_columns <- c("Model", "Scenario", "Region", "Variable", "Unit", "Period", "Value")
   return(
     as.quitte(df) %>%
