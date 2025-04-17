@@ -37,20 +37,18 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
                       append = FALSE, sep = ';', na = 'NA') {
     x <- as.quitte(x)
     if (nrow(x) == 0) warning("Writing empty data frame to ", path)
-    default_columns <- c('Model', 'Scenario', 'Region', 'Variable', 'Unit',
-                         'Period', 'Value')
 
-    . <- NULL
+    if (append && file.exists(path)) {
+        other <- read.quitte(path)
+        extra_cols <- setdiff(colnames(other), colnames(x))
+        if (length(extra_cols) > 0) {
+            stop("Cannot append to file ", path, " as it contains extra columns: ", paste(extra_cols, collapse = ", "))
+        }
+        x <- rbind(other, x)
+    }
 
     # make column names upper-case
-    x <- x %>%
-        rename_with(.fn = str_to_title,
-                    .cols = matches('^[A-Za-z][A-Za-z0-9_]*$')) %>%
-        select(setdiff(default_columns, last(default_columns)),
-               setdiff(colnames(.), default_columns),
-               last(default_columns)) %>%
-        arrange(.data$Period) %>%
-        pivot_wider(names_from = 'Period', values_from = 'Value')
+    x <- x %>% as.IAMCTimeseries()
 
     # check existing header
     if (append) {

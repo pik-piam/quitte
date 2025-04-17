@@ -4,7 +4,7 @@
 \alias{write.IAMCxlsx}
 \title{Write .xlsx file}
 \usage{
-write.IAMCxlsx(x, path, append = FALSE)
+write.IAMCxlsx(x, path, append = FALSE, is.IAMCTimeseries = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link{quitte}} data frame.}
@@ -13,6 +13,9 @@ write.IAMCxlsx(x, path, append = FALSE)
 
 \item{append}{Overwrite existing files (\code{FALSE}, default), or append to them
 (\code{TRUE}).}
+
+\item{is.IAMCTimeseries}{Set TRUE if data frame has already been converted to
+wide format. Defaults to FALSE.}
 }
 \description{
 Write a \code{.xlsx} file in line with IAMC standard.

@@ -9,8 +9,7 @@ df_populate_range(df, column, n = 100)
 \arguments{
 \item{df}{A data frame.}
 
-\item{column}{<\link[=dplyr_tidy_select]{tidy-select}> The column with data to
-populate.}
+\item{column}{The column with data to populate. Uses \code{\link[dplyr:dplyr_tidy_select]{tidy-select}} statements}
 
 \item{n}{Length of the sequence to return.  Defaults to 100.}
 }
