@@ -9,7 +9,9 @@
 #' @author Michaja Pehl, Tonn Rüter
 #'
 #' @examples
-#' write.IAMCxlsx(quitte_example_data, tempfile())
+#' \dontrun{
+#'   qf <- read.quitte("path/to/file") %>% as.IAMCTimeseries()
+#' }
 #'
 #' @importFrom dplyr rename_with select
 #' @importFrom tidyr pivot_wider
@@ -18,11 +20,6 @@
 #' @export
 as.IAMCTimeseries <- function(df, fill = NA) {
   default_columns <- c("Model", "Scenario", "Region", "Variable", "Unit", "Period", "Value")
-  # Assume `quitte` columns are always lower case
-  ignored_columns <- setdiff(colnames(df), tolower(default_columns))
-  if (length(ignored_columns) > 0) {
-    warning("Data frame contains non standard column names. Ignore columns: ", paste(ignored_columns, collapse = ", "))
-  }
   return(
     as.quitte(df) %>%
       # Convert lower case column names to Title Case (i.e. capitalize the first letter of each word)
@@ -31,10 +28,17 @@ as.IAMCTimeseries <- function(df, fill = NA) {
         # Make sure not to include `y2015` style periods
         .cols = matches("^[A-Za-z][A-Za-z0-9_]*$")
       ) %>%
-      # Only consider the default columns
-      select(all_of(default_columns)) %>%
+      select(
+        # Select all the default columns (sans Value column) first
+        setdiff(default_columns, last(default_columns)),
+        # Then possible extra columns
+        setdiff(colnames(.), default_columns),
+        # Then the values column
+        last(default_columns)) %>%
       # Drop NAN values
       filter(is.finite(.data$Value), "" != .data$Value) %>%
+      # Make sure periods are sorted
+      arrange(.data$Period) %>%
       # Create new columns based on periods, then fill rows with values
       pivot_wider(names_from = "Period", names_sort = TRUE, values_from = "Value", values_fill = fill)
   )
