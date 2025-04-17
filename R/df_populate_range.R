@@ -4,8 +4,7 @@
 #'
 #' @md
 #' @param df A data frame.
-#' @param column <[tidy-select][dplyr_tidy_select]> The column with data to
-#'     populate.
+#' @param column The column with data to populate. Uses [`tidy-select`][dplyr::dplyr_tidy_select] statements
 #' @param n Length of the sequence to return.  Defaults to 100.
 #'
 #' @return A data frame.
