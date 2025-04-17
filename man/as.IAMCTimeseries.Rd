@@ -7,13 +7,17 @@
 as.IAMCTimeseries(df, fill = NA)
 }
 \arguments{
-\item{df}{A fill value. Defaults to \code{NA}}
+\item{df}{A \code{\link{quitte}} data frame}
+
+\item{fill}{A fill value. Defaults to \code{NA}}
 }
 \description{
 Pivots periods to columns so that values are given as a time series table rather than a long list.
 }
 \examples{
-write.IAMCxlsx(quitte_example_data, tempfile())
+\dontrun{
+  qf <- read.quitte("path/to/file") \%>\% as.IAMCTimeseries()
+}
 
 }
 \author{
