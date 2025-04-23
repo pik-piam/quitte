@@ -21,10 +21,9 @@ test_that(
     'write .mif file with comment header',
     {
         f <- tempfile()
-        set.seed(0)
-        quitte_example_data %>%
-            slice_sample(n = 10) %>%
-          write.mif(path = f, comment_header = c('foo: bar', 'fuzz: baz'))
+        x <- read.quitte(system.file('extdata', 'comment_header.mif',
+                                     package = 'quitte'))
+        write.mif(x = x, path = f, comment_header = attr(x, 'comment_header'))
 
         expect_equal(
             object = read_lines(f),
@@ -38,6 +37,20 @@ test_that(
         f <- tempfile()
         expect_warning(write.mif(filter(quitte_example_data, model == "x"), f),
                        "Writing empty data frame")
+    })
+
+test_that(
+    'write .mif file with comment header',
+    {
+      f <- tempfile()
+      x <- read.quitte(system.file('extdata', 'comment_header.mif',
+                                   package = 'quitte'))
+      write.mif(x = x, path = f, comment_header = attr(x, 'comment_header'))
+
+      expect_equal(
+          object = read_lines(f),
+          expected = read_lines(system.file('extdata', 'comment_header.mif',
+                                            package = 'quitte')))
     })
 
 test_that(
