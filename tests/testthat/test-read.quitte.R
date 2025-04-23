@@ -126,3 +126,16 @@ test_that(
 
           expect_null(df_diff(lhs, rhs))
     })
+
+test_that(
+    'read.quitte() reads IAMC .csv files',
+    {
+        expect_contains(
+            object = read.quitte(
+                file = system.file(
+                    'extdata', 'ar6_climate_assessment_SSP2-PkBudg1000-AMT.csv',
+                    package = 'quitte'),
+                sep = ',') |>
+            class(),
+            expected = 'quitte')
+    })
