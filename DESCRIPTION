@@ -1,7 +1,7 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3143.1.9001
+Version: 0.3144.0
 Date: 2025-04-24
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
@@ -11,7 +11,8 @@ Authors@R: c(
     person("Gunnar", "Luderer", , "luderer@pik-potsdam.de", role = "aut"),
     person("Anselm", "Schultes", , "schultes@pik-potsdam.de", role = "aut"),
     person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut"),
-    person("Oliver", "Richters", role = "aut")
+    person("Oliver", "Richters", role = "aut"),
+    person("Tonn", "Rüter", , "tonn.rueter@pik-potsdam.de", role = "aut")
   )
 Maintainer: Falk Benke <benke@pik-potsdam.de>
 Description: A collection of functions for easily dealing with
