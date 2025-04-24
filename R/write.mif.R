@@ -37,8 +37,10 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
     x <- as.quitte(x)
     if (nrow(x) == 0) warning("Writing empty data frame to ", path)
 
-    # make column names upper-case
-    x <- x %>% as.IAMCTimeseries()
+    # make column names upper-case and pivot periods
+    x <- x %>%
+        pivot_periods() %>%
+        rename_with(str_to_title)
 
     # check existing header
     if (append) {
