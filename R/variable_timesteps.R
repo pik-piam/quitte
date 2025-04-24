@@ -10,7 +10,6 @@
 #' `timesteps`.  `ggplot_bar_remind_vts()` uses the [`remind_timesteps`] data
 #' frame.
 #'
-#' @md
 #' @param data A data frame.
 #' @param timesteps A data frame like [`remind_timesteps`] with columns
 #'   `period`, `year`, and `weight`, where `weight` determines which share of

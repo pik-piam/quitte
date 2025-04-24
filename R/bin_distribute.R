@@ -6,7 +6,6 @@
 #' `bin_distribute_sizes(count, binsize)` calculates the sizes of such bins for
 #' `count` items.
 #'
-#' @md
 #' @param x A character vector to be distributed into bins.
 #' @param binsize The maximum bin size.
 #' @param count The number of items to be binned.

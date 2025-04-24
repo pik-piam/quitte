@@ -5,7 +5,6 @@
 #' smaller/bigger than the existing ones can be filled with the values for the
 #' first/last available period in the case of linear interpolation.
 #'
-#' @md
 #' @param data A data frame or a quitte object.
 #' @param ... A name-value pair of periods to fill. If unnamed, defaults to
 #'     `'period'`. If empty (but possibly named) uses only periods present in

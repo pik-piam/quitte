@@ -5,7 +5,6 @@
 #'
 #'  `write.IAMCcsv()` uses commas as filed separators instead of semi-colons.
 #'
-#' @md
 #' @param x A [`quitte`] data frame.
 #' @param path Path or connection to write to.
 #' @param comment_header Comment header to be written to the `.mif` file.
