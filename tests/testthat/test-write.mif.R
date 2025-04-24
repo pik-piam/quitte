@@ -49,3 +49,26 @@ test_that(
                      expected = quitte_example_dataAR6 %>%
                          filter(!is.na(.data$value)))
     })
+
+test_that(
+    'write.mif(append = TRUE) does not duplicate data',
+    {
+        f <- tempfile(fileext = '.mif')
+
+        d <- quitte_example_data %>%
+            filter(first(scenario) == scenario,
+                   first(variable) == variable,
+                   first(period) == period) %>%
+            droplevels()
+
+        d %>%
+            head(n = floor(nrow(d) / 2)) %>%
+            write.mif(f, append = FALSE)
+
+        d %>%
+            tail(n = ceiling(nrow(d) / 2)) %>%
+            write.mif(f, append = TRUE)
+
+        expect_equal(object = read.quitte(f),
+                     expected = d)
+    })
