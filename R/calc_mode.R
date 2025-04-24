@@ -1,6 +1,5 @@
 #' Calculate the mode of a sample
 #'
-#' @md
 #' @param v A vector.
 #'
 #' @return The mode, or a vector of modes if the sample is multi-modal.

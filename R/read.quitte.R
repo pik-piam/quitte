@@ -2,7 +2,6 @@
 #'
 #' Reads IAMC-style .csv or .xlsx files or object from rds file into a quitte data frame.
 #'
-#' @md
 #' @param file Path of IAMC-style .csv, .xlsx, or rds file or vector of paths to read.
 #' @param sep Column separator, defaults to ";" in read_mif_header().
 #' @param quote Quote characters, empty by default.

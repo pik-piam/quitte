@@ -2,7 +2,6 @@
 #'
 #' This is a wrapper function for [quantile] for easy use with data frames.
 #'
-#' @md
 #' @param .data a data frame, possibly grouped
 #' @param value column name for which sample quantiles should be calculated
 #' @param probs named numeric vector of probabilities with values in

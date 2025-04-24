@@ -2,7 +2,6 @@
 #' or data from rds file, allowing to filter the loaded data.
 #' If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
 #'
-#' @md
 #' @param file Path of single IAMC-style .csv/.mif/.xlsx/.rds file
 #' @param keep list with quitte columns as names and data points that should be kept.
 #' If head, tail and grep are available and a csv/mif file is read, this list is used to extract the

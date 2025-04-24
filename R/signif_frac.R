@@ -2,7 +2,6 @@
 #'
 #' Round numbers to significant digits, preserving integer parts.
 #'
-#' @md
 #' @param x A numeric vector.
 #' @param digits Number of significant digits, defaults to 3.
 #'

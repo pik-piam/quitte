@@ -3,7 +3,6 @@
 #' Check an IAMC-style data frame to see if values across variables and regions
 #' sum up to the totals specified within the data frame.
 #'
-#' @md
 #' @param quitte IAMC-style data frame.
 #' @param check_variables List, string or file of variables to check.
 #' @param check_regions List, string or file of regions to check.

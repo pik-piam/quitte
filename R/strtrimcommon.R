@@ -1,6 +1,5 @@
 #' Trim common portions from both sides of a vector of strings
 #'
-#' @md
 #' @param x A vector of strings
 #' @param split A [`character`] to use for splitting.  If `split` is empty (i.e.
 #'     `split  = ''`), `x` is split into single characters.  Otherwise, `x` is
