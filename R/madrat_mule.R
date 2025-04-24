@@ -3,7 +3,6 @@
 #' Convert _anything_ to a [`magpie`][magclass::magclass] object and back to
 #' traffic data across `madrat` borders.
 #'
-#' @md
 #' @param x Anything.
 #'
 #' @return A [`magpie`][magclass::magclass] object containing `x` (in unusable

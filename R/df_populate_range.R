@@ -2,7 +2,6 @@
 #'
 #' Generate sequences of n equidistant data points for a column in a data frame.
 #'
-#' @md
 #' @param df A data frame.
 #' @param column The column with data to populate. Uses [`tidy-select`][dplyr::dplyr_tidy_select] statements
 #' @param n Length of the sequence to return.  Defaults to 100.

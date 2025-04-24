@@ -1,6 +1,5 @@
 #' Read .mif Header
 #'
-#' @md
 #' @param file A path to a `.mif` file.
 #' @param sep Column separator, defaults to ";".
 #' @param comment A character which at line start signifies the optional comment

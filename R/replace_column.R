@@ -9,7 +9,6 @@
 #' This can be used to replace columns based on a mapping to, e.g., rename
 #' scenarios, regions, etc. in model data.
 #'
-#' @md
 #' @param data A data frame or a quitte object.
 #' @param mask A data frame containing the `match_column` and the
 #'     `new_column`.

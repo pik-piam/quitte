@@ -2,7 +2,6 @@
 #' 
 #' Pivots periods to columns so that values are given as a time series table rather than a long list.
 #'
-#' @md
 #' @param df A [`quitte`] data frame
 #' @param fill A fill value. Defaults to `NA`
 #'

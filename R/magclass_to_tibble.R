@@ -2,7 +2,6 @@
 #'
 #' Sensible `magclass` to `tibble` conversion.
 #'
-#' @md
 #' @param m A [`magpie`][magclass::magclass] object.
 #' @param colnames Column names for the returned `tibble`.  Must match the
 #'     number of columns.

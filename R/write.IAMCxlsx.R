@@ -3,7 +3,6 @@
 #'
 #' Write a `.xlsx` file in line with IAMC standard.
 #'
-#' @md
 #' @param x A [`quitte`] data frame.
 #' @param path Path or connection to write to.
 #' @param append Overwrite existing files (`FALSE`, default), or append to them
