@@ -38,15 +38,6 @@ write.mif <- function(x, path, comment_header = NULL, comment = '#',
     x <- as.quitte(x)
     if (nrow(x) == 0) warning("Writing empty data frame to ", path)
 
-    if (append && file.exists(path)) {
-        other <- read.quitte(path)
-        extra_cols <- setdiff(colnames(other), colnames(x))
-        if (length(extra_cols) > 0) {
-            stop("Cannot append to file ", path, " as it contains extra columns: ", paste(extra_cols, collapse = ", "))
-        }
-        x <- rbind(other, x)
-    }
-
     # make column names upper-case
     x <- x %>% as.IAMCTimeseries()
 
