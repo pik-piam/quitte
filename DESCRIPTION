@@ -27,7 +27,7 @@ Imports:
     countrycode,
     dplyr (>= 1.1.1),
     forcats (>= 1.0.0),
-    ggplot2,
+    ggplot2 (>= 4.0.0),
     gms (>= 0.17.0),
     glue,
     lazyeval,

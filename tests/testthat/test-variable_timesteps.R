@@ -455,19 +455,17 @@ test_that(
 test_that(
   desc = 'ggplot_bar_vts() plots',
   code = {
-    expect_warning(
-      object = expect_s3_class(
-        object = ggplot_bar_vts(
-          data = quitte_example_data %>%
-            filter(first(scenario) == scenario,
-                   last(region) == region,
-                   first(variable) == variable),
-          timesteps = remind_timesteps,
-          mapping = ggplot2::aes(x = !!sym('period'),
-                                 y = !!sym('value'),
-                                 fill = !!sym('variable'))),
-        class = 'ggplot'),
-      regexp = 'Ignoring unknown aesthetics: .*width')
+    expect_s3_class(
+      object = ggplot_bar_vts(
+        data = quitte_example_data %>%
+          filter(first(scenario) == scenario,
+                 last(region) == region,
+                 first(variable) == variable),
+        timesteps = remind_timesteps,
+        mapping = ggplot2::aes(x = !!sym('period'),
+                               y = !!sym('value'),
+                               fill = !!sym('variable'))),
+      class = 'ggplot')
   }
 )
 
@@ -475,17 +473,15 @@ test_that(
 test_that(
   desc = 'ggplot_bar_remind_vts() plots',
   code = {
-    expect_warning(
-      object = expect_s3_class(
-        object = ggplot_bar_remind_vts(
-          data = quitte_example_data %>%
-            filter(first(scenario) == scenario,
-                   last(region) == region,
-                   first(variable) == variable),
-          mapping = ggplot2::aes(x = !!sym('period'),
-                                 y = !!sym('value'),
-                                 fill = !!sym('variable'))),
-        class = 'ggplot'),
-      regexp = 'Ignoring unknown aesthetics: .*width')
+    expect_s3_class(
+      object = ggplot_bar_remind_vts(
+        data = quitte_example_data %>%
+          filter(first(scenario) == scenario,
+                 last(region) == region,
+                 first(variable) == variable),
+        mapping = ggplot2::aes(x = !!sym('period'),
+                               y = !!sym('value'),
+                               fill = !!sym('variable'))),
+      class = 'ggplot')
   }
 )
