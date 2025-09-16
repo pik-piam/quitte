@@ -45,11 +45,11 @@ tribbelise <- function(df)
                             USE.NAMES = FALSE)
             }
 
-            return(x)
+            escape_cntrl(x, escape_quotes = 'both')
         })
 
     c('tribble(',
       sapply(seq_len(lengths(x)[[1]]),
              \(i) paste(sapply(x, getElement, name = i), collapse = ''))) |>
-        cat(sep = '\n')
+      cat(sep = '\n')
 }
