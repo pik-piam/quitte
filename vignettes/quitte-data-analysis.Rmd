@@ -433,7 +433,7 @@ data %>%
 data %>% 
     filter(period %in% c(2010, 2030, 2050, 2100),
            grepl('^PE\\|', variable)) %>% 
-    mip::mipBarYearData(x = .) +
+    mip::mipBarYearData(data = .) +
     facet_wrap(~ region, scales = 'free_y')
 ```
 

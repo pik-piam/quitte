@@ -54,7 +54,7 @@ Suggests:
     gamstransfer,
     gdxrrw,
     knitr,
-    mip,
+    mip (>= 0.155.2),
     rmarkdown,
     testthat (>= 3.2.0),
     tidyverse,
