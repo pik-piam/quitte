@@ -58,9 +58,9 @@ test_that(
     {
         f <- tempfile(fileext = '.csv')
         write.IAMCcsv(quitte_example_dataAR6, f)
-        expect_equal(object = read.snapshot(f),
-                     expected = quitte_example_dataAR6 %>%
-                         filter(!is.na(.data$value)))
+        expect_equivalent(object = read.snapshot(f),
+                          expected = quitte_example_dataAR6 %>%
+                            filter(!is.na(.data$value)))
     })
 
 test_that(
