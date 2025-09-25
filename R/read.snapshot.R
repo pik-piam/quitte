@@ -1,6 +1,7 @@
 #' Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
 #' or data from rds file, allowing to filter the loaded data.
-#' If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
+#' If you're using a non-Windows system with head, tail and grep,
+#' a pre-filtering improves performance for csv files.
 #'
 #' @param file Path of single IAMC-style .csv/.mif/.xlsx/.rds file
 #' @param keep list with quitte columns as names and data points that should be kept.
@@ -38,10 +39,12 @@ read.snapshot <- function(file, keep = list(), filter.function = identity) {
   # temporary file
   tmpfile <- tempfile(pattern = "data", fileext = gsub("^.*\\.", ".", basename(file)))
   if (length(setdiff(names(keep), "period")) > 0 && !grepl("\\.(rds|xlsx?)$", file)) {
-    # check whether system commands are supported
+    # check whether we are on windows (no pipes and output redirection) and system commands are supported
     testcommand <- c("grep", "head", "tail")
     notavailable <- Sys.which(testcommand) == ""
-    if (any(notavailable)) {
+    if (identical(Sys.info()[["sysname"]], "Windows")) {
+        message("On Windows the entire file is read.")
+    } else if (any(notavailable)) {
         message(paste0("`", testcommand[notavailable], "`", collapse = ", "),
                 " are not available system commands, so the entire file is read.")
     } else {

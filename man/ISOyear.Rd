@@ -7,13 +7,13 @@
 ISOyear(year)
 }
 \arguments{
-\item{year}{Vector of years to convert to \link{POSIXct}.}
+\item{year}{Vector of years to convert to \link[lubridate:posix_utils]{lubridate::POSIXct}.}
 }
 \value{
-A vector of \link{POSIXct} values.
+A vector of \link[lubridate:posix_utils]{lubridate::POSIXct} values.
 }
 \description{
-Converts integer years (e.g. \code{2023}) to \link{POSIXct} date/time values (e.g.
+Converts integer years (e.g. \code{2023}) to \link[lubridate:posix_utils]{lubridate::POSIXct} date/time values (e.g.
 \verb{2023-07-02 12:00:00 GMT}) corresponding to July 2, noon, which is the middle
 of the (non-leap) year.  The function keeps a cache of already converted
 values, as the underlying function \code{\link[=ISOdate]{ISOdate()}} is rather slow.

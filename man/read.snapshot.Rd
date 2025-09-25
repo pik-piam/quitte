@@ -4,7 +4,8 @@
 \alias{read.snapshot}
 \title{Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
 or data from rds file, allowing to filter the loaded data.
-If head, tail and grep are on your system, a pre-filtering improves performance for csv files.}
+If you're using a non-Windows system with head, tail and grep,
+a pre-filtering improves performance for csv files.}
 \usage{
 read.snapshot(file, keep = list(), filter.function = identity)
 }
@@ -25,7 +26,8 @@ A quitte data frame.
 \description{
 Reads IAMC-style .csv or .xlsx files obtained as a IIASA snapshot into a quitte data frame,
 or data from rds file, allowing to filter the loaded data.
-If head, tail and grep are on your system, a pre-filtering improves performance for csv files.
+If you're using a non-Windows system with head, tail and grep,
+a pre-filtering improves performance for csv files.
 }
 \examples{
 \dontrun{
