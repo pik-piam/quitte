@@ -47,7 +47,7 @@ linters: list(
     system_file_linter(),
     undesirable_operator_linter(),
     unnecessary_lambda_linter(),
-    unnecessary_nested_if_linter(),
+    unnecessary_nesting_linter(),
     unnecessary_placeholder_linter(),
     unreachable_code_linter(),
     unused_import_linter(),
