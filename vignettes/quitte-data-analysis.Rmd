@@ -2,7 +2,7 @@
 title: "REMIND/IAM Data Analysis Using quitte"
 author: "Michaja Pehl"
 date: "`r as.Date(file.mtime('./quitte-data-analysis.Rmd'))`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: yes
     df_print: tibble
@@ -10,7 +10,7 @@ vignette: >
   %\VignetteIndexEntry{REMIND/IAM Data Analysis Using quitte}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -20,13 +20,13 @@ knitr::opts_chunk$set(
 	message = FALSE,
 	collapse = TRUE,
 	comment = "#>",
-	fig.height = 5, 
+	fig.height = 5,
 	fig.width = 7
 )
 ```
 
 The `quitte` package is a grab-bag of utility functions to work with REMIND/IAM 
-results (or any kind of data) in a `.mif`-like format. It builds on the 
+results (or any kind of data) in a `.mif`-like format. It builds on the
 capabilities of the `dplyr`, `tidyr`, and `ggplot2` packages.
 
 # Load required packages
@@ -36,19 +36,19 @@ library(quitte)
 ```
 
 Generally, when working with quitte, you will need the `dplyr` and `tidyr` 
-packages. `tidyverse` is a "collection" package loading these two, as well as 
+packages. `tidyverse` is a "collection" package loading these two, as well as
 the `ggplot2` package and a couple of others.
 
 
 # Data Wrangling
 
 As `quitte` builds on the capabilities and practices of the _tidy data_ 
-packages, it is highly recommended to read [this excellent tutorial introducing 
+packages, it is highly recommended to read [this excellent tutorial introducing
 `dplyr` and `tidyr`
-](https://datacarpentry.org/R-ecology-lesson/03-dplyr.html). You 
-should be comfortable with the concept of piping (`%>%`), as well as the 
-`filter()`, `select()`, `group_by()`, `mutate()`, and `summarise()` functions. 
-Understanding the join functions (especially `inner_join()` and `full_join()` 
+](https://datacarpentry.org/R-ecology-lesson/03-dplyr.html). You
+should be comfortable with the concept of piping (`%>%`), as well as the
+`filter()`, `select()`, `group_by()`, `mutate()`, and `summarise()` functions.
+Understanding the join functions (especially `inner_join()` and `full_join()`
 will help immensely).
 
 
@@ -58,7 +58,7 @@ will help immensely).
 > explained further down.
 
 `read.quitte()` reads `.mif`-files and converts them into five-dimensional long 
-format data frames with columns `model`, `scenario`, `region`, 
+format data frames with columns `model`, `scenario`, `region`,
 `variable`/`unit`, `period`, and `value`.
 
 First, select all the `.mif` files you want to load:
@@ -76,9 +76,9 @@ data.files <- c(
 ```
 
 > **Tip!** Keep your data input formatted in a way that is easy to read and to 
-> modify. Separate the directory from the path if there are many files in the 
-> same directory. Having each path (or other item) on a separate line (and 
-> ending with `NULL`) makes it easy to comment out individual files during 
+> modify. Separate the directory from the path if there are many files in the
+> same directory. Having each path (or other item) on a separate line (and
+> ending with `NULL`) makes it easy to comment out individual files during
 > development or debugging.
 
 Then load all the files:
@@ -86,7 +86,7 @@ Then load all the files:
 data <- read.quitte(file.path(base.path, data.files))
 ```
 , we can also load it like this:
-This is what you will do normally.  Since the example data is included with the 
+This is what you will do normally.  Since the example data is included with the
 `quitte` package as a data object in case you just want to try something or give
 an example for something, we can also load it like this:
 ```{r quitte example data}
@@ -95,7 +95,7 @@ an example for something, we can also load it like this:
 
 
 # Trim Data
-If you know which data you will need you can trim down the data frame early, 
+If you know which data you will need you can trim down the data frame early,
 reducing memory needs and increasing processing speed.
 
 `inline.data.frame()` is a wrapper function for entering tabular data in an 
@@ -114,22 +114,22 @@ tmax <- 2100
 ```
 
 ```{r trim data}
-data <- data %>% 
+data <- data %>%
     filter(scenario %in% scenarios$scenario,
            tmax >= period)
 ```
 
 
 # Use Pretty Names
-`replace_column()` can be used to replace a column with hard-to-read or ugly 
-entries with more pleasant ones. This is quite useful for preparing data for 
+`replace_column()` can be used to replace a column with hard-to-read or ugly
+entries with more pleasant ones. This is quite useful for preparing data for
 plots or tables.
 
 `order.levels()` arranges factor levels (e.g. scenario names) in a specific 
 order, thus controlling the order with which items appear in plots.
 ```{r replace scenario names}
-(data <- data %>% 
-    replace_column(scenarios, scenario, scen.name) %>% 
+(data <- data %>%
+    replace_column(scenarios, scenario, scen.name) %>%
      order.levels(scenario = scenarios$scen.name))
 ```
 
@@ -141,83 +141,83 @@ together. So instead of writing a long code worm like
 ```{r code worm, eval = FALSE}
 ungroup(mutate(group_by(select(filter(data, 'Reference' == scenario), region, period, value), region), value = cumsum(value)))
 ```
-that you would have to read from the inside out, you can write each function 
-call on a separate line, greatly improving readability as data "flows" from top 
+that you would have to read from the inside out, you can write each function
+call on a separate line, greatly improving readability as data "flows" from top
 to bottom, each function being applied in succession.
 ```{r readable code, eval = FALSE}
-data %>% 
-    filter('Reference' == scenario) %>% 
-    select(region, period, value) %>% 
-    group_by(region) %>% 
-    mutate(value = cumsum(value)) %>% 
+data %>%
+    filter('Reference' == scenario) %>%
+    select(region, period, value) %>%
+    group_by(region) %>%
+    mutate(value = cumsum(value)) %>%
     ungroup()
 ```
 
 ## Filtering
-`filter()` is a more useful and versatile variant of the data frame extraction 
+`filter()` is a more useful and versatile variant of the data frame extraction
 operator `[`. Instead of
 ```{r extraction, eval = FALSE}
 data[data$period == 2030 & df$scenario != 'Reference',]
 ```
 use
 ```{r filter, eval = FALSE}
-data %>% 
+data %>%
     filter(period == 2030,
            scenario != 'Reference')
 ```
 again, improving readability and decreasing proneness to error. Predicates (the
-test) are combined via logical AND, you can use as many of them as you want, 
+test) are combined via logical AND, you can use as many of them as you want,
 and there are lots of helper functions available in the `dplyr` package.
 
 ## Selecting
 `select()` selects columns from a data frame. So if you only need columns
 `scenario` and `region`, do
 ```{r select A and B, eval = FALSE}
-data %>% 
+data %>%
     select(scenario, region)
 ```
 If you need all but `model`, do
 ```{r select all but C, eval = FALSE}
-data %>% 
+data %>%
     select(-model)
 ```
 You can rename columns on the way
 ```{r select and rename, eval = FALSE}
-data %>% 
+data %>%
     select(scenario, year = period)
 ```
 
 ## Grouping
-`group_by()` subdivides a data frame into groups, such that so-called _window_ 
-functions operate only on the items within a group. If you, for example, want 
-to calculate the cumulated energy production over time for different 
+`group_by()` subdivides a data frame into groups, such that so-called _window_
+functions operate only on the items within a group. If you, for example, want
+to calculate the cumulated energy production over time for different
 scenarios and regions, you need to group by those dimensions first.
 ```{r grouping, eval = FALSE}
-data %>% 
-    filter(variable == 'PE') %>% 
-    group_by(scenario, region) %>% 
-    mutate(value = cumsum(value)) %>% 
+data %>%
+    filter(variable == 'PE') %>%
+    group_by(scenario, region) %>%
+    mutate(value = cumsum(value)) %>%
     ungroup()
 ```
 
 ## Mutating
-`mutate()` is the low-level function for modifying existing or creating new 
+`mutate()` is the low-level function for modifying existing or creating new
 columns. Its output has the same number of rows as its input.
 ```{r mutating, eval = FALSE}
-data %>% 
-    filter(variable == 'PE') %>% 
-    group_by(scenario, region) %>% 
-    mutate(value = cumsum(value)) %>% 
+data %>%
+    filter(variable == 'PE') %>%
+    group_by(scenario, region) %>%
+    mutate(value = cumsum(value)) %>%
     ungroup()
 ```
 
 ## Summarising
-`summarise()` is the low-level function for aggregating variables. Its output 
+`summarise()` is the low-level function for aggregating variables. Its output
 has _one_ row for every group. All ungrouped columns are dropped.
 ```{r summarising, eval = FALSE}
-data %>% 
-    group_by(scenario) %>% 
-    summarise(value = mean(value)) %>% 
+data %>%
+    group_by(scenario) %>%
+    summarise(value = mean(value)) %>%
     ungroup()
 ```
 
@@ -226,36 +226,36 @@ data %>%
 `sum_total()` sums values up across regions
 
 ```{r sum regions}
-data %>% 
-    filter(scenario == 'Reference', 
-           variable == 'Consumption', 
-           period == 2050, 
-           region %in% c('CHN', 'IND', 'JPN', 'OAS')) %>% 
+data %>%
+    filter(scenario == 'Reference',
+           variable == 'Consumption',
+           period == 2050,
+           region %in% c('CHN', 'IND', 'JPN', 'OAS')) %>%
     sum_total(group = region, name = 'all Asia')
 ```
 
 or across other dimensions
 
 ```{r sum variables}
-data %>% 
-    filter(scenario == '2°C', 
+data %>%
+    filter(scenario == '2°C',
            region == 'RUS',
            period == 2035,
-           variable %in% paste0('SE|Heat|', c('Coal', 'Gas'))) %>% 
+           variable %in% paste0('SE|Heat|', c('Coal', 'Gas'))) %>%
     sum_total(variable, name = 'SE|Heat|fossil')
 ```
 
 
 # Add New Variables
-`calc_addVariable()` calculates new variables from existing ones, using generic 
-formulas. Variable names that are not valid R identifiers -- basically 
+`calc_addVariable()` calculates new variables from existing ones, using generic
+formulas. Variable names that are not valid R identifiers -- basically
 everything inside a `.mif`-file, need to be escaped using backticks ("`").
 
 ```{r add per-capita FE use}
-data %>% 
+data %>%
     filter(region == 'EUR',
            period == 2025,
-           variable %in% c('PE', 'Population')) %>% 
+           variable %in% c('PE', 'Population')) %>%
     calc_addVariable(
         # EJ/yr / million / (3.6e-9 EJ/MWh) * 1e6 1/million = MWh/yr
         '`PE per capita`' = 'PE / Population / 3.6e-3',
@@ -263,17 +263,17 @@ data %>%
 ```
 
 > **Tip!** Note down all unit conversions you do where you do them, and include 
-> the calculation. This will save you hours of debug-time in the future. 
+> the calculation. This will save you hours of debug-time in the future.
 > (Trust me.)
 
 It is also possible to only keep the newly calculated values for further 
 manipulation, by settting `only.new = TRUE`.
 
 ```{r add PE carrier intensity of GDP}
-data %>% 
+data %>%
     filter(region == 'OAS',
            period == 2070,
-           scenario != 'Reference') %>% 
+           scenario != 'Reference') %>%
     calc_addVariable(
         # EJ/yr / $bn/yr * 1e-15 kJ/EJ * 1e9 $/$bn = kJ/$
         '`PE|Coal|GDP intensity`'       = '`PE|Coal`       / `GDP|PPP` * 1e6',
@@ -303,11 +303,11 @@ returns a data.frame with the variable `Consumption [Growth Rate]`.
 `calcCumulatedDiscount()` calculates the net present value of a time series.
 
 ```{r calc NPV}
-data %>% 
+data %>%
     filter(scenario != 'Reference',
-           region == 'World') %>% 
-    calcCumulatedDiscount(nameVar = 'Policy Cost|Consumption Loss') %>% 
-    select(-model, -region, -unit) %>% 
+           region == 'World') %>%
+    calcCumulatedDiscount(nameVar = 'Policy Cost|Consumption Loss') %>%
+    select(-model, -region, -unit) %>%
     pivot_wider(names_from = 'scenario')
 ```
 
@@ -318,16 +318,16 @@ data %>%
 given probabilities from data frames.
 
 ```{r calculate sample quantiles}
-(data.plot <- data %>% 
+(data.plot <- data %>%
     filter(region != 'World',
-           period == 2040) %>% 
+           period == 2040) %>%
     calc_addVariable(
         # MtCO2/$bn * 1e9 kg/Mt * 1e-9 $/$bn = kgCO2/$
         '`CO2 intensity`' = '`Emi|CO2` / `GDP|PPP`',
         units = 'kGCO2/US$2005',
-        only.new = TRUE) %>% 
-    group_by(model, scenario, variable, unit, period) %>% 
-    calc_quantiles() %>% 
+        only.new = TRUE) %>%
+    group_by(model, scenario, variable, unit, period) %>%
+    calc_quantiles() %>%
     pivot_wider(names_from = 'quantile'))
 ```
 
@@ -336,9 +336,9 @@ This is quite useful for plotting uncertainty ranges.
 ```{r plot_sample_quantities}
 ggplot() +
     geom_col(
-        data = data %>% 
+        data = data %>%
             filter(region == 'World',
-                   period == 2040) %>% 
+                   period == 2040) %>%
             calc_addVariable(
                 # MtCO2/$bn * 1e9 kg/Mt * 1e-9 $/$bn = kgCO2/$
                 '`CO2 intensity`' = '`Emi|CO2` / `GDP|PPP`',
@@ -349,7 +349,7 @@ ggplot() +
     geom_boxplot(
         data = data.plot,
         mapping = aes(
-            x = scenario, 
+            x = scenario,
             ymin = q0, lower = q25, middle = q50, upper = q75, ymax = q100),
         stat = 'identity',
         width = 0.5)
@@ -358,25 +358,25 @@ ggplot() +
 It can also be done for arbitrary quantiles
 
 ```{r calculate different sample quantiles}
-data %>% 
+data %>%
     filter(region == 'World',
-           period == 2040) %>% 
+           period == 2040) %>%
     calc_addVariable(
         # MtCO2/$bn * 1e9 kg/Mt * 1e-9 $/$bn = kgCO2/$
         '`CO2 intensity`' = '`Emi|CO2` / `GDP|PPP`',
         units = 'kGCO2/US$2005',
-        only.new = TRUE) %>% 
-    group_by(model, scenario, variable, unit, period) %>% 
-    calc_quantiles(probs = c(low = 1/3, high = 2/3, 'very high' = 4/5)) %>% 
+        only.new = TRUE) %>%
+    group_by(model, scenario, variable, unit, period) %>%
+    calc_quantiles(probs = c(low = 1/3, high = 2/3, 'very high' = 4/5)) %>%
     pivot_wider(names_from = 'quantile')
 ```
 
 
 # Interpolate Missing Periods
-`interpolate_missing_periods()` adds missing periods to a data frame and 
-interpolates missing values. It uses either _linear_ or _spline_ interpolation 
-and can extend missing data before/after the first/last period in the original 
-data. 
+`interpolate_missing_periods()` adds missing periods to a data frame and
+interpolates missing values. It uses either _linear_ or _spline_ interpolation
+and can extend missing data before/after the first/last period in the original
+data.
 
 ```{r interpolate missing periods}
 data.example <- tribble(
@@ -388,17 +388,17 @@ data.example <- tribble(
     2040,    0.3)
 
 data.plot <- bind_rows(
-    data.example %>% 
+    data.example %>%
         interpolate_missing_periods(
-            x = seq(2005, 2045, 1), expand.values = TRUE, 
-            method = 'linear') %>% 
-        rename(linear = value) %>% 
+            x = seq(2005, 2045, 1), expand.values = TRUE,
+            method = 'linear') %>%
+        rename(linear = value) %>%
         gather(interpolation, value, -x),
-    
+
     data.example %>% 
         interpolate_missing_periods(
-            x = seq(2005, 2045, 1), expand.values = TRUE, method = 'spline') %>% 
-        rename(spline = value) %>% 
+            x = seq(2005, 2045, 1), expand.values = TRUE, method = 'spline') %>%
+        rename(spline = value) %>%
         gather(interpolation, value, -x)
 )
 ```
@@ -422,17 +422,17 @@ Data in `quitte` format is easily passed to the plot functions in the `mip`
 package.
 
 ```{r area_plot_with_mip}
-data %>% 
+data %>%
     filter('World' == region,
-           grepl('^PE\\|', variable)) %>% 
+           grepl('^PE\\|', variable)) %>%
     mip::mipArea(x = .) +
     facet_wrap(~ scenario)
 ```
 
 ```{r bar_plot_with_mip}
-data %>% 
+data %>%
     filter(period %in% c(2010, 2030, 2050, 2100),
-           grepl('^PE\\|', variable)) %>% 
+           grepl('^PE\\|', variable)) %>%
     mip::mipBarYearData(x = .) +
     facet_wrap(~ region, scales = 'free_y')
 ```
@@ -493,12 +493,12 @@ ggplot() +
 ```
 
 In both cases, the visual representation of the data is distorted, since the are 
-of the bars should correspond to the integral of the variable over time. (3 EJ 
-over 10 years should result in a bar with twice the area than 3 EJ over 5 
+of the bars should correspond to the integral of the variable over time. (3 EJ
+over 10 years should result in a bar with twice the area than 3 EJ over 5
 years.)
 
 To correct this, you can use the function `add_remind_timesteps_columns`, that 
-adds two columns to the data frame, `xpos` and `width`, which can be used to 
+adds two columns to the data frame, `xpos` and `width`, which can be used to
 create a 'correct' bar plot:
 ```{r correct barplot, warning = FALSE}
 ggplot() +

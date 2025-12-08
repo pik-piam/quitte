@@ -105,4 +105,3 @@ pivot_periods_longer <- function(df, drop_na = TRUE)
 {
     pivot_periods(df = df, direction = 'longer', drop_na = drop_na)
 }
-
