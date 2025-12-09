@@ -5,7 +5,7 @@ test_that("read.snapshot works", {
     quitteSort() %>%
     droplevels()
   tmpfile <- tempfile(pattern = "data", fileext = ".csv")
-  write.table(pivot_wider(qe, names_from = "period"), 
+  write.table(pivot_wider(qe, names_from = "period"),
               file = tmpfile, append = FALSE, quote = FALSE, sep = ",",
               eol = "\n", na = "", dec = ".", row.names = FALSE,
               col.names = TRUE) # mimick IIASA snapshot format
@@ -29,7 +29,7 @@ test_that("read.snapshot works", {
     expect_equal(droplevels(dplyr::filter(qe, variable %in% v)),
                  read.snapshot(tmpfile, list(variable = v)))
   }
-  ptests <- list(head(unique(qe$period), 1), head(unique(qe$period, 2)), unique(qe$period))  
+  ptests <- list(head(unique(qe$period), 1), head(unique(qe$period, 2)), unique(qe$period))
   for (p in ptests) {
     expect_equal(droplevels(dplyr::filter(qe, period %in% p)),
                  read.snapshot(tmpfile, list(period = p)))
