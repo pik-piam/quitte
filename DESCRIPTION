@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3147.0
-Date: 2026-03-10
+Version: 0.3148.0
+Date: 2026-03-31
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -21,12 +21,13 @@ License: GPL-2
 URL: https://github.com/pik-piam/quitte
 BugReports: https://github.com/pik-piam/quitte/issues
 Depends:
-    R (>= 4.0)
+    R (>= 4.1.0)
 Imports:
     cli,
     countrycode,
     dplyr (>= 1.1.1),
     forcats (>= 1.0.0),
+    gamstransfer,
     ggplot2 (>= 4.0.0),
     gms (>= 0.17.0),
     glue,
@@ -51,7 +52,6 @@ Imports:
     zoo,
 Suggests:
     covr,
-    gamstransfer,
     gdxrrw,
     knitr,
     mip,

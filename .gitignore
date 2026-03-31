@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 quitte.Rproj
+
+# Copilot context files
+.github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
