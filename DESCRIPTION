@@ -1,8 +1,8 @@
 Type: Package
 Package: quitte
 Title: Bits and pieces of code to use with quitte-style data frames
-Version: 0.3147.0
-Date: 2026-03-10
+Version: 0.3148.0
+Date: 2026-03-31
 Authors@R: c(
     person("Michaja", "Pehl", , "pehl@pik-potsdam.de", role = c("aut", "cre")),
     person("Nico", "Bauer", , "nicolasb@pik-potsdam.de", role = "aut"),
@@ -65,3 +65,4 @@ Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
+Config/Needs/website: tidyverse/tidytemplate

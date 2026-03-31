@@ -14,3 +14,4 @@
 ^Makefile$
 ^.*CITATION.cff$
 ^_pkgdown\.yml$
+^\.claude$
