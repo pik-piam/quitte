@@ -10,4 +10,4 @@ allowLinterWarnings: yes
 enforceVersionUpdate: no
 skipCoverage: no
 AutocreateCITATION: yes
-UsePkgDown: no
+UsePkgDown: yes

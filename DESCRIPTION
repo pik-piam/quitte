@@ -65,3 +65,4 @@ Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
+Config/Needs/website: tidyverse/tidytemplate
