@@ -1,0 +1,309 @@
+# Bits and pieces of code to use with quitte-style data frames
+
+R package **quitte**, version **0.3148.0**
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/quitte)](https://cran.r-project.org/package=quitte)
+[![R build
+status](https://github.com/pik-piam/quitte/workflows/check/badge.svg)](https://github.com/pik-piam/quitte/actions)
+[![codecov](https://codecov.io/gh/pik-piam/quitte/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/quitte)
+[![r-universe](https://pik-piam.r-universe.dev/badges/quitte)](https://pik-piam.r-universe.dev/builds)
+
+## Purpose and Functionality
+
+A collection of functions for easily dealing with quitte-style data
+frames, doing multi-model comparisons and plots.
+
+## Installation
+
+For installation of the most recent package version an additional
+repository has to be added in R:
+
+``` r
+options(repos = c(CRAN = "@CRAN@", pik = "https://rse.pik-potsdam.de/r/packages"))
+```
+
+The additional repository can be made available permanently by adding
+the line above to a file called `.Rprofile` stored in the home folder of
+your system (`Sys.glob("~")` in R returns the home directory).
+
+After that the most recent version of the package can be installed using
+`install.packages`:
+
+``` r
+install.packages("quitte")
+```
+
+Package updates can be installed using `update.packages` (make sure that
+the additional repository has been added before running that command):
+
+``` r
+update.packages()
+```
+
+## Tutorial
+
+The package comes with a vignette describing the basic functionality of
+the package and how to use it. You can load it with the following
+command (the package needs to be installed):
+
+``` r
+vignette("quitte-data-analysis") # REMIND/IAM Data Analysis Using quitte
+```
+
+## Questions / Problems
+
+In case of questions / problems please contact Falk Benke
+<benke@pik-potsdam.de>.
+
+## Citation
+
+To cite package **quitte** in publications use:
+
+Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich
+J, Richters O, Rüter T (2026). “quitte: Bits and pieces of code to use
+with quitte-style data frames.” Version: 0.3148.0,
+<https://github.com/pik-piam/quitte>.
+
+A BibTeX entry for LaTeX users is
+
+``` latex
+@Misc{,
+ title = {quitte: Bits and pieces of code to use with quitte-style data frames},
+ author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich and Oliver Richters and Tonn Rüter},
+ date = {2026-03-31},
+ year = {2026},
+ url = {https://github.com/pik-piam/quitte},
+ note = {Version: 0.3148.0},
+}
+```
+
+# Package index
+
+## All functions
+
+- [`ISOyear()`](ISOyear.md) : speedily converting years to POSIXct
+  values
+
+- [`add_countrycode()`](add_countrycode.md)
+  [`add_countrycode_()`](add_countrycode.md) : Add country code
+
+- [`aggregate_map()`](aggregate_map.md) : Aggregates or disaggregates a
+  data frame
+
+- [`bin_distribute()`](bin_distribute.md)
+  [`bin_distribute_sizes()`](bin_distribute.md) : Distribute into Equal
+  Bins
+
+- [`calcAddVariable()`](calcAddVariable.md) : Calculate new variable
+
+- [`calcCumulatedDiscount()`](calcCumulatedDiscount.md) : Calculates the
+  cumulated discounted time series
+
+- [`calcDecompEff()`](calcDecompEff.md)
+  [`calcDecompEff_scen()`](calcDecompEff.md) : Decomposes a change in a
+  variable based on the changes of its factors (Kaya-like)
+
+- [`calcMitigationCost()`](calcMitigationCost.md) : Calculate mitigation
+  costs
+
+- [`calc_addVariable()`](calc_addVariable.md)
+  [`calc_addVariable_()`](calc_addVariable.md) : Calculate new variables
+
+- [`calc_growthrate()`](calc_growthrate.md) : Calculates the growth rate
+  in '%/yr' for variables
+
+- [`calc_mode()`](calc_mode.md) : Calculate the mode of a sample
+
+- [`calc_quantiles()`](calc_quantiles.md)
+  [`calc_quantiles_()`](calc_quantiles.md) : Sample Quantiles
+
+- [`cartesian()`](cartesian.md) : Generate Cartesian Product from
+  Vectors
+
+- [`character.data.frame()`](character.data.frame.md)
+  [`character.data.frame_()`](character.data.frame.md) : Changes factor
+  columns of a data frame into character columns
+
+- [`check_quitte()`](check_quitte.md) : Check IAMC-style data frame for
+  inconsistencies.
+
+- [`chooseFilter()`](chooseFilter.md) : Allows to interactively filter
+  data from quitte object
+
+- [`df.2.named.vector()`](df.2.named.vector.md) : Data frame to named
+  vector
+
+- [`df.as.list()`](df.as.list.md) : Data Frame as List
+
+- [`df_populate_range()`](df_populate_range.md) : Populate Data With
+  Sequence Along Range
+
+- [`df_variation()`](df_variation.md) : Data Frame Variation
+
+- [`duplicate()`](duplicate.md) [`duplicate_()`](duplicate.md) :
+  Duplicate rows
+
+- [`escape_cntrl()`](escape_cntrl.md) : Escape Control Characters
+
+- [`factor.data.frame()`](factor.data.frame.md)
+  [`factor.data.frame_()`](factor.data.frame.md) : (Re-) Factorise
+  factor and character columns in data frame
+
+- [`factorise()`](factorise.md) : Factorise
+
+- [`getColValues()`](getColValues.md) : Retrieves values from one column
+  of a quitte object
+
+- [`getModels()`](getModels.md) : Retrieves models from a quitte object
+
+- [`getPeriods()`](getPeriods.md) : Retrieves periods from a quitte
+  object
+
+- [`getRegs()`](getRegs.md) : Retrieves regions from a quitte object
+
+- [`getScenarios()`](getScenarios.md) : Retrieves scenarios from a
+  quitte object
+
+- [`getVars()`](getVars.md) : Retrieves variable names from a quitte
+  object
+
+- [`gg_colour_hue()`](gg_colour_hue.md) : Get n Colours
+
+- [`inline.data.frame()`](inline.data.frame.md) : Convert a vector of
+  stings to a data frame
+
+- [`interpolate_missing_periods()`](interpolate_missing_periods.md)
+  [`interpolate_missing_periods_()`](interpolate_missing_periods.md) :
+  Interpolate missing periods
+
+- [`list_to_data_frame()`](list_to_data_frame.md)
+  [`list_to_data_frame_()`](list_to_data_frame.md) : Convert mapping
+  list to data frame
+
+- [`looks_like_quitte()`](looks_like_quitte.md) : Does a data frame
+  match the quitte definition?
+
+- [`madrat_mule()`](madrat_mule.md) : Madrat Mule
+
+- [`magclass_to_tibble()`](magclass_to_tibble.md) : Make a Tibble of a
+  Magclass
+
+- [`mif2rds()`](mif2rds.md) : MIF2RDS converter
+
+- [`mutate_text()`](mutate_text.md) : Uses mutate based on a character
+  vector#'
+
+- [`order.levels()`](order.levels.md)
+  [`order.levels_()`](order.levels.md) : Order data frame factor levels.
+
+- [`overwrite()`](overwrite.md) : Replace rows in a data frame with new
+  values
+
+- [`pivot_periods()`](pivot_periods.md)
+  [`pivot_periods_wider()`](pivot_periods.md)
+  [`pivot_periods_longer()`](pivot_periods.md) : Pivot Data Frame on
+  Periods
+
+- [`prepQuitteForScatter()`](prepQuitteForScatter.md) : selects two
+  variables from a long format Quitte and puts them into a wide format
+  Quitte
+
+- [`as.quitte()`](quitte-class.md) [`is.quitte()`](quitte-class.md) :
+  Class "quitte" \~\~~
+
+- [`quitte-package`](quitte-package.md) [`quitte`](quitte-package.md) :
+  The quitte R package
+
+- [`quitte2quantiles()`](quitte2quantiles.md) : calculate quantiles
+
+- [`quitteSort()`](quitteSort.md) : Sorts a quitte object in a
+  standardized way: model -\> scenario -\> variable -\> unit -\> region
+  -\> period
+
+- [`quitte_example_data`](quitte_example_data.md) : quitte example data
+
+- [`quitte_example_dataAR6`](quitte_example_dataAR6.md) : quitte example
+  data with three models (REMIND, GCAM, MESSAGEix) and two scenarios
+  (Current Policies, Delayed transition)
+
+- [`read.gdx()`](read.gdx.md) :
+
+  Read item from `.gdx` file as quitte data frame
+
+- [`read.quitte()`](read.quitte.md) : Read IAMC-style .csv or .xlsx
+  files, or object from rds file.
+
+- [`read.snapshot()`](read.snapshot.md) : Reads IAMC-style .csv or .xlsx
+  files obtained as a IIASA snapshot into a quitte data frame, or data
+  from rds file, allowing to filter the loaded data. If you're using a
+  non-Windows system with head, tail and grep, a pre-filtering improves
+  performance for csv files.
+
+- [`read_mif_header()`](read_mif_header.md) : Read .mif Header
+
+- [`remind_timesteps`](remind_timesteps.md) : REMIND time steps
+
+- [`removeColNa()`](removeColNa.md) : Removes all NA columns of a data
+  frame
+
+- [`replace_column()`](replace_column.md)
+  [`replace_column_()`](replace_column.md) : Replace data frame column
+
+- [`reportDuplicates()`](reportDuplicates.md) : Checks for duplicates in
+  quitte object
+
+- [`revalue.levels()`](revalue.levels.md)
+  [`revalue.levels_()`](revalue.levels.md) : Revalue data frame factor
+  levels.
+
+- [`seq_range()`](seq_range.md) : Sequence from a Range
+
+- [`setXor()`](setXor.md) : Set Xor
+
+- [`signif_frac()`](signif_frac.md) : Round fractions only
+
+- [`signrange()`](signrange.md) : Sign Range
+
+- [`ggplot_bar_stacked_dodged()`](stacked_dodged.md)
+  [`add_stacked_dodged_xpos()`](stacked_dodged.md)
+  [`calc_stacked_dodged_xlabels()`](stacked_dodged.md) : Stacked and
+  dodged bar plots
+
+- [`strtrimcommon()`](strtrimcommon.md) : Trim common portions from both
+  sides of a vector of strings
+
+- [`sum_total()`](sum_total.md) [`sum_total_()`](sum_total.md) : Sum
+  over one dimension of a data frame
+
+- [`toolExtractSortScaleQuitte()`](toolExtractSortScaleQuitte.md) :
+  prepare data for plots
+
+- [`tribbelise()`](tribbelise.md) : Recreate a data frame as a tribble
+
+- [`unique_or_levels()`](unique_or_levels.md) : Unique or levels
+
+- [`unquitte()`](unquitte.md) : Remove quitte class atribute
+
+- [`useWorld()`](useWorld.md) : useWorld
+
+- [`add_timesteps_columns()`](variable_timesteps.md)
+  [`add_remind_timesteps_columns()`](variable_timesteps.md)
+  [`ggplot_bar_vts()`](variable_timesteps.md)
+  [`ggplot_bar_remind_vts()`](variable_timesteps.md) : Bar plots with
+  variable time steps
+
+- [`write.IAMCxlsx()`](write.IAMCxlsx.md) : Write .xlsx file
+
+- [`write.gdx()`](write.gdx.md) :
+
+  Write quitte data frame to a `.gdx` file
+
+- [`write.mif()`](write.mif.md) [`write.IAMCcsv()`](write.mif.md) :
+  Write .mif file
+
+# Articles
+
+### All vignettes
+
+- [REMIND/IAM Data Analysis Using quitte](quitte-data-analysis.md):

@@ -1,0 +1,114 @@
+# Decomposes a change in a variable based on the changes of its factors (Kaya-like)
+
+Computes decomposition for a change in time or policy of a variable. The
+decomposition follows the methodology of the paper: "Some properties of
+an exact energy decomposition model", Sun and Ang, 2000, Energy
+
+## Usage
+
+``` r
+calcDecompEff(df, x, bau = NULL, pol = NULL, gap = "policy")
+
+calcDecompEff_scen(df, x, bau)
+```
+
+## Arguments
+
+- df:
+
+  a quitte object (with coluns model, scenario, region, variable, unit,
+  period, value)
+
+- x:
+
+  a character vector detailing the explained variable from the
+  decomposition as well as the factors in the decomposition. The
+  explained variable should be named "explained" in the character
+  vector.
+
+- bau:
+
+  the name of the reference scenario, as a character string. It is
+  `NULL` as a default
+
+- pol:
+
+  the name of the policy scenario, as a character string. It is `NULL`
+  as a default
+
+- gap:
+
+  either `"policy"` or `"time"`. If `"policy"`, `bau` and `pol` should
+  be detailed. If `"time"`, `bau` and `pol` should stay `NULL`.
+
+## Value
+
+A data frame with the effects of each component of the decomposition.
+The data frame contains new columns:
+
+- `explained` gives the name of the explained variable
+
+- `factors` gives the name of the factor considered (from the
+  decomposition chain)
+
+- `type` gives the parameters:
+
+  - `eff` is the result of the decomposition: how much of the change is
+    to be attributed to the factor
+
+  - `value` is the value of the factor
+
+  - `lag` is the value of the factor in the reference scenario or in the
+    previous period
+
+  - `delta` is the difference in the factor's value between the policy
+    and the reference, or between one period and another
+
+## Author
+
+Antoine Levesque
+
+## Examples
+
+``` r
+# In this example, emissions = ue * fe_ue * emi_fe
+testdf = inline.data.frame(
+  c("scenario ;period; variable; value",
+
+    "reference; 2015 ; emissions; 10",
+    "reference; 2015 ; ue       ;  4",
+    "reference; 2015 ; fe_ue    ;  2",
+    "reference; 2015 ; emi_fe   ;  1.25",
+
+    "reference; 2050 ; emissions; 50",
+    "reference; 2050 ; ue       ; 25",
+    "reference; 2050 ; fe_ue    ;  1.25",
+    "reference; 2050 ; emi_fe   ;  1.6",
+
+    "policy1; 2015 ; emissions; 10",
+    "policy1; 2015 ; ue       ;  4",
+    "policy1; 2015 ; fe_ue    ;  2",
+    "policy1; 2015 ; emi_fe   ;  1.25",
+
+    "policy1; 2050 ; emissions; 20",
+    "policy1; 2050 ; ue       ; 25",
+    "policy1; 2050 ; fe_ue    ;  1.25",
+    "policy1; 2050 ; emi_fe   ;  0.64",
+
+    "policy2; 2015 ; emissions; 10",
+    "policy2; 2015 ; ue       ;  4",
+    "policy2; 2015 ; fe_ue    ;  2",
+    "policy2; 2015 ; emi_fe   ;  1.25",
+
+    "policy2; 2050 ; emissions; 10",
+    "policy2; 2050 ; ue       ; 25",
+    "policy2; 2050 ; fe_ue    ;  1.25",
+    "policy2; 2050 ; emi_fe   ;  0.32")
+)
+testdf = as.quitte(testdf)
+decomposition_chain = c(explained = "emissions", "ue","fe_ue","emi_fe")
+
+result = calcDecompEff(testdf,x = decomposition_chain,gap = "time")
+result2 = calcDecompEff(testdf,x = decomposition_chain,bau = "reference",pol = "policy1")
+result3 = calcDecompEff_scen(testdf, x = decomposition_chain, bau = "reference")
+```
