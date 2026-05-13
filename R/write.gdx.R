@@ -66,6 +66,11 @@ write.gdx <- function(qf, path, varmap, dimCols = c("region", "period"), verbose
     # build gamstransfer container ----
     container <- gamstransfer::Container$new()
 
+    # named sets so the GDX stores proper dimension names (not "*")
+    for (col in dimCols) {
+        container$addSet(col, records = unique(as.character(qf[[col]])))
+    }
+
     for (quitteVar in mappedVars) {
         records <- qf %>%
             filter(.data[['variable']] == quitteVar) %>%
@@ -76,7 +81,7 @@ write.gdx <- function(qf, path, varmap, dimCols = c("region", "period"), verbose
 
         container$addParameter(
             name    = varmap[[quitteVar]],
-            domain  = rep('*', length(dimCols)),
+            domain  = dimCols,
             records = as.data.frame(records)
         )
     }
