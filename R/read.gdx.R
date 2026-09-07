@@ -17,8 +17,8 @@
 #' @param colNames String vector of column names to override dimension and field
 #'     names.
 #' @param factors Deprecated.  Do not use any more.
-#' @param squeeze If `TRUE`, squeeze out any zero or EPS stored in the GDX
-#'        container.  Ignored when using [gamstransfer](gamstransfer-package).
+#' @param squeeze If `TRUE` (the default), squeeze out any zero or EPS stored in
+#'        the GDX container.
 #'
 #' @return A quitte data frame.
 #' @author Michaja Pehl
@@ -282,6 +282,17 @@ init_gdxrrw <- function() {
             select(all_of(column_selector)) %>%
             mutate(across(where(is.factor), as.character),
                    across(where(is.integer.string), as.numeric))
+    }
+
+    # squeeze out stored zeros / EPS ----
+    # gamstransfer::readGDX always returns stored zeros (and reads EPS back as 0),
+    # whereas gdxrrw::rgdx(squeeze = TRUE) drops them. Replicate this for compatibility
+    # so the `squeeze` argument behaves identically: drop records whose primary value/level
+    # is 0. Special vals like NA and +/-Inf are kept
+    if (squeeze && length(fields) > 0 && !is.Scalar(d) && nrow(result) > 0) {
+        value_col <- names(result)[[ncol(result) - length(fields) + 1]]
+        v <- result[[value_col]]
+        result <- result[is.na(v) | v != 0, , drop = FALSE]
     }
 
     # extract scalars ----

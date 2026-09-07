@@ -35,6 +35,28 @@ test_that('write.gdx writes a 2d parameter and round-trips correctly', {
     expect_equal(sort(result$value), sort(parameter_d2$value))
 })
 
+# round-trip through quitte's own read.gdx() ----
+test_that('write.gdx output round-trips through read.gdx()', {
+    x      <- make_quitte_for_write(parameter_d2, 'myVar',
+                                    c('region', 'period'))
+    varmap <- c('myVar' = 'parameter_d2')
+    gdxFn  <- withr::local_tempfile(fileext = '.gdx')
+
+    write.gdx(x, gdxFn, varmap, dimCols = c('region', 'period'))
+
+    result <- read.gdx(gdxFn, 'parameter_d2')
+
+    # dimension names survive as GDX set names, in order, plus the value column
+    expect_identical(colnames(result), c('region', 'period', 'value'))
+    expect_equal(nrow(result), nrow(parameter_d2))
+
+    # values match row-for-row once both are keyed on the dimensions
+    result   <- result[order(result$region, result$period), ]
+    expected <- parameter_d2[order(parameter_d2$set_d1_UPPER,
+                                   parameter_d2$set_d1_lower), ]
+    expect_equal(result$value, expected$value)
+})
+
 # varmap validation ----
 test_that('write.gdx aborts on unnamed varmap', {
     x <- make_quitte_for_write(parameter_d1, 'myVar', 'region')

@@ -29,8 +29,8 @@ names.}
 
 \item{factors}{Deprecated.  Do not use any more.}
 
-\item{squeeze}{If \code{TRUE}, squeeze out any zero or EPS stored in the GDX
-container.  Ignored when using \href{gamstransfer-package}{gamstransfer}.}
+\item{squeeze}{If \code{TRUE} (the default), squeeze out any zero or EPS stored in
+the GDX container.}
 }
 \value{
 A quitte data frame.

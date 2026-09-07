@@ -110,6 +110,40 @@
             expect_true(identical_tibble(x, parameter_d2_0), info = info)
         })
 
+    test_that(
+        'read.gdx() squeezes out stored zeros and EPS by default',
+        {
+            x <- read.gdx(gdx, 'parameter_d1_squeeze')
+
+            expect_true(identical_tibble(x, parameter_d1_squeeze_squeezed),
+                        info = info)
+        })
+
+    test_that(
+        'read.gdx() keeps stored zeros and EPS when squeeze = FALSE',
+        {
+            x <- read.gdx(gdx, 'parameter_d1_squeeze', squeeze = FALSE)
+
+            expect_true(identical_tibble(x, parameter_d1_squeeze), info = info)
+        })
+
+    test_that(
+        'read.gdx() coerces integer-like set elements to numeric',
+        {
+            x <- read.gdx(gdx, 'parameter_years')
+
+            expect_identical(class(x[['set_years']]), 'numeric', info = info)
+            expect_true(identical_tibble(x, parameter_years), info = info)
+        })
+
+    test_that(
+        'read.gdx() preserves +Inf, -Inf and NA special values',
+        {
+            x <- read.gdx(gdx, 'parameter_special')
+
+            expect_true(identical_tibble(x, parameter_special), info = info)
+        })
+
     ## variables ----
     test_that(
         'read.gdx() reads scalar variables correctly',
