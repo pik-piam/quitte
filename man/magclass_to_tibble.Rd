@@ -19,5 +19,5 @@ A \code{\link[tibble:tibble]{tibble}}.
 Sensible \code{magclass} to \code{tibble} conversion.
 }
 \examples{
-magclass_to_tibble(magclass::maxample('pop'))
+\donttest{magclass_to_tibble(magclass::maxample('pop'))}
 }

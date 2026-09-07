@@ -9,9 +9,10 @@ looks_like_quitte(df, verbose = NULL)
 \arguments{
 \item{df}{An object to test for \code{quitte} structure.}
 
-\item{verbose}{Any function like \code{\link[base:message]{message()}},
-\code{\link[base:warning]{warning()}}, or \code{\link[base:stop]{stop()}} to report if any
-of the criteria of the quitte definition are not fulfilled.}
+\item{verbose}{Either \code{NULL}, or one of \code{'abort'}, \code{'warn'}, or \verb{'inform}',
+to report if any of the criteria of the quitte definition are not
+fulfilled using \verb{[cli::cli_abort]}, \verb{[cli::cli_warn]}, or
+\verb{[cli::cli_inform]}.}
 }
 \value{
 \code{TRUE} if all criteria are met, \code{FALSE} otherwise.
@@ -35,6 +36,6 @@ quitte_example_data \%>\%
 quitte_example_data \%>\%
     select(-'model') \%>\%
     mutate(period = as.character(period)) \%>\%
-    looks_like_quitte(verbose = message)
+    looks_like_quitte(verbose = 'inform')
 
 }
