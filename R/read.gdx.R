@@ -12,8 +12,9 @@
 #' @param colNames String vector of column names to override dimension and field
 #'     names.
 #' @param factors Deprecated.  Do not use any more.
-#' @param squeeze If `TRUE` (the default), squeeze out any zero or EPS stored in
-#'        the GDX container.
+#' @param squeeze If `TRUE`, squeeze out any zero or EPS stored in the GDX
+#'        container.  Defaults to `FALSE`, i.e. all stored values (including
+#'        zeros and EPS) are returned.
 #'
 #' @return A quitte data frame.
 #' @author Michaja Pehl
@@ -24,7 +25,7 @@
 #'
 #' @export
 read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
-                     factors = deprecated(), squeeze = TRUE) {
+                     factors = deprecated(), squeeze = FALSE) {
     if (is_present(factors)) {
         deprecate_warn('0.3135.0', 'quitte::read.gdx(factors = )',
                        details = 'Please do not use the argument anymore.')

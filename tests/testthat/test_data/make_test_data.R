@@ -25,9 +25,9 @@ parameter_d2_0 <- parameter_d2 %>%
     filter(FALSE)
 
 ## parameter with stored zeros and an EPS, for testing `squeeze` ----
-# read.gdx() reads EPS back as 0.  With squeeze = TRUE (the default) both the
-# stored zero and the EPS entry are dropped, leaving only the genuinely non-zero
-# record; with squeeze = FALSE both are returned (as 0).
+# read.gdx() reads EPS back as 0.  With squeeze = FALSE (the default) both the
+# stored zero and the EPS entry are returned (as 0); with squeeze = TRUE both are
+# dropped, leaving only the genuinely non-zero record.
 parameter_d1_squeeze <- tibble(set_d1_UPPER, value = c(0, 0, 5))
 
 parameter_d1_squeeze_squeezed <- parameter_d1_squeeze %>%

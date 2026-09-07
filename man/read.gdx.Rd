@@ -10,7 +10,7 @@ read.gdx(
   fields = "l",
   colNames = NULL,
   factors = deprecated(),
-  squeeze = TRUE
+  squeeze = FALSE
 )
 }
 \arguments{
@@ -28,8 +28,9 @@ names.}
 
 \item{factors}{Deprecated.  Do not use any more.}
 
-\item{squeeze}{If \code{TRUE} (the default), squeeze out any zero or EPS stored in
-the GDX container.}
+\item{squeeze}{If \code{TRUE}, squeeze out any zero or EPS stored in the GDX
+container.  Defaults to \code{FALSE}, i.e. all stored values (including
+zeros and EPS) are returned.}
 }
 \value{
 A quitte data frame.
