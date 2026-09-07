@@ -52,7 +52,6 @@ Imports:
     zoo,
 Suggests:
     covr,
-    gdxrrw,
     knitr,
     mip,
     rmarkdown,
