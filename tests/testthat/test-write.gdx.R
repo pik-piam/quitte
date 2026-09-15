@@ -116,7 +116,6 @@ test_that("write.gdx always warns on varmap entries missing from df", {
     )
 })
 
-# ...existing code...
 # no matches at all ----
 test_that("write.gdx aborts when no variables match varmap", {
     x <- make_quitte_for_write(parameter_d1, "myVar", "region")

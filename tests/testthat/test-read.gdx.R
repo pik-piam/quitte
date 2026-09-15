@@ -103,19 +103,19 @@ test_that(
     })
 
 test_that(
-    'read.gdx() keeps stored zeros and EPS by default (squeeze = FALSE)',
+    'read.gdx() squeezes out stored zeros and EPS by default (squeeze = TRUE)',
     {
         x <- read.gdx(gdx, 'parameter_d1_squeeze')
 
-        expect_true(identical_tibble(x, parameter_d1_squeeze))
+        expect_true(identical_tibble(x, parameter_d1_squeeze_squeezed))
     })
 
 test_that(
-    'read.gdx() squeezes out stored zeros and EPS when squeeze = TRUE',
+    'read.gdx() keeps stored zeros and EPS when squeeze = FALSE',
     {
-        x <- read.gdx(gdx, 'parameter_d1_squeeze', squeeze = TRUE)
+        x <- read.gdx(gdx, 'parameter_d1_squeeze', squeeze = FALSE)
 
-        expect_true(identical_tibble(x, parameter_d1_squeeze_squeezed))
+        expect_true(identical_tibble(x, parameter_d1_squeeze))
     })
 
 test_that(
