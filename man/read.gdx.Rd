@@ -9,8 +9,7 @@ read.gdx(
   requestList.name,
   fields = "l",
   colNames = NULL,
-  factors = deprecated(),
-  squeeze = FALSE
+  squeeze = TRUE
 )
 }
 \arguments{
@@ -26,11 +25,9 @@ parameters.}
 \item{colNames}{String vector of column names to override dimension and field
 names.}
 
-\item{factors}{Deprecated.  Do not use any more.}
-
-\item{squeeze}{If \code{TRUE}, squeeze out any zero or EPS stored in the GDX
-container.  Defaults to \code{FALSE}, i.e. all stored values (including
-zeros and EPS) are returned.}
+\item{squeeze}{If \code{TRUE} (the default), drop records whose value/level is a
+stored zero or EPS.  Set to \code{FALSE} to return every stored value,
+including zeros and EPS.}
 }
 \value{
 A quitte data frame.

@@ -7,7 +7,7 @@
 magclass_to_tibble(m, colnames = NULL)
 }
 \arguments{
-\item{m}{A \code{\link[magclass:magclass-package]{magpie}} object.}
+\item{m}{A \code{\link[magclass:magclass]{magpie}} object.}
 
 \item{colnames}{Column names for the returned \code{tibble}.  Must match the
 number of columns.}
