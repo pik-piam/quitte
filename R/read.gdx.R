@@ -11,26 +11,19 @@
 #'     parameters.
 #' @param colNames String vector of column names to override dimension and field
 #'     names.
-#' @param factors Deprecated.  Do not use any more.
-#' @param squeeze If `TRUE`, squeeze out any zero or EPS stored in the GDX
-#'        container.  Defaults to `FALSE`, i.e. all stored values (including
-#'        zeros and EPS) are returned.
+#' @param squeeze If `TRUE` (the default), drop records whose value/level is a
+#'        stored zero or EPS.  Set to `FALSE` to return every stored value,
+#'        including zeros and EPS.
 #'
 #' @return A quitte data frame.
 #' @author Michaja Pehl
 #'
 #' @importFrom cli cli_abort
-#' @importFrom lifecycle deprecated deprecate_warn is_present
 #' @importFrom tibble as_tibble
 #'
 #' @export
 read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
-                     factors = deprecated(), squeeze = FALSE) {
-    if (is_present(factors)) {
-        deprecate_warn('0.3135.0', 'quitte::read.gdx(factors = )',
-                       details = 'Please do not use the argument anymore.')
-    }
-
+                     squeeze = TRUE) {
     # functions ----
     is.Alias <- function(d) {
         'Alias' == d[['class']]
@@ -68,8 +61,8 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
     }
 
     convert_field_names <- function(fields) {
-        # convert short (gdxrrw) to long (gamstransfer) field names, check for
-        # unknown field names
+        # convert short field names (l, m, ...) to the long names gamstransfer
+        # uses, and check for unknown field names
         field_codes <- c('l'  = 'level',
                          'm'  = 'marginal',
                          'lo' = 'lower',
@@ -151,10 +144,13 @@ read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
     }
 
     # squeeze out stored zeros / EPS ----
-    # gamstransfer::readGDX always returns stored zeros (and reads EPS back as 0),
-    # whereas gdxrrw::rgdx(squeeze = TRUE) drops them. Replicate this for compatibility
-    # so the `squeeze` argument behaves identically: drop records whose primary value/level
-    # is 0. Special vals like NA and +/-Inf are kept
+    # When `squeeze` is TRUE, drop records whose primary value/level is a stored
+    # zero.  This only touches symbols that have a value/level column: sets carry
+    # no value (`length(fields) == 0`), so they are never squeezed. Parameters are
+    # sparse, so a plain 0 is simply absent rather than stored. `gamstransfer`
+    # reads EPS back as 0, so EPS records are dropped here too. Matters only for
+    # variables and equations, where GDX stores a 0 level record. Special values
+    # (NA, +/-Inf) are always kept.
     if (squeeze && length(fields) > 0 && !is.Scalar(d) && nrow(result) > 0) {
         value_col <- names(result)[[ncol(result) - length(fields) + 1]]
         v <- result[[value_col]]
