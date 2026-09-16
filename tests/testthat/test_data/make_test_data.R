@@ -24,6 +24,24 @@ parameter_d2 <- set_d2 %>%
 parameter_d2_0 <- parameter_d2 %>%
     filter(FALSE)
 
+## parameter with stored zeros and an EPS, for testing `squeeze` ----
+# read.gdx() reads EPS back as 0.  With squeeze = TRUE (the default) both the
+# stored zero and the EPS entry are dropped, leaving only the genuinely non-zero
+# record; with squeeze = FALSE both are returned (as 0).
+parameter_d1_squeeze <- tibble(set_d1_UPPER, value = c(0, 0, 5))
+
+parameter_d1_squeeze_squeezed <- parameter_d1_squeeze %>%
+    filter(0 != value)
+
+## parameter over integer-like (year) labels, for testing numeric coercion ----
+set_years <- c('2005', '2010', '2015')
+
+parameter_years <- tibble(set_years = as.numeric(set_years),
+                          value = c(10, 20, 30))
+
+## parameter with GAMS special values +Inf, -Inf and NA/UNDF ----
+parameter_special <- tibble(set_d1_UPPER, value = c(Inf, -Inf, NA))
+
 # variables ----
 variable_d0 <- data.frame('level'    =  13,
                           'marginal' =  -1,

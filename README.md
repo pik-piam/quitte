@@ -1,6 +1,6 @@
 # Bits and pieces of code to use with quitte-style data frames
 
-R package **quitte**, version **0.3151.0**
+R package **quitte**, version **0.3152.0**
 
    [![R build status](https://github.com/pik-piam/quitte/workflows/check/badge.svg)](https://github.com/pik-piam/quitte/actions) [![codecov](https://codecov.io/gh/pik-piam/quitte/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/quitte) [![r-universe](https://pik-piam.r-universe.dev/badges/quitte)](https://pik-piam.r-universe.dev/builds)
 
@@ -21,13 +21,13 @@ The additional repository can be made available permanently by adding the line a
 
 After that the most recent version of the package can be installed using `install.packages`:
 
-```r 
+```r
 install.packages("quitte")
 ```
 
 Package updates can be installed using `update.packages` (make sure that the additional repository has been added before running that command):
 
-```r 
+```r
 update.packages()
 ```
 
@@ -47,7 +47,7 @@ In case of questions / problems please contact Falk Benke <benke@pik-potsdam.de>
 
 To cite package **quitte** in publications use:
 
-Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich J, Richters O, Rüter T (2026). "quitte: Bits and pieces of code to use with quitte-style data frames." Version: 0.3151.0, <https://github.com/pik-piam/quitte>.
+Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich J, Richters O, Rüter T (2026). "quitte: Bits and pieces of code to use with quitte-style data frames." Version: 0.3152.0, <https://github.com/pik-piam/quitte>.
 
 A BibTeX entry for LaTeX users is
 
@@ -55,9 +55,9 @@ A BibTeX entry for LaTeX users is
 @Misc{,
   title = {quitte: Bits and pieces of code to use with quitte-style data frames},
   author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich and Oliver Richters and Tonn Rüter},
-  date = {2026-07-23},
+  date = {2026-09-07},
   year = {2026},
   url = {https://github.com/pik-piam/quitte},
-  note = {Version: 0.3151.0},
+  note = {Version: 0.3152.0},
 }
 ```
