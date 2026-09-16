@@ -27,6 +27,11 @@
 - [`calcMitigationCost()`](calcMitigationCost.md) : Calculate mitigation
   costs
 
+- [`calc_addScenIncrease()`](calc_addScenIncrease.md)
+  [`calc_addScenRatio()`](calc_addScenIncrease.md)
+  [`calc_addScenPercentChange()`](calc_addScenIncrease.md) : Add
+  Scenario Change
+
 - [`calc_addVariable()`](calc_addVariable.md)
   [`calc_addVariable_()`](calc_addVariable.md) : Calculate new variables
 

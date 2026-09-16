@@ -171,8 +171,6 @@ replace_column(quitte, mask, model = ugly_name, clear_name)
 #> 1 Model 1 Scenario Region Variable Unit    2010     1
 #> 2 Model 2 Scenario Region Variable Unit    2010     2
 str(.Last.value)
-#> List of 3
-#>  $ repos        : NULL
-#>  $ Ncpus        : NULL
-#>  $ HTTPUserAgent: chr "R/4.5.3 (ubuntu-24.04) R (4.5.3 x86_64-pc-linux-gnu x86_64 linux-gnu)"
+#> List of 1
+#>  $ HTTPUserAgent: NULL
 ```

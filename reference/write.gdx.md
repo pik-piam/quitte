@@ -2,7 +2,7 @@
 
 Writes one or more variables from a quitte data frame as GAMS parameters
 to a `.gdx` file using
-[`gamstransfer::gamstransfer`](https://rdrr.io/pkg/gamstransfer/man/gamstransfer-package.html).
+[`gamstransfer`](https://rdrr.io/pkg/gamstransfer/man/gamstransfer-package.html).
 
 ## Usage
 

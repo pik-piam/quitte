@@ -1,7 +1,7 @@
 # Add country code
 
 Wrapper function for
-[`countrycode::countrycode()`](https://vincentarelbundock.github.io/countrycode/man/countrycode.html)
+[`countrycode::countrycode()`](https://rdrr.io/pkg/countrycode/man/countrycode.html)
 enabling piped execution.
 
 ## Usage
@@ -33,14 +33,14 @@ add_countrycode_(data, origin, destination, warn = TRUE, na.rm = FALSE)
 - origin:
 
   Named scalar linking source column to source coding scheme. See
-  [`countrycode::countrycode()`](https://vincentarelbundock.github.io/countrycode/man/countrycode.html)
+  [`countrycode::countrycode()`](https://rdrr.io/pkg/countrycode/man/countrycode.html)
   for details.
 
 - destination:
 
   Named scalar linking destination column name to destination coding
   scheme. See
-  [`countrycode::countrycode()`](https://vincentarelbundock.github.io/countrycode/man/countrycode.html)
+  [`countrycode::countrycode()`](https://rdrr.io/pkg/countrycode/man/countrycode.html)
   for details.
 
 ## Value

@@ -27,13 +27,13 @@ Source:
 
 Pehl M, Bauer N, Hilaire J, Levesque A, Luderer G, Schultes A, Dietrich
 J, Richters O, Rüter T (2026). *quitte: Bits and pieces of code to use
-with quitte-style data frames*. R package version 0.3148.0,
+with quitte-style data frames*. R package version 0.3152.0,
 <https://github.com/pik-piam/quitte>.
 
     @Manual{,
       title = {quitte: Bits and pieces of code to use with quitte-style data frames},
       author = {Michaja Pehl and Nico Bauer and Jérôme Hilaire and Antoine Levesque and Gunnar Luderer and Anselm Schultes and Jan Philipp Dietrich and Oliver Richters and Tonn Rüter},
       year = {2026},
-      note = {R package version 0.3148.0},
+      note = {R package version 0.3152.0},
       url = {https://github.com/pik-piam/quitte},
     }

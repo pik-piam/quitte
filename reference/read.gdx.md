@@ -1,7 +1,6 @@
 # Read item from `.gdx` file as quitte data frame
 
-`read.gdx()` is a wrapper function for either
-[`gdxrrw::rgdx()`](https://rdrr.io/pkg/gdxrrw/man/rgdx.html) or
+`read.gdx()` is a wrapper function for
 [`gamstransfer::readGDX()`](https://rdrr.io/pkg/gamstransfer/man/readGDX.html)
 that returns a quitte data frame.
 
@@ -13,7 +12,6 @@ read.gdx(
   requestList.name,
   fields = "l",
   colNames = NULL,
-  factors = deprecated(),
   squeeze = TRUE
 )
 ```
@@ -30,36 +28,24 @@ read.gdx(
 
 - fields:
 
-  Fields to read from variables and equations. When using
-  [gdxrrw](gdxrrw-package), any of `l`, `m`, `lo`, `up`, `s`. When using
-  using [gamstransfer](gamstransfer-package), `level`, `marginal`,
-  `lower`, `upper`, and `scale` are understood as well. `all` will
-  return all fields. Ignored when reading sets or parameters.
+  Fields to read from variables and equations. Any of `l`, `m`, `lo`,
+  `up`, `s` (or the long forms `level`, `marginal`, `lower`, `upper`,
+  and `scale`). `all` will return all fields. Ignored when reading sets
+  or parameters.
 
 - colNames:
 
   String vector of column names to override dimension and field names.
 
-- factors:
-
-  Deprecated. Do not use any more.
-
 - squeeze:
 
-  If `TRUE`, squeeze out any zero or EPS stored in the GDX container.
-  Ignored when using [gamstransfer](gamstransfer-package).
+  If `TRUE` (the default), drop records whose value/level is a stored
+  zero or EPS. Set to `FALSE` to return every stored value, including
+  zeros and EPS.
 
 ## Value
 
 A quitte data frame.
-
-## Details
-
-`read.gdx()` will use
-[`gdxrrw::rgdx()`](https://rdrr.io/pkg/gdxrrw/man/rgdx.html) if
-[gdxrrw](gdxrrw-package) is installed and the option
-`quitte_force_gamstransfer` is not `TRUE`, otherwise it will use
-[`gamstransfer::readGDX()`](https://rdrr.io/pkg/gamstransfer/man/readGDX.html).
 
 ## Author
 

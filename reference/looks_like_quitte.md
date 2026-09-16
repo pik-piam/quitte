@@ -25,10 +25,9 @@ looks_like_quitte(df, verbose = NULL)
 
 - verbose:
 
-  Any function like [`message()`](https://rdrr.io/r/base/message.html),
-  [`warning()`](https://rdrr.io/r/base/warning.html), or
-  [`stop()`](https://rdrr.io/r/base/stop.html) to report if any of the
-  criteria of the quitte definition are not fulfilled.
+  Either `NULL`, or one of `'abort'`, `'warn'`, or `'inform`', to report
+  if any of the criteria of the quitte definition are not fulfilled
+  using `[cli::cli_abort]`, `[cli::cli_warn]`, or `[cli::cli_inform]`.
 
 ## Value
 
@@ -46,8 +45,10 @@ quitte_example_data %>%
 quitte_example_data %>%
     select(-'model') %>%
     mutate(period = as.character(period)) %>%
-    looks_like_quitte(verbose = message)
-#> Mandatory columns `model` missing from `df`.
-#> Column `period` must be of class "integer" or "POSIXct", but has class `character`.
+    looks_like_quitte(verbose = 'inform')
+#> `df` must have all mandatory columns.
+#> ℹ "model" is missing.
+#> Column period must be of class <integer> or <POSIXct>.
+#> ℹ It is of class <character>.
 #> [1] FALSE
 ```

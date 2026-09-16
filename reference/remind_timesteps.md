@@ -20,9 +20,9 @@ require(tidyverse)
 #> Loading required package: tidyverse
 #> ── Attaching core tidyverse packages ─────────────── tidyverse 2.0.0 ──
 #> ✔ forcats   1.0.1     ✔ readr     2.2.0
-#> ✔ ggplot2   4.0.2     ✔ stringr   1.6.0
+#> ✔ ggplot2   4.0.3     ✔ stringr   1.6.0
 #> ✔ lubridate 1.9.5     ✔ tibble    3.3.1
-#> ✔ purrr     1.2.1     
+#> ✔ purrr     1.2.2     
 #> ── Conflicts ───────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
 #> ✖ dplyr::lag()    masks stats::lag()

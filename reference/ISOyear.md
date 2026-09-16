@@ -1,9 +1,10 @@
 # speedily converting years to POSIXct values
 
-Converts integer years (e.g. `2023`) to lubridate::POSIXct date/time
-values (e.g. `2023-07-02 12:00:00 GMT`) corresponding to July 2, noon,
-which is the middle of the (non-leap) year. The function keeps a cache
-of already converted values, as the underlying function
+Converts integer years (e.g. `2023`) to
+[POSIXct](https://rdrr.io/r/base/DateTimeClasses.html) date/time values
+(e.g. `2023-07-02 12:00:00 GMT`) corresponding to July 2, noon, which is
+the middle of the (non-leap) year. The function keeps a cache of already
+converted values, as the underlying function
 [`ISOdate()`](https://rdrr.io/r/base/ISOdatetime.html) is rather slow.
 
 ## Usage
@@ -16,11 +17,13 @@ ISOyear(year)
 
 - year:
 
-  Vector of years to convert to lubridate::POSIXct.
+  Vector of years to convert to
+  [POSIXct](https://rdrr.io/r/base/DateTimeClasses.html).
 
 ## Value
 
-A vector of lubridate::POSIXct values.
+A vector of [POSIXct](https://rdrr.io/r/base/DateTimeClasses.html)
+values.
 
 ## Author
 
