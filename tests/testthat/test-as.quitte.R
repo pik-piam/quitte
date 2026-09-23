@@ -103,6 +103,28 @@ test_that(
 )
 
 test_that(
+  'as.quitte converts character year/period columns',
+  {
+    a <- data.frame(model = 'm', scenario = 's', region = 'r', variable = 'v', unit = 'u',
+                     year = c('2005', '2010'), value = c(1, 2))
+
+    q <- as.quitte(a)
+    expect_identical(q$period, c(2005L, 2010L))
+    expect_true(is.quitte(q))
+
+    qPosix <- as.quitte(a, periodClass = 'POSIXct')
+    expect_identical(qPosix$period, ISOyear(c(2005L, 2010L)))
+
+    # a quitte object whose period column was turned into character should
+    # not error in is.quitte(), and should be convertible back
+    q$period <- as.character(q$period)
+    class(q) <- c('quitte', class(q))
+    expect_false(is.quitte(q, warn = FALSE))
+    expect_identical(as.quitte(q)$period, c(2005L, 2010L))
+  }
+)
+
+test_that(
   'as.quitte works on rds files',
   {
     rdsfile <- tempfile(pattern = "report", fileext = ".rds")

@@ -229,3 +229,24 @@ test_that(
         calc_addVariable(inline.data.frame(csvstring), only.new = TRUE)
     )
   })
+
+test_that(
+  'calc_addVariable() does not error with a data frame/file and a vector `units`',
+  {
+    # a non-scalar `units` used to trip up `is.na(units)` (length > 1 in
+    # a scalar `&&` context) whenever a single data frame/csv argument was
+    # combined with an explicit (multi-element) `units` argument
+    twoFormulaCsv <- c(
+      "variable;unit;formula",
+      "Consumption|pCap;US$2005/cap;0.001 * `Consumption`/`Population`",
+      "GDP|pCap;US$2005/cap;0.001 * `GDP|PPP`/`Population`")
+
+    result <- quitte_example_data %>%
+      calc_addVariable(inline.data.frame(twoFormulaCsv),
+                        units = c("US$2005/cap", "1000 US$2005/cap"),
+                        only.new = TRUE)
+
+    expect_setequal(
+      as.character(unique(result$unit)),
+      c("US$2005/cap", "1000 US$2005/cap"))
+  })
