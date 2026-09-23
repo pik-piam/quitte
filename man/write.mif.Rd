@@ -46,7 +46,7 @@ Defaults to \verb{;}.}
 \code{write.mif()} and to \code{''} for \code{write.IAMCcsv()}.}
 }
 \description{
-A wrapper around \code{\link[readr:read_lines]{readr::write_lines}} for writing files conforming to the
+A wrapper around \code{\link[readr:write_lines]{readr::write_lines}} for writing files conforming to the
 \href{https://gitlab.pik-potsdam.de/rse/rsewiki/-/wikis/Model-Intercomparison-File-Format-(mif)}{\code{.mif} standard}.
 }
 \details{

@@ -10,12 +10,12 @@ madrat_mule(x)
 \item{x}{Anything.}
 }
 \value{
-A \code{\link[magclass:magclass-package]{magpie}} object containing \code{x} (in unusable
-form), or the original \code{x} if a \code{\link[magclass:magclass-package]{magpie}} object was
+A \code{\link[magclass:magclass]{magpie}} object containing \code{x} (in unusable
+form), or the original \code{x} if a \code{\link[magclass:magclass]{magpie}} object was
 passed.
 }
 \description{
-Convert \emph{anything} to a \code{\link[magclass:magclass-package]{magpie}} object and back to
+Convert \emph{anything} to a \code{\link[magclass:magclass]{magpie}} object and back to
 traffic data across \code{madrat} borders.
 }
 \examples{

@@ -28,7 +28,7 @@ Invisibly returns \code{qf}.
 }
 \description{
 Writes one or more variables from a quitte data frame as GAMS parameters
-to a \code{.gdx} file using \code{\link[gamstransfer:gamstransfer-package]{gamstransfer::gamstransfer}}.
+to a \code{.gdx} file using \code{\link[gamstransfer:gamstransfer]{gamstransfer}}.
 }
 \author{
 Tonn Rueter

@@ -59,6 +59,35 @@ invisible(m$addParameter(name = 'parameter_d2_0',,
                          records = parameter_d2_0,
                          description = 'a parameter with no defined values'))
 
+## parameter with a stored zero and an EPS (for testing `squeeze`) ----
+invisible(m$addParameter(name = 'parameter_d1_squeeze',
+                         domain = m['set_d1_UPPER'],
+                         records = data.frame(
+                             set_d1_UPPER = set_d1_UPPER,
+                             value = c(0, SpecialValues$EPS, 5)),
+                         description = 'a parameter with a stored zero and EPS'))
+
+## parameter over integer-like (year) labels ----
+invisible(m$addSet(name = 'set_years',
+                   records = set_years,
+                   description = 'a set of integer-like (year) labels'))
+
+invisible(m$addParameter(name = 'parameter_years',
+                         domain = m['set_years'],
+                         records = data.frame(set_years = set_years,
+                                              value = c(10, 20, 30)),
+                         description = 'a parameter over integer-like labels'))
+
+## parameter with GAMS special values +Inf, -Inf and NA/UNDF ----
+invisible(m$addParameter(name = 'parameter_special',
+                         domain = m['set_d1_UPPER'],
+                         records = data.frame(
+                             set_d1_UPPER = set_d1_UPPER,
+                             value = c(SpecialValues$POSINF,
+                                       SpecialValues$NEGINF,
+                                       SpecialValues$UNDEF)),
+                         description = 'a parameter with +Inf, -Inf and UNDF'))
+
 # variables ----
 ## variable over no set ----
 invisible(m$addVariable(name = 'variable_d0',

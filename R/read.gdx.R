@@ -1,170 +1,29 @@
 #' Read item from `.gdx` file as quitte data frame
 #'
-#' `read.gdx()` is a wrapper function for either [`gdxrrw::rgdx()`] or
-#' [`gamstransfer::readGDX()`] that returns a quitte data frame.
-#'
-#' `read.gdx()` will use [`gdxrrw::rgdx()`] if [gdxrrw](gdxrrw-package) is
-#' installed and the option `quitte_force_gamstransfer` is not `TRUE`, otherwise
-#' it will use [`gamstransfer::readGDX()`].
+#' `read.gdx()` is a wrapper function for [`gamstransfer::readGDX()`] that
+#' returns a quitte data frame.
 #'
 #' @param gdxName Path to a `.gdx` file.
 #' @param requestList.name Name of the item to read.
-#' @param fields Fields to read from variables and equations.  When using
-#'     [gdxrrw](gdxrrw-package), any of `l`, `m`, `lo`, `up`, `s`.  When using
-#'     using [gamstransfer](gamstransfer-package), `level`, `marginal`, `lower`,
-#'     `upper`, and `scale` are understood as well.  `all` will return all
-#'     fields.  Ignored when reading sets or parameters.
+#' @param fields Fields to read from variables and equations.  Any of `l`, `m`,
+#'     `lo`, `up`, `s` (or the long forms `level`, `marginal`, `lower`, `upper`,
+#'     and `scale`).  `all` will return all fields.  Ignored when reading sets or
+#'     parameters.
 #' @param colNames String vector of column names to override dimension and field
 #'     names.
-#' @param factors Deprecated.  Do not use any more.
-#' @param squeeze If `TRUE`, squeeze out any zero or EPS stored in the GDX
-#'        container.  Ignored when using [gamstransfer](gamstransfer-package).
+#' @param squeeze If `TRUE` (the default), drop records whose value/level is a
+#'        stored zero or EPS.  Set to `FALSE` to return every stored value,
+#'        including zeros and EPS.
 #'
 #' @return A quitte data frame.
 #' @author Michaja Pehl
 #'
 #' @importFrom cli cli_abort
-#' @importFrom lifecycle deprecated deprecate_warn is_present
 #' @importFrom tibble as_tibble
 #'
 #' @export
 read.gdx <- function(gdxName, requestList.name, fields = "l", colNames = NULL,
-                     factors = deprecated(), squeeze = TRUE) {
-    if (is_present(factors)) {
-        deprecate_warn('0.3135.0', 'quitte::read.gdx(factors = )',
-                       details = 'Please do not use the argument anymore.')
-    }
-
-    # Check if gdxrrw package is installed
-    no_gdx_package <- !any(c('gdxrrw', 'gamstransfer') %in%
-                               .packages(all.available = TRUE))
-    if (no_gdx_package) {
-        stop('Neither `gdxrrw` nor `gamstransfer` package is installed.\n',
-             'See https://www.gams.com/latest/docs/API_R_GAMSTRANSFER.html')
-    }
-
-    # use gdxrrw unless gamstransfer is forced or gdxrrw is not installed
-    use_gdxrrw <- !any(getOption('quitte_force_gamstransfer', default = FALSE),
-                       !'gdxrrw' %in% .packages(all.available = TRUE))
-
-    if (use_gdxrrw) {
-        .read.gdx_gdxrrw(gdxName, requestList.name, fields, colNames, squeeze)
-    }
-    else {
-        .read.gdx_gamstransfer(gdxName, requestList.name, fields, colNames,
-                               squeeze)
-    }
-}
-
-init_gdxrrw <- function() {
-    if (!(done <- gdxrrw::igdx(silent = TRUE, returnStr = FALSE))) {
-        if ("Windows" == getElement(Sys.info(), "sysname")) {
-            path <- strsplit(Sys.getenv("PATH"), ";")[[1]]
-            path <- grep("gams", path, value = TRUE, ignore.case = TRUE)
-            path <- grep("%", path, value = TRUE, invert = TRUE)
-
-            for (p in path)
-                if (done <- gdxrrw::igdx(p, silent = TRUE))
-                    break
-        }
-        else {
-            suppressWarnings(
-                s <- system("which gams | xargs dirname", intern = TRUE,
-                            ignore.stderr = TRUE))
-            if (0 != length(s)) {
-                done <- gdxrrw::igdx(s, silent = TRUE)
-            }
-            else {
-                done <- FALSE
-            }
-        }
-    }
-    return(done)
-}
-
-.read.gdx_gdxrrw <- function(gdxName, requestList.name, fields, colNames,
-                             squeeze) {
-    if (!init_gdxrrw()) {
-        stop("Could not load gdx libraries")
-    }
-
-    gdxName <- path.expand(gdxName)
-
-    # if reading variable or equation, read specific fields (e.g. "lo", "m")
-    info <- gdxrrw::gdxInfo(gdxName, dump = FALSE, returnList = TRUE)
-    read.fields <- tolower(requestList.name) %in% tolower(c(info$variables,
-                                                            info$equations))
-
-    # read the first (or only) field
-    if (read.fields) {
-        requestList <- list(name = requestList.name, field = fields[[1]])
-        item <- gdxrrw::rgdx(gdxName, requestList, squeeze = squeeze)
-    }
-    else {
-        requestList <- list(name = requestList.name)
-        item <- gdxrrw::rgdx(gdxName, requestList, squeeze = squeeze)
-    }
-
-    # if item is a scalar, return a named vector
-    if (0 == item$dim) {
-        data <- as.vector(item$val)
-        names(data) <- requestList.name
-        return(data)
-    }
-
-    # convert dimension info
-    data <- list()
-    for (d in 1:(item$dim)) {
-        val <- item$val[,d]
-        uel <- item$uels[[d]]
-
-        if (all(grepl("^[0-9]+$", uel)))
-            uel <- as.numeric(uel)
-
-        data[[d]] <- c(uel[val])
-    }
-
-    # add first (or only) field
-    if (dim(item$val)[[2]] > d) {
-        d <- d + 1
-        data[[d]] <- c(item$val[,d])
-    }
-
-    # read additional fields
-    if (read.fields) {
-        for (field in fields[-1]) {
-            d <- d + 1
-            requestList <- list(name = requestList.name, field = field)
-            item <- gdxrrw::rgdx(gdxName, requestList, squeeze = squeeze)
-            data[[d]] <- c(item$val[,item$dim + 1])
-        }
-    }
-
-    if (read.fields) {
-        field.names <- sub("^l$", "value", fields)
-    }
-    else {
-        field.names <- "value"
-    }
-
-    if (is.null(colNames)) {
-        if (length(data) > length(item$domains)) {
-            names(data) <- c(item$domains, field.names)
-        } else {
-            names(data) <- c(item$domains)
-        }
-    }
-    else {
-        names(data) <- colNames
-    }
-
-    data <- as_tibble(data.frame(data))
-
-    return(data)
-}
-
-.read.gdx_gamstransfer <- function(gdxName, requestList.name, fields, colNames,
-                                   squeeze) {
+                     squeeze = TRUE) {
     # functions ----
     is.Alias <- function(d) {
         'Alias' == d[['class']]
@@ -202,8 +61,8 @@ init_gdxrrw <- function() {
     }
 
     convert_field_names <- function(fields) {
-        # convert short (gdxrrw) to long (gamstransfer) field names, check for
-        # unknown field names
+        # convert short field names (l, m, ...) to the long names gamstransfer
+        # uses, and check for unknown field names
         field_codes <- c('l'  = 'level',
                          'm'  = 'marginal',
                          'lo' = 'lower',
@@ -282,6 +141,20 @@ init_gdxrrw <- function() {
             select(all_of(column_selector)) %>%
             mutate(across(where(is.factor), as.character),
                    across(where(is.integer.string), as.numeric))
+    }
+
+    # squeeze out stored zeros / EPS ----
+    # When `squeeze` is TRUE, drop records whose primary value/level is a stored
+    # zero.  This only touches symbols that have a value/level column: sets carry
+    # no value (`length(fields) == 0`), so they are never squeezed. Parameters are
+    # sparse, so a plain 0 is simply absent rather than stored. `gamstransfer`
+    # reads EPS back as 0, so EPS records are dropped here too. Matters only for
+    # variables and equations, where GDX stores a 0 level record. Special values
+    # (NA, +/-Inf) are always kept.
+    if (squeeze && length(fields) > 0 && !is.Scalar(d) && nrow(result) > 0) {
+        value_col <- names(result)[[ncol(result) - length(fields) + 1]]
+        v <- result[[value_col]]
+        result <- result[is.na(v) | v != 0, , drop = FALSE]
     }
 
     # extract scalars ----

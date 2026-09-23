@@ -32,7 +32,7 @@ calculated positions will be called \code{xpos}.}
 \code{add_stacked_dodged_xpos()} returns the input data frame with an
 additional column.  Row and column order are preserved.
 \code{calc_stacked_dodged_xlabels()} returns a named character vector for use
-with \code{\link[ggplot2:scale_continuous]{scale_x_continuous()}}.
+with \code{\link[ggplot2:scale_x_continuous]{scale_x_continuous()}}.
 \code{ggplot_bar_stacked_dodged()} returns a \code{\link[ggplot2:ggplot]{ggplot}} object.
 }
 \description{
