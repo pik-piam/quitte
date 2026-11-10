@@ -116,7 +116,7 @@ test_that(
     expect_identical(qPosix$period, ISOyear(c(2005L, 2010L)))
 
     # a quitte object whose period column was turned into character should
-    # not error in is.quitte(), and should be convertible back
+    # not crash in is.quitte(), and should be convertible back
     q$period <- as.character(q$period)
     class(q) <- c('quitte', class(q))
     expect_false(is.quitte(q, warn = FALSE))
