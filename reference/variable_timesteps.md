@@ -207,7 +207,6 @@ ggplot_bar_remind_vts(
                                      levels(quitte_example_data$variable),
                                      value = TRUE))) +
     facet_wrap(~ scenario)
-#> 
 
 
 # another data set with a different time column
