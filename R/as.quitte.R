@@ -112,7 +112,10 @@ as.quitte.data.frame <- function(x, periodClass = "integer", addNA = FALSE, na.r
             x[[i]] <- as.factor(x[[i]])
     }
     if (is.factor(x$period)) {
-      x$period <- as.integer(as.character(x$period))
+      x$period <- as.character(x$period)
+    }
+    if (is.character(x$period)) {
+      x$period <- as.integer(x$period)
     }
 
     if (periodClass == "integer")

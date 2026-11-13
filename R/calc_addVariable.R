@@ -145,7 +145,7 @@ calc_addVariable <- function(data, ..., units = NA, na.rm = TRUE,
 
     .dots <- as.list(setNames(filedata$formula, filedata$variable))
 
-    if (is.na(units) && "unit" %in% colnames(filedata)) {
+    if (all(is.na(units)) && "unit" %in% colnames(filedata)) {
       units <- filedata$unit
     }
   }
